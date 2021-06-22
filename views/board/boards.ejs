@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko_KR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test</title>
+    <link href="/includes/css/common.css" rel="stylesheet">
+    <link href="/includes/css/board.css" rel="stylesheet">
+</head>
+<body onload="loadon()">
+    <%- include('../includes/header') %>
+    <div class="container">
+        <div class="board-list">
+            <div class="board">
+                <div class="board-top">
+                    <div class="board-title">
+                        1번 보드입니다.
+                    </div>
+                    <a class="plus alt" href="boards/boardInfo"><i class="fal fa-plus"></i></a>
+                </div>
+                <div class="board-middle">
+                    <div class="card">
+                        내용입니다.
+                    </div>
+                    <div class="card">
+                        내용입니다.
+                    </div>
+                    <div class="card">
+                        내용입니다.
+                    </div><!--  최대 3개까지 지원하고 작아지면 그만큼 개수가 줄어들어야함 -->
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="/includes/js/jquery.min.js"></script>
+<script>
+const loadon = () => {
+    $.ajax({
+        type: 'GET',
+        url: 'https://ori-db.run.goorm.io/blog/getBoardsInfo',
+        data: {boardType: 'jquery'},
+        dataType: 'json',
+        success: (data) => {console.log(data)},
+        error: (err) => {alert(err)}
+    });
+}
+</script>
+</body>
+</html>
