@@ -1,0 +1,19 @@
+---
+import type { GetStaticPaths } from "astro";
+import { Posts } from "../../../static/Posts";
+import { NotionPage } from "../../components/Notion/NotionPage";
+import { NotionAPI } from "notion-client";
+import Layout from "../../layouts/Layout.astro";
+
+export const getStaticPaths = (() => {
+  return Posts.map((post) => ({ params: { postId: post } }));
+}) satisfies GetStaticPaths;
+
+const { postId } = Astro.params;
+const notion = new NotionAPI();
+const recoardMap = await notion.getPage(postId);
+---
+
+<Layout title="Loopy's Blog.">
+  <NotionPage client:only recordMap={recoardMap} />
+</Layout>
