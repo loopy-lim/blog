@@ -2,7 +2,6 @@
 title: 'Econo Recruit 회고'
 description: 'Econo Recruit 회고입니다.'
 pubDate: '2023/10/20'
-heroImage: '/blog-placeholder-3.jpg'
 ---
 
 드디어 Econovation Recruit가 끝이났다. 실제로 사람들이 사용하는 첫번째 프로젝트였다. 처음하는 것만큼 안전성에 목적을 두었고, 문제없이 잘 마무리가 되었다.

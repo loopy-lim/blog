@@ -45,6 +45,21 @@ import { SITE_TITLE } from "../consts";
     align-items: center;
     justify-content: space-between;
   }
+
+  nav > * {
+    flex: 1;
+  }
+
+  nav > *:not(:first-child, :last-child) {
+    display: flex;
+    justify-content: center;
+  }
+
+  nav > *:last-child {
+    display: flex;
+    justify-content: flex-end;
+  }
+
   nav a {
     padding: 1em 0.5em;
     color: var(--black);
