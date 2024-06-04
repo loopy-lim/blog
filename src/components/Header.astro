@@ -5,7 +5,13 @@ import { SITE_TITLE } from "../consts";
 
 <header>
   <nav>
-    <h2><a href="/">{SITE_TITLE}</a></h2>
+    <h2>
+      <a href="/">
+        <img style="width: 1.4rem" alt="loopy-blog" src="/favicon.svg" />{
+          SITE_TITLE
+        }</a
+      >
+    </h2>
     <div class="internal-links">
       <HeaderLink href="/">Home</HeaderLink>
       <HeaderLink href="/blog">Blog</HeaderLink>
@@ -34,6 +40,11 @@ import { SITE_TITLE } from "../consts";
   h2 {
     margin: 0;
     font-size: 1em;
+  }
+
+  h2 a {
+    display: flex;
+    gap: 4px;
   }
 
   h2 a,
