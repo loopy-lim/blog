@@ -16,7 +16,7 @@ shell을 사용하면서, "더욱 화려하게 사용하고 싶다", "더욱 효
 
 ###  Oh-My-Zsh
 
-github는 (여기)[https://github.com/ohmyzsh/ohmyzsh]에서 확인할 수 있다.
+github는 [여기](https://github.com/ohmyzsh/ohmyzsh)에서 확인할 수 있다.
 
 oh-my-zsh설치는 모두 한번에 가능하게 되어 있다.
 
@@ -32,7 +32,7 @@ oh-my-zsh를 설치하면 다양한 plugin들을 적용할 수 있는데, 여기
 
 oh-my-zsh를 설치하면 git, sudo, colored-man-pages는 이미 설치되어 있다. 그래서 여기 밑에서는 2개에 관해 설치 과정을 쓰려고 한다.
 
-설치에 관해 자세한 내용은 (여기)[https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md]에서 확인할 수 있다.
+설치에 관해 자세한 내용은 [여기](https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md)에서 확인할 수 있다.
 
 mac, ubuntu를 각각 설치할 수 있으나, 우리는 zsh라는 plugin manager를 사용하므로 쉽게 git을 clone하여 설치할 수 있다.
 ```sh
@@ -43,7 +43,7 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:
 
 #### zsh-autosuggestions
 
-위와 비슷하게 설치에 관해 자세한 내용은 (여기)[git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting]에서 확인할 수 있다.
+위와 비슷하게 설치에 관해 자세한 내용은 [여기](https://github.com/zsh-users/zsh-autosuggestions)에서 확인할 수 있다.
 
 ```sh
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
@@ -53,7 +53,7 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 
 #### powerlevel10k
 
-github는 (여기)[https://github.com/romkatv/powerlevel10k]에서 확인할 수 있다.
+github는 [여기](https://github.com/romkatv/powerlevel10k)에서 확인할 수 있다.
 
 ```sh
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
@@ -69,7 +69,7 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$
 
 먼저 node를 버전에 맞추어 다운받기 위해서 간단하게 node manager를 설치하려고 한다. nvm도 충분히 좋지만, 이보다 더 빠른 fnm이라는 것이 등장하여 이를 주로 사용하고 있다.
 
-githu는 (여기)[https://github.com/Schniz/fnm]에서 확인할 수 있다.
+githu는 [여기](https://github.com/Schniz/fnm)에서 확인할 수 있다.
 
 이를 설치하기 위해서는 curl이 필요하며, mac, ubuntu모두 동일하다.
 
@@ -81,7 +81,7 @@ fnm으로 fnm install 20와 같이 타겟하는 node version을 설치하면 nod
 
 #### bun
 
-자세한 설치 내용은 (여기)[https://bun.sh/docs/installation]에 있다.
+자세한 설치 내용은 [여기](https://bun.sh/docs/installation)에 있다.
 
 ```sh
 curl -fsSL https://bun.sh/install | bash
@@ -89,7 +89,7 @@ curl -fsSL https://bun.sh/install | bash
 
 #### pnpm
 
-자세한 설치 내용은 (여기)[https://pnpm.io/installation]에 있다.
+자세한 설치 내용은 [여기](https://pnpm.io/installation)에 있다.
 
 ```sh
 curl -fsSL https://get.pnpm.io/install.sh | sh -
@@ -97,11 +97,11 @@ curl -fsSL https://get.pnpm.io/install.sh | sh -
 
 ### shell를 더 파워풀하게
 
-shell을 사용하면서 불편한 것은 파일 찾는 것이다. (이 사이트)[https://github.com/josean-dev/dev-environment-files]에서 설정을 따라가다보면 정말 깔끔한 FZF와 같은 설치가 될 것이다.
+shell을 사용하면서 불편한 것은 파일 찾는 것이다. [이 사이트](https://github.com/josean-dev/dev-environment-files)에서 설정을 따라가다보면 정말 깔끔한 FZF와 같은 설치가 될 것이다.
 
 ## 마무리
 
-모든 세팅을 하고 나면 다음과 같은 (zshrc)[https://gist.github.com/loopy-lim/77da579643fbcf6044eef8693916d7f8]을 얻을 수 있을 것이다.
+모든 세팅을 하고 나면 다음과 같은 [zshrc](https://gist.github.com/loopy-lim/77da579643fbcf6044eef8693916d7f8)을 얻을 수 있을 것이다.
 
 다음에 세팅할때도 이를 참고하고 만들어보자
 
