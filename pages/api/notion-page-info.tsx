@@ -1,7 +1,3 @@
-export const config = {
-  runtime: 'experimental-edge'
-}
-
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import got from 'got'
