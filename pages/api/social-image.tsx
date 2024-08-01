@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import * as React from 'react'
 import { NextRequest } from 'next/server'
 

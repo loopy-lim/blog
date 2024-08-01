@@ -1,3 +1,5 @@
+export const runtime = 'edge'
+
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import got from 'got'
