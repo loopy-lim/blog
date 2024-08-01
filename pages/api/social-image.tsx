@@ -1,7 +1,3 @@
-export const config = {
-  runtime: 'edge', // 'nodejs' is the default
-};
-
 import * as React from 'react'
 import { NextRequest } from 'next/server'
 
@@ -19,7 +15,7 @@ const interBoldFontP = fetch(
 ).then((res) => res.arrayBuffer())
 
 export const config = {
-  runtime: 'experimental-edge'
+  runtime: 'edge'
 }
 
 export default async function OGImage(req: NextRequest) {
