@@ -1,5 +1,5 @@
 export const config = {
-  runtime: 'edge' // 'nodejs' is the default
+  runtime: 'experimental-edge'
 }
 
 import { NextApiRequest, NextApiResponse } from 'next'
