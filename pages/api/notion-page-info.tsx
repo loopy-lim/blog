@@ -1,4 +1,6 @@
-export const runtime = 'edge'
+export const config = {
+  runtime: 'edge' // 'nodejs' is the default
+}
 
 import { NextApiRequest, NextApiResponse } from 'next'
 
