@@ -56,6 +56,9 @@ importers:
       posthog-js:
         specifier: ^1.20.2
         version: 1.154.0
+      prismjs:
+        specifier: ^1.29.0
+        version: 1.29.0
       react:
         specifier: ^18.2.0
         version: 18.3.1
