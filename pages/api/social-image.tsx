@@ -6,12 +6,12 @@ import { ImageResponse } from '@vercel/og'
 import { api, apiHost, rootNotionPageId } from '@/lib/config'
 import { NotionPageInfo } from '@/lib/types'
 
-const interRegularFontP = fetch(
-  new URL('../../public/fonts/Inter-Regular.ttf', import.meta.url)
+const pretendardRegularFontP = fetch(
+  new URL('../../public/fonts/Pretendard-Regular.ttf', import.meta.url)
 ).then((res) => res.arrayBuffer())
 
-const interBoldFontP = fetch(
-  new URL('../../public/fonts/Inter-SemiBold.ttf', import.meta.url)
+const pretendardBoldFontP = fetch(
+  new URL('../../public/fonts/Pretendard-SemiBold.ttf', import.meta.url)
 ).then((res) => res.arrayBuffer())
 
 export const config = {
@@ -38,9 +38,9 @@ export default async function OGImage(req: NextRequest) {
   const pageInfo: NotionPageInfo = await pageInfoRes.json()
   console.log(pageInfo)
 
-  const [interRegularFont, interBoldFont] = await Promise.all([
-    interRegularFontP,
-    interBoldFontP
+  const [pretendardRegularFont, pretendardBoldFont] = await Promise.all([
+    pretendardRegularFontP,
+    pretendardBoldFontP
   ])
 
   return new ImageResponse(
@@ -163,13 +163,13 @@ export default async function OGImage(req: NextRequest) {
       fonts: [
         {
           name: 'Inter',
-          data: interRegularFont,
+          data: pretendardRegularFont,
           style: 'normal',
           weight: 400
         },
         {
           name: 'Inter',
-          data: interBoldFont,
+          data: pretendardBoldFont,
           style: 'normal',
           weight: 700
         }
