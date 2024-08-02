@@ -7,11 +7,11 @@ import { api, apiHost, rootNotionPageId } from '@/lib/config'
 import { NotionPageInfo } from '@/lib/types'
 
 const pretendardRegularFontP = fetch(
-  new URL('../../public/fonts/pretendard/Pretendard-Regular.subset.woff', import.meta.url)
+  new URL('../../public/fonts/pretendard/woff-subset/Pretendard-Regular.subset.woff', import.meta.url)
 ).then((res) => res.arrayBuffer())
 
 const pretendardBoldFontP = fetch(
-  new URL('../../public/fonts/pretendard/Pretendard-SemiBold.subset.woff', import.meta.url)
+  new URL('../../public/fonts/pretendard/woff-subset/Pretendard-SemiBold.subset.woff', import.meta.url)
 ).then((res) => res.arrayBuffer())
 
 export const config = {
