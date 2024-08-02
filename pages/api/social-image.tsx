@@ -14,10 +14,6 @@ const pretendardBoldFontP = fetch(
   new URL('../../public/fonts/pretendard/woff-subset/Pretendard-SemiBold.subset.woff', import.meta.url)
 ).then((res) => res.arrayBuffer())
 
-export const config = {
-  runtime: 'experimental-edge'
-}
-
 export default async function OGImage(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const pageId = searchParams.get('id') || rootNotionPageId

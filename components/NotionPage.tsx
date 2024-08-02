@@ -79,12 +79,13 @@ const Collection = dynamic(() =>
 const Equation = dynamic(() =>
   import('react-notion-x/build/third-party/equation').then((m) => m.Equation)
 )
-const Pdf = dynamic(
-  () => import('react-notion-x/build/third-party/pdf').then((m) => m.Pdf),
-  {
-    ssr: false
-  }
-)
+// TODO: Can't resolve canvas
+// const Pdf = dynamic(
+//   () => import('react-notion-x/build/third-party/pdf').then((m) => m.Pdf),
+//   {
+//     ssr: false,
+//   }
+// )
 const Modal = dynamic(
   () =>
     import('react-notion-x/build/third-party/modal').then((m) => {
@@ -157,7 +158,7 @@ export const NotionPage: React.FC<types.PageProps> = ({
       Code,
       Collection,
       Equation,
-      Pdf,
+      // Pdf,
       Modal,
       Tweet,
       Header: NotionPageHeader,
