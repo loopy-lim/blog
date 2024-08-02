@@ -7,11 +7,11 @@ import { api, apiHost, rootNotionPageId } from '@/lib/config'
 import { NotionPageInfo } from '@/lib/types'
 
 const pretendardRegularFontP = fetch(
-  new URL('../../public/fonts/Pretendard-Regular.ttf', import.meta.url)
+  new URL('../../public/fonts/pretendard/Pretendard-Regular.subset.woff', import.meta.url)
 ).then((res) => res.arrayBuffer())
 
 const pretendardBoldFontP = fetch(
-  new URL('../../public/fonts/Pretendard-SemiBold.ttf', import.meta.url)
+  new URL('../../public/fonts/pretendard/Pretendard-SemiBold.subset.woff', import.meta.url)
 ).then((res) => res.arrayBuffer())
 
 export const config = {
@@ -55,7 +55,7 @@ export default async function OGImage(req: NextRequest) {
           backgroundColor: '#1F2027',
           alignItems: 'center',
           justifyContent: 'center',
-          fontFamily: '"Inter", sans-serif',
+          fontFamily: '"Pretendard", sans-serif',
           color: 'black'
         }}
       >
@@ -117,7 +117,7 @@ export default async function OGImage(req: NextRequest) {
               style={{
                 fontSize: 70,
                 fontWeight: 700,
-                fontFamily: 'Inter'
+                fontFamily: 'Pretendard'
               }}
             >
               {pageInfo.title}
@@ -162,13 +162,13 @@ export default async function OGImage(req: NextRequest) {
       height: 630,
       fonts: [
         {
-          name: 'Inter',
+          name: 'Pretendard',
           data: pretendardRegularFont,
           style: 'normal',
           weight: 400
         },
         {
-          name: 'Inter',
+          name: 'Pretendard',
           data: pretendardBoldFont,
           style: 'normal',
           weight: 700
