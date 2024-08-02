@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { NextRequest } from 'next/server'
 
-import { ImageResponse } from '@vercel/og'
+import { ImageResponse } from "@cloudflare/pages-plugin-vercel-og/api";
 
 import { api, apiHost, rootNotionPageId } from '@/lib/config'
 import { NotionPageInfo } from '@/lib/types'

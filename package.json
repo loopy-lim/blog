@@ -23,9 +23,9 @@
     "test:prettier": "prettier '**/*.{js,jsx,ts,tsx}' --check"
   },
   "dependencies": {
+    "@cloudflare/pages-plugin-vercel-og": "^0.1.2",
     "@keyvhq/core": "^1.6.26",
     "@react-icons/all-files": "^4.1.0",
-    "@vercel/og": "^1.0.0",
     "classnames": "^2.3.1",
     "expiry-map": "^2.0.0",
     "fathom-client": "^3.4.1",

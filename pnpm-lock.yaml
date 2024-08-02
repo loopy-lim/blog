@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@cloudflare/pages-plugin-vercel-og':
+        specifier: ^0.1.2
+        version: 0.1.2
       '@keyvhq/core':
         specifier: ^1.6.26
         version: 1.6.26
@@ -193,6 +196,9 @@ packages:
   '@babel/types@7.25.2':
     resolution: {integrity: sha512-YTnYtra7W9e6/oAZEHj0bJehPRUlLH9/fbpT5LfB0NhQXyALCRkRs3zH9v07IYhkgpqX6Z78FnuccZr/l4Fs4Q==}
     engines: {node: '>=6.9.0'}
+
+  '@cloudflare/pages-plugin-vercel-og@0.1.2':
+    resolution: {integrity: sha512-aWA2pHu1R2UbOJIcSASCuViyYVEhYkZ3tWTrTnr+yLosBfksOzjecHQkCkPv/jy75hGPrn1BbtsQR+oWVFkp1g==}
 
   '@emnapi/runtime@1.2.0':
     resolution: {integrity: sha512-bV21/9LQmcQeCPEg3BDFtvwL6cwiTMksYNWQQ4KOxCZikEGalWtenoZ0wCiukJINlGCIi2KXx01g4FoH/LxpzQ==}
@@ -2602,6 +2608,8 @@ snapshots:
       '@babel/helper-string-parser': 7.24.8
       '@babel/helper-validator-identifier': 7.24.7
       to-fast-properties: 2.0.0
+
+  '@cloudflare/pages-plugin-vercel-og@0.1.2': {}
 
   '@emnapi/runtime@1.2.0':
     dependencies:
