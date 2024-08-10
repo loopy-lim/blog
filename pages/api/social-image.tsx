@@ -1,177 +1,135 @@
-import * as React from 'react'
-import { NextRequest } from 'next/server'
+import { NextRequest } from 'next/server';
+import * as React from 'react';
 
-import { ImageResponse } from "@cloudflare/pages-plugin-vercel-og/api";
+import * as siteConfig from 'lib/config';
 
-import { api, apiHost, rootNotionPageId } from '@/lib/config'
-import { NotionPageInfo } from '@/lib/types'
+import { ImageResponse } from '@vercel/og';
 
-const pretendardRegularFontP = fetch(
-  new URL('../../public/fonts/pretendard/woff-subset/Pretendard-Regular.subset.woff', import.meta.url)
-).then((res) => res.arrayBuffer())
+export const config = {
+  runtime: 'edge',
+};
 
-const pretendardBoldFontP = fetch(
-  new URL('../../public/fonts/pretendard/woff-subset/Pretendard-SemiBold.subset.woff', import.meta.url)
-).then((res) => res.arrayBuffer())
+export default async function handler(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const { id } = Object.fromEntries(searchParams);
 
-export const runtime = 'edge';
+    const result = await fetch(`https://api.notion.com/v1/pages/${id}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.NOTION_API_KEY}`,
+        'Notion-Version': '2022-06-28',
+      },
+    });
 
-export default async function OGImage(req: NextRequest) {
-  const { searchParams } = new URL(req.url)
-  const pageId = searchParams.get('id') || rootNotionPageId
-  if (!pageId) {
-    return new Response('Invalid notion page id', { status: 400 })
-  }
+    const { properties, cover } = await result.json();
 
-  const pageInfoRes = await fetch(`${apiHost}${api.getNotionPageInfo}`, {
-    method: 'POST',
-    body: JSON.stringify({ pageId }),
-    headers: {
-      'content-type': 'application/json'
-    }
-  })
-  if (!pageInfoRes.ok) {
-    return new Response(pageInfoRes.statusText, { status: pageInfoRes.status })
-  }
-  const pageInfo: NotionPageInfo = await pageInfoRes.json()
-  console.log(pageInfo)
+    const image = cover?.external?.url || cover?.file?.url || siteConfig.defaultPageCover;
+    const title = properties?.['이름']?.title?.[0]?.plain_text || siteConfig.name;
+    const description = properties?.['설명']?.rich_text?.[0]?.plain_text || siteConfig.description;
+    const tags = (properties?.['태그']?.multi_select || []).map((tag: any) => tag.name);
+    const author = siteConfig.author;
+    const authorImage = siteConfig.defaultPageIcon;
+    const publishedAt = properties?.['작성일']?.created_time;
+    const publishedAtString = publishedAt
+      ? new Date(publishedAt).toLocaleDateString('ko-KR', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })
+      : siteConfig.domain;
 
-  const [pretendardRegularFont, pretendardBoldFont] = await Promise.all([
-    pretendardRegularFontP,
-    pretendardBoldFontP
-  ])
-
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          position: 'relative',
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          backgroundColor: '#1F2027',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontFamily: '"Pretendard", sans-serif',
-          color: 'black'
-        }}
-      >
-        {pageInfo.image && (
-          <img
-            src={pageInfo.image}
-            style={{
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover'
-              // TODO: satori doesn't support background-size: cover and seems to
-              // have inconsistent support for filter + transform to get rid of the
-              // blurred edges. For now, we'll go without a blur filter on the
-              // background, but Satori is still very new, so hopefully we can re-add
-              // the blur soon.
-
-              // backgroundImage: pageInfo.image
-              //   ? `url(${pageInfo.image})`
-              //   : undefined,
-              // backgroundSize: '100% 100%'
-              // TODO: pageInfo.imageObjectPosition
-              // filter: 'blur(8px)'
-              // transform: 'scale(1.05)'
-            }}
-          />
-        )}
-
+    return new ImageResponse(
+      (
         <div
           style={{
-            position: 'relative',
-            width: 900,
-            height: 465,
             display: 'flex',
-            flexDirection: 'column',
-            border: '16px solid rgba(0,0,0,0.3)',
-            borderRadius: 8,
-            zIndex: '1'
+            padding: '46px',
+            background: '#1F2027',
+            color: 'white',
+            width: '100%',
+            height: '100%',
+            justifyContent: 'space-between',
           }}
         >
           <div
             style={{
-              width: '100%',
-              height: '100%',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'space-around',
-              backgroundColor: '#fff',
-              padding: 24,
-              alignItems: 'center',
-              textAlign: 'center'
+              justifyContent: 'space-between',
+              flex: 1,
+              height: '100%',
             }}
           >
-            {pageInfo.detail && (
-              <div style={{ fontSize: 32, opacity: 0 }}>{pageInfo.detail}</div>
-            )}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <h1 style={{ fontSize: '46px', fontWeight: 'bold', paddingTop: '24px' }}>{title}</h1>
+              <p style={{ fontSize: '18px', opacity: 0.8 }}>{description}</p>
+              <div style={{ display: 'flex', fontSize: '18px', opacity: 0.6 }}>
+                {tags.map((tag: string, i) => (
+                  <div
+                    key={tag}
+                    style={{ display: 'flex', marginRight: tags.length === i + 1 ? '' : '10px' }}
+                  >
+                    #{tag}
+                  </div>
+                ))}
+              </div>
+            </div>
 
             <div
               style={{
-                fontSize: 70,
-                fontWeight: 700,
-                fontFamily: 'Pretendard'
+                display: 'flex',
+                alignItems: 'center',
               }}
             >
-              {pageInfo.title}
-            </div>
+              <img
+                src={authorImage}
+                style={{
+                  width: '100px',
+                  height: '100px',
+                  objectFit: 'cover',
+                  objectPosition: 'center',
+                  borderRadius: '50%',
+                  marginRight: '16px',
+                }}
+              />
 
-            {pageInfo.detail && (
-              <div style={{ fontSize: 32, opacity: 0.6 }}>
-                {pageInfo.detail}
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <div style={{ fontSize: '32px', opacity: 0.8 }}>{author}</div>
+                <div style={{ fontSize: '20px', opacity: 0.8 }}>{publishedAtString}</div>
               </div>
-            )}
+            </div>
           </div>
-        </div>
 
-        {pageInfo.authorImage && (
-          <div
-            style={{
-              position: 'absolute',
-              top: 47,
-              left: 104,
-              height: 128,
-              width: 128,
-              display: 'flex',
-              borderRadius: '50%',
-              border: '4px solid #fff',
-              zIndex: '5'
-            }}
-          >
+          {image && (
             <img
-              src={pageInfo.authorImage}
+              src={image}
               style={{
-                width: '100%',
-                height: '100%'
-                // transform: 'scale(1.04)'
+                width: '35%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center',
+                borderRadius: '5px',
+                marginLeft: '36px',
               }}
             />
-          </div>
-        )}
-      </div>
-    ),
-    {
-      width: 1200,
-      height: 630,
-      fonts: [
-        {
-          name: 'Pretendard',
-          data: pretendardRegularFont,
-          style: 'normal',
-          weight: 400
-        },
-        {
-          name: 'Pretendard',
-          data: pretendardBoldFont,
-          style: 'normal',
-          weight: 700
-        }
-      ]
-    }
-  )
+          )}
+        </div>
+      ),
+      {
+        width: 1200,
+        height: 630,
+      },
+    );
+  } catch (e: any) {
+    console.error(`${e.message}`);
+
+    return new Response(`Failed to generate the image`, {
+      status: 500,
+    });
+  }
 }

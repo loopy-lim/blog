@@ -1,13 +1,15 @@
-// import useDarkModeImpl from '@fisch0920/use-dark-mode'
-import { useDarkMode as useDarkModeImpl } from 'usehooks-ts'
-
-
+import { useRecoilState } from 'recoil';
+import { preferencesStore } from 'stores/settings';
 
 export function useDarkMode() {
-  const { isDarkMode, toggle } = useDarkModeImpl({ defaultValue: false });
+  const [preferences, setPreferences] = useRecoilState(preferencesStore);
 
   return {
-    isDarkMode: isDarkMode,
-    toggleDarkMode: toggle
-  }
+    isDarkMode: preferences.isDarkMode,
+    toggleDarkMode: () =>
+      setPreferences({
+        ...preferences,
+        isDarkMode: !preferences.isDarkMode,
+      }),
+  };
 }

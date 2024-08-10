@@ -1,65 +1,93 @@
-// global styles shared across the entire site
-import * as React from 'react'
-import type { AppProps } from 'next/app'
-import { useRouter } from 'next/router'
+import * as React from 'react';
+import { useEffect } from 'react';
 
-import * as Fathom from 'fathom-client'
-// used for rendering equations (optional)
-import 'katex/dist/katex.min.css'
-import posthog from 'posthog-js'
-// used for code syntax highlighting (optional)
-import 'prismjs/themes/prism-coy.css'
-// core styles shared by all of react-notion-x (required)
-import 'react-notion-x/src/styles.css'
-import 'styles/global.css'
-// this might be better for dark mode
-// import 'prismjs/themes/prism-okaidia.css'
-// global style overrides for notion
-import 'styles/notion.css'
-// global style overrides for prism theme (optional)
-import 'styles/prism-theme.css'
+import type { AppProps } from 'next/app';
+import { useRouter } from 'next/router';
+import { GoogleAnalytics } from 'nextjs-google-analytics';
 
-import { bootstrap } from '@/lib/bootstrap-client'
-import {
-  fathomConfig,
-  fathomId,
-  isServer,
-  posthogConfig,
-  posthogId
-} from '@/lib/config'
+import axios from 'axios';
+import { motion } from 'framer-motion';
+import posthog from 'posthog-js';
+import { RecoilRoot, useRecoilState } from 'recoil';
+import { preferencesStore } from 'stores/settings';
+import { SWRConfig, SWRConfiguration } from 'swr';
 
-if (!isServer) {
-  bootstrap()
-}
+import PageLoading from '~/components/PageLoading';
+import { bootstrap } from '~/lib/bootstrap-client';
+import { posthogConfig, posthogId } from '~/lib/config';
+import '~/styles/custom/index.scss';
 
-export default function App({ Component, pageProps }: AppProps) {
-  const router = useRouter()
+const Bootstrap = () => {
+  const [preferences, setPreferences] = useRecoilState(preferencesStore);
 
-  React.useEffect(() => {
+  const router = useRouter();
+
+  // posthog
+  useEffect(() => {
     function onRouteChangeComplete() {
-      if (fathomId) {
-        Fathom.trackPageview()
-      }
-
       if (posthogId) {
-        posthog.capture('$pageview')
+        posthog.capture('$pageview');
       }
-    }
-
-    if (fathomId) {
-      Fathom.load(fathomId, fathomConfig)
     }
 
     if (posthogId) {
-      posthog.init(posthogId, posthogConfig)
+      posthog.init(posthogId, posthogConfig);
     }
 
-    router.events.on('routeChangeComplete', onRouteChangeComplete)
+    router.events.on('routeChangeComplete', onRouteChangeComplete);
 
     return () => {
-      router.events.off('routeChangeComplete', onRouteChangeComplete)
-    }
-  }, [router.events])
+      router.events.off('routeChangeComplete', onRouteChangeComplete);
+    };
+  }, [router.events]);
 
-  return <Component {...pageProps} />
+  useEffect(() => {
+    if (preferences.isDarkMode) {
+      if (!document.body.classList.contains('dark-mode')) {
+        document.body.classList.add('dark-mode');
+      }
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }, [preferences.isDarkMode]);
+
+  useEffect(() => {
+    bootstrap();
+
+    // 기기의 다크모드 연동
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+      setPreferences({ ...preferences, isDarkMode: event.matches });
+    });
+  }, []);
+
+  return null;
+};
+
+const swrConfig: SWRConfiguration = {
+  errorRetryCount: 3,
+  errorRetryInterval: 500,
+  revalidateOnFocus: false,
+  revalidateIfStale: false,
+  fetcher: (url: string) => axios.get(url).then(res => res.data),
+};
+
+export default function App({ Component, pageProps, router }: AppProps) {
+  return (
+    <RecoilRoot>
+      <SWRConfig value={swrConfig}>
+        <Bootstrap />
+        <GoogleAnalytics trackPageViews />
+        <PageLoading />
+
+        <motion.div
+          key={router.pathname + router.query?.pageId || ''}
+          initial={{ x: 10, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Component {...pageProps} />
+        </motion.div>
+      </SWRConfig>
+    </RecoilRoot>
+  );
 }
