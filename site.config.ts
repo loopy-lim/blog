@@ -22,7 +22,6 @@ export default siteConfig({
   // linkedin: 'fisch2',
   // newsletter: '#', // optional newsletter URL
   // youtube: '#', // optional youtube channel name or `channel/UCGbXXXXXXXXXXXXXXXXXXXXXX`
-
   // default notion icon and cover images for site-wide consistency (optional)
   // page-specific values will override these site-wide defaults
   defaultPageIcon: "",
@@ -62,7 +61,6 @@ export default siteConfig({
   //     menuPage: true,
   //   },
   // ],
-
   // date-fns format string
   dateformat: 'yyyy년 MM월 dd일',
 
@@ -74,7 +72,5 @@ export default siteConfig({
 
   // default theme color
   defaultTheme: 'system',
-
-  // enable comment
-  // enableComment: true,
+  enableComment: false
 });
