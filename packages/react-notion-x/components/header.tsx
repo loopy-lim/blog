@@ -118,7 +118,6 @@ export const Search: React.FC<{
           onClick={onOpenSearch}
         >
           <SearchIcon className="searchIcon" />
-
           {title && <span className="title">{title}</span>}
         </div>
       )}
