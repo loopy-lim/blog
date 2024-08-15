@@ -10,7 +10,7 @@ export default siteConfig({
 
   // basic site info (required)
   name: "loopy's blog",
-  domain: 'blog.2skydev.com',
+  domain: 'blog.ll3.com',
   author: 'loopy',
 
   // open graph metadata (optional)
