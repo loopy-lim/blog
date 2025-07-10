@@ -1,0 +1,19 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Gnb from "@components/commons/gnb";
+import AboutBackground from "@components/about/background";
+import AboutMe from "@components/about/me";
+---
+
+<BaseLayout title="Abount Me">
+	<Gnb />
+	<main class="mx-auto max-w-[1200px] px-4">
+    <div class="flex min-h-screen flex-col items-center justify-center">
+   		<AboutBackground client:only />
+      <AboutMe />
+    </div>
+    <div class="flex min-h-screen flex-col items-center justify-center">
+      <AboutMe />
+    </div>
+	</main>
+</BaseLayout>
