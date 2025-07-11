@@ -2,8 +2,10 @@
 import PointSpan from "@components/commons/PointSpan.astro";
 ---
 
-<div class="flex flex-col max-w-3xl w-full m-auto gap-8">
-  <PointSpan text="About Me" className="text-5xl font-bold" />
+<div class="flex flex-col gap-8 my-24">
+  <h2>
+    <PointSpan text="About Me" className="text-5xl font-bold" />
+  </h2>
   <div class="flex flex-col gap-4 text-xl">
     <p>
       저는 코드로 문제를 해결하기보다, 문제의 본질을 파고들어 최적의 해결책을
@@ -38,5 +40,6 @@ strong {
     height: 0.8rem;
     background-color: #0048f4;
     opacity: 0.5;
+    pointer-events: none;
 }
 </style>

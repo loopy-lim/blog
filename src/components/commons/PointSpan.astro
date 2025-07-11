@@ -1,4 +1,6 @@
 ---
+import { cn } from "@lib/utils";
+
 interface Props {
   text: string;
   className?: string;
@@ -9,8 +11,10 @@ const className = Astro.props.className || "";
 ---
 
 <span
-  class={"after:mr-2 after:mb-7 after:inline-block after:h-3 after:w-3 after:rounded-full after:bg-[#0048F4] " +
-    className}
+  class={cn(
+    "after:mr-2 after:mb-7 after:inline-block after:h-3 after:w-3 after:rounded-full after:bg-[#0048F4]",
+    className,
+  )}
 >
   {text}
 </span>

@@ -5,6 +5,8 @@ import IntroBackground from "@components/intro/background";
 import IntroAboutMe from "@components/intro/me.astro";
 import IntroLinks from "@components/intro/links.astro";
 import AboutMe from "@components/about/me.astro";
+import Skills from "@components/about/skills.astro";
+import Experiences from "@components/about/experiences.astro";
 ---
 
 <BaseLayout title="Abount Me">
@@ -15,8 +17,10 @@ import AboutMe from "@components/about/me.astro";
       <IntroAboutMe />
       <IntroLinks />
     </section>
-    <section id="about-me" class="min-h-screen pt-16">
+    <section id="about-me" class="min-h-screen pt-16 mx-auto w-full max-w-3xl">
       <AboutMe />
+      <Skills />
+      <Experiences />
     </section>
   </main>
 </BaseLayout>

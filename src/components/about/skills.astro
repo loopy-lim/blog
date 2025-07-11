@@ -1,0 +1,83 @@
+---
+import PointSpan from "@components/commons/PointSpan.astro";
+import { cn } from "@lib/utils";
+
+const skills = [
+  [
+    "Frontend",
+    ["React", 1],
+    ["Nextjs", 1],
+    ["Tailwind", 1],
+    ["Tanstack-Query", 1],
+    ["zustand", 1],
+  ],
+  ["Backend", ["Node", 1], ["Nestjs", 2], ["SQLight", 2]],
+  ["Infra", ["Ubuntu", 2], ["Docker", 2], ["Nginx", 3], ["Proxmox VE", 3]],
+  ["ETC", ["Git/Github", 1], ["Figma", 1], ["Notion", 1]],
+];
+---
+
+<div class="flex flex-col gap-8 my-24">
+  <h2>
+    <PointSpan text="Skills" className="text-5xl font-bold" />
+  </h2>
+  <div class="flex flex-col gap-4">
+    {
+      skills.map(([skill, ...stacks]) => (
+        <div class="flex gap-4">
+          <h3 class="text-2xl font-semibold text-right min-w-[120px]">
+            {skill}
+          </h3>
+          <li class="flex-1 flex gap-4 flex-wrap list-none">
+            {stacks.map(([stack, level]) => (
+              <ul class="flex items-center gap-2">
+                <div
+                  class={cn(
+                    "bg-[#0048fd] w-6 h-6 rounded-full flex items-center justify-center font-semibold text-white border-[#0048fd] border text-sm",
+                    {
+                      "text-[#0048fd] bg-white dark:bg-[#0048fd]/20":
+                        level === 3,
+                      "bg-[#80a3fa]": level === 2,
+                      "": level === 1,
+                    },
+                  )}
+                >
+                  {level}
+                </div>
+                <div class="text-xl">{stack}</div>
+              </ul>
+            ))}
+          </li>
+        </div>
+      ))
+    }
+    <div class="flex gpa-4 justify-end -mt-8">
+      <li class="list-none">
+        <ul class="flex gap-2 items-center">
+          <div
+            class="bg-[#0048fd] w-4 h-4 rounded-full flex items-center justify-center font-semibold text-white border-[#0048fd] border text-xs"
+          >
+            1
+          </div>
+          <div>프로젝트를 진행할 수 있어요</div>
+        </ul>
+        <ul class="flex gap-2 items-center">
+          <div
+            class="bg-[#80a3fa] w-4 h-4 rounded-full flex items-center justify-center font-semibold text-white border-[#0048fd] border text-xs"
+          >
+            2
+          </div>
+          <div>어느정도 사용할 줄 알아요</div>
+        </ul>
+        <ul class="flex gap-2 items-center">
+          <div
+            class="text-[#0048fd] bg-white w-4 h-4 rounded-full flex items-center justify-center font-semibold border-[#0048fd] border text-xs dark:bg-[#0048fd]/20"
+          >
+            3
+          </div>
+          <div>보고 이해할 수 있어요</div>
+        </ul>
+      </li>
+    </div>
+  </div>
+</div>
