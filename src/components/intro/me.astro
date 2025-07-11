@@ -1,0 +1,30 @@
+---
+import PointSpan from "../commons/PointSpan.astro";
+---
+
+<h1 class="text-center text-3xl font-bold">
+  솔루션을 설계하는 프로덕트 엔지니어,
+  <PointSpan text="임채승" className="text-5xl" />
+  입니다.
+</h1>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const title = document.querySelector("h1");
+    if (title) {
+      title.style.transform = "translateY(0)";
+      title.style.opacity = "1";
+    }
+  });
+</script>
+
+<style>
+  h1 {
+    transform: translateY(-40px);
+    opacity: 0;
+
+    transition:
+      transform 500ms ease-out,
+      opacity 500ms ease-in-out;
+  }
+</style>

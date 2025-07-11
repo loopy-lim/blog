@@ -1,19 +1,22 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import Gnb from "@components/commons/gnb";
-import AboutBackground from "@components/about/background";
-import AboutMe from "@components/about/me";
+import Gnb from "@components/commons/gnb.astro";
+import IntroBackground from "@components/intro/background";
+import IntroAboutMe from "@components/intro/me.astro";
+import IntroLinks from "@components/intro/links.astro";
+import AboutMe from "@components/about/me.astro";
 ---
 
 <BaseLayout title="Abount Me">
   <Gnb />
   <main class="mx-auto max-w-7xl px-4">
-    <div class="flex min-h-screen flex-col items-center justify-center">
-      <AboutBackground client:only={true} />
+    <section class="flex min-h-screen flex-col items-center justify-center">
+      <IntroBackground client:only={true} />
+      <IntroAboutMe />
+      <IntroLinks />
+    </section>
+    <section id="about-me" class="min-h-screen pt-16">
       <AboutMe />
-    </div>
-    <div class="flex min-h-screen flex-col items-center justify-center">
-      <AboutMe />
-    </div>
+    </section>
   </main>
 </BaseLayout>

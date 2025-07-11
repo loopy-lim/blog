@@ -7,7 +7,7 @@ import useResize from "../hooks/useResize";
 
 const CIRCLE_COUNT = 20;
 
-export default function AboutBackground() {
+export default function IntroBackground() {
   const stage = useRef<Konva.Stage | null>(null);
 
   useResize(() => {
@@ -17,12 +17,16 @@ export default function AboutBackground() {
       stage.current.height(window.innerHeight);
       stage.current.scale({ x: scale, y: scale });
     }
-  })
+  });
 
   return (
     <div className="absolute top-0 left-0 -z-50 h-full w-full overflow-hidden">
       <div className="relative h-full w-full scale-110 blur-2xl">
-        <Stage ref={stage} width={window.innerWidth} height={window.innerHeight}>
+        <Stage
+          ref={stage}
+          width={window.innerWidth}
+          height={window.innerHeight}
+        >
           <Layer>
             <Group globalCompositeOperation="saturation">
               {Array.from({ length: CIRCLE_COUNT }).map((_, index) => (

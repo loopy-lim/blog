@@ -1,0 +1,54 @@
+<div class="p-8">
+  <ul class="flex gap-6 text-xl">
+    <li>
+      <a data-transition-delay="400ms" href="#about-me">About Me</a>
+    </li>
+    <li>
+      <a data-transition-delay="500ms" href="#">Blog</a>
+    </li>
+    <li>
+      <a data-transition-delay="600ms" href="#">Projects</a>
+    </li>
+  </ul>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const links = document.querySelectorAll("a");
+    links.forEach((link) => {
+      link.style.transitionDelay = link.dataset.transitionDelay || "0ms";
+      link.style.transform = "translateY(0)";
+      link.style.opacity = "1";
+    });
+    links.forEach((link) => {
+      link.ontransitionend = () => {
+        link.style.transitionDelay = "0ms";
+      };
+    });
+  });
+</script>
+
+<style>
+  a {
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border: 1px solid #000;
+    cursor: pointer;
+    background-color: transparent;
+    transform: translateY(-40px);
+    opacity: 0;
+
+    transition:
+      100ms ease-in background-color,
+      300ms ease-in trasform,
+      300ms ease-in opacity;
+
+    @media (prefers-color-scheme: dark) {
+      border-color: #fff;
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+  }
+</style>
