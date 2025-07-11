@@ -6,14 +6,14 @@ import AboutMe from "@components/about/me";
 ---
 
 <BaseLayout title="Abount Me">
-	<Gnb />
-	<main class="mx-auto max-w-[1200px] px-4">
+  <Gnb />
+  <main class="mx-auto max-w-7xl px-4">
     <div class="flex min-h-screen flex-col items-center justify-center">
-   		<AboutBackground client:only />
+      <AboutBackground client:only={true} />
       <AboutMe />
     </div>
     <div class="flex min-h-screen flex-col items-center justify-center">
       <AboutMe />
     </div>
-	</main>
+  </main>
 </BaseLayout>

@@ -5,7 +5,7 @@ import { Circle } from "react-konva";
 const MAX_RADIUS = 1000;
 const MIN_RADIUS = 800;
 
-const COLOR = ["255, 0, 0", "0, 255, 0", "0, 0, 255"];
+const COLOR = ["202, 26, 255", "244, 179, 0", "56, 255, 92"];
 const CIRCLE_COLORS = COLOR.map((color) => `rgba(${color}, 0.2)`);
 const CIRCLE_COLORS_GRADIENT = COLOR.map((color) => `rgba(${color}, 0)`);
 
