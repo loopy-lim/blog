@@ -9,7 +9,7 @@ import Skills from "@components/about/skills.astro";
 import Experiences from "@components/about/experiences.astro";
 ---
 
-<BaseLayout title="Abount Me">
+<BaseLayout title="About Me">
   <Gnb />
   <main class="mx-auto max-w-7xl px-4">
     <section class="flex min-h-screen flex-col items-center justify-center">
@@ -17,7 +17,10 @@ import Experiences from "@components/about/experiences.astro";
       <IntroAboutMe />
       <IntroLinks />
     </section>
-    <section id="about-me" class="min-h-screen pt-16 mx-auto w-full max-w-3xl">
+    <section
+      id="about-me"
+      class="min-h-screen pt-16 mx-auto w-full max-w-3xl py-16"
+    >
       <AboutMe />
       <Skills />
       <Experiences />

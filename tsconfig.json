@@ -35,6 +35,9 @@
       ],
       "@hooks/*": [
         "src/hooks/*"
+      ],
+      "@contents/*": [
+        "src/contents/*"
       ]
     },
     "jsxImportSource": "react",

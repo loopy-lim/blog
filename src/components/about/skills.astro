@@ -18,12 +18,42 @@ const skills = [
 ];
 ---
 
-<div class="flex flex-col gap-8 my-24">
-  <h2>
-    <PointSpan text="Skills" className="text-5xl font-bold" />
-  </h2>
+<div class="flex flex-col gap-8 my-12">
+  <div class="flex justify-between flex-wrap gap-3">
+    <h2>
+      <PointSpan text="Skills" className="text-5xl font-bold" />
+    </h2>
+    <div class="flex gap-2 justify-end">
+      <li class="list-none text-sm">
+        <ul class="flex gap-2 items-center">
+          <div
+            class="bg-[#0048fd] w-4 h-4 rounded-full flex items-center justify-center font-semibold text-white border-[#0048fd] border text-xs"
+          >
+            1
+          </div>
+          <div>프로젝트를 진행할 수 있어요</div>
+        </ul>
+        <ul class="flex gap-2 items-center">
+          <div
+            class="bg-[#80a3fa] w-4 h-4 rounded-full flex items-center justify-center font-semibold text-white border-[#0048fd] border text-xs"
+          >
+            2
+          </div>
+          <div>어느정도 사용할 줄 알아요</div>
+        </ul>
+        <ul class="flex gap-2 items-center">
+          <div
+            class="text-[#0048fd] bg-white w-4 h-4 rounded-full flex items-center justify-center font-semibold border-[#0048fd] border text-xs dark:bg-[#0048fd]/20"
+          >
+            3
+          </div>
+          <div>보고 이해할 수 있어요</div>
+        </ul>
+      </li>
+    </div>
+  </div>
   <LeftLine>
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-3">
       {
         skills.map(([skill, ...stacks]) => (
           <div class="flex gap-4">
@@ -32,10 +62,10 @@ const skills = [
             </h3>
             <li class="flex-1 flex gap-4 flex-wrap list-none">
               {stacks.map(([stack, level]) => (
-                <ul class="flex items-center gap-2">
+                <ul class="flex items-center gap-1">
                   <div
                     class={cn(
-                      "bg-[#0048fd] w-6 h-6 rounded-full flex items-center justify-center font-semibold text-white border-[#0048fd] border text-sm",
+                      "bg-[#0048fd] w-5 h-5 rounded-full flex items-center justify-center font-semibold text-white border-[#0048fd] border text-xs",
                       {
                         "text-[#0048fd] bg-white dark:bg-[#0048fd]/20":
                           level === 3,
@@ -46,41 +76,13 @@ const skills = [
                   >
                     {level}
                   </div>
-                  <div class="text-xl">{stack}</div>
+                  <div class="text-base">{stack}</div>
                 </ul>
               ))}
             </li>
           </div>
         ))
       }
-      <div class="flex gpa-4 justify-end -mt-8">
-        <li class="list-none">
-          <ul class="flex gap-2 items-center">
-            <div
-              class="bg-[#0048fd] w-4 h-4 rounded-full flex items-center justify-center font-semibold text-white border-[#0048fd] border text-xs"
-            >
-              1
-            </div>
-            <div>프로젝트를 진행할 수 있어요</div>
-          </ul>
-          <ul class="flex gap-2 items-center">
-            <div
-              class="bg-[#80a3fa] w-4 h-4 rounded-full flex items-center justify-center font-semibold text-white border-[#0048fd] border text-xs"
-            >
-              2
-            </div>
-            <div>어느정도 사용할 줄 알아요</div>
-          </ul>
-          <ul class="flex gap-2 items-center">
-            <div
-              class="text-[#0048fd] bg-white w-4 h-4 rounded-full flex items-center justify-center font-semibold border-[#0048fd] border text-xs dark:bg-[#0048fd]/20"
-            >
-              3
-            </div>
-            <div>보고 이해할 수 있어요</div>
-          </ul>
-        </li>
-      </div>
     </div>
   </LeftLine>
 </div>

@@ -1,0 +1,23 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  period?: string;
+}
+
+const { title, description, period } = Astro.props;
+---
+
+<div class="flex items-center gap-4 my-2">
+  <h3 class="text-xl font-semibold">{title}</h3>
+  {
+    description && (
+      <>
+        <span class="h-5 w-[1.5px] bg-gray-600" />
+        <p>{description}</p>
+      </>
+    )
+  }
+  <span class="flex-1 h-[1px] bg-gray-900"></span>
+  {period && <span class="text-gray-500 text-sm">{period}</span>}
+</div>
