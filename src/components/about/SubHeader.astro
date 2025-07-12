@@ -8,16 +8,19 @@ interface Props {
 const { title, description, period } = Astro.props;
 ---
 
-<div class="flex items-center gap-4 my-2">
+<div
+  class="flex items-center gap-4 my-2 max-[420px]:flex-col max-[420px]:gap-1 max-[420px]:items-start flex-wrap"
+>
   <h3 class="text-xl font-semibold">{title}</h3>
   {
     description && (
       <>
-        <span class="h-5 w-[1.5px] bg-gray-600" />
+        <span class="h-5 w-[1.5px] bg-gray-600 max-[420px]:hidden" />
         <p>{description}</p>
       </>
     )
   }
   <span class="flex-1 h-[1px] bg-gray-900"></span>
   {period && <span class="text-gray-500 text-sm">{period}</span>}
+  <span class="w-full h-[1px] bg-gray-900 min-[420px]:hidden"></span>
 </div>
