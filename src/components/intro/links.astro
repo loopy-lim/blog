@@ -3,13 +3,31 @@
     class="flex flex-wrap items-center justify-center gap-6 text-xl max-[420px]:flex-col"
   >
     <li>
-      <a data-transition-delay="400ms" href="#about-me">About Me</a>
+      <a
+        href="/about-me"
+        class="swup-fade"
+        style={{
+          transitionDelay: "400ms",
+        }}>About Me</a
+      >
     </li>
     <li>
-      <a data-transition-delay="500ms" href="#">Blog</a>
+      <a
+        href="/blog"
+        class="swup-fade"
+        style={{
+          transitionDelay: "500ms",
+        }}>Blog</a
+      >
     </li>
     <li>
-      <a data-transition-delay="600ms" href="#">Projects</a>
+      <a
+        href="/projects"
+        class="swup-fade"
+        style={{
+          transitionDelay: "600ms",
+        }}>Projects</a
+      >
     </li>
   </ul>
 </div>
@@ -17,11 +35,6 @@
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const links = document.querySelectorAll("a");
-    links.forEach((link) => {
-      link.style.transitionDelay = link.dataset.transitionDelay || "0ms";
-      link.style.transform = "translateY(0)";
-      link.style.opacity = "1";
-    });
     links.forEach((link) => {
       link.ontransitionend = () => {
         link.style.transitionDelay = "0ms";
@@ -52,5 +65,15 @@
     &:hover {
       background-color: rgba(255, 255, 255, 0.3);
     }
+  }
+
+  html.swup-enabled a.swup-fade {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  html.is-rendering a.swup-fade {
+    transform: translateY(-40px);
+    opacity: 0;
   }
 </style>

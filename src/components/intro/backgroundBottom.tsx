@@ -58,7 +58,7 @@ export default function BackgroundBottom() {
         y={window.innerHeight / 2 - 150}
         radiusX={window.innerWidth * 0.9}
         radiusY={window.innerHeight * 0.5}
-        fill="#003DFF"
+        fill="#0048fd"
         globalCompositeOperation="destination-out"
       />
     </Group>

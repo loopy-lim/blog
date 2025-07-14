@@ -1,31 +1,17 @@
+import { Icons } from "@contents/common/icons";
 interface LinkwithIconProps {
   href: string;
   title: string;
 }
 
-const Icons = [
-  {
-    name: "GitHub",
-    icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg",
-  },
-  {
-    name: "YouTube",
-    icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/youtube.svg",
-  },
-  {
-    name: "Chrome",
-    icon: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/googlechrome.svg",
-  },
-];
-
 const getIconByUrl = (url: string) => {
   switch (true) {
     case url.includes("github.com"):
-      return Icons.find((icon) => icon.name === "GitHub")?.icon;
+      return Icons.GitHub;
     case url.includes("youtube.com") || url.includes("youtu.be"):
-      return Icons.find((icon) => icon.name === "YouTube")?.icon;
+      return Icons.YouTube;
     default:
-      return Icons.find((icon) => icon.name === "Chrome")?.icon;
+      return Icons.Chrome;
   }
 };
 
@@ -35,7 +21,7 @@ export default function LinkWithIcon({ title, href }: LinkwithIconProps) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center text-[#003df4] underline-offset-2 hover:underline"
+      className="text-primary flex items-center underline-offset-2 hover:underline"
     >
       <img
         src={getIconByUrl(href)}

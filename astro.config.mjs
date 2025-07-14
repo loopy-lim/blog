@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from "astro/config";
+import swup from "@swup/astro";
 
 import tailwindcss from "@tailwindcss/vite";
 import react from "@astrojs/react";
@@ -10,6 +11,5 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss(), tsconfigPaths()],
   },
-
-  integrations: [react()],
+  integrations: [react(), swup({ animationClass: "swup-" })],
 });

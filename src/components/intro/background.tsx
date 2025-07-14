@@ -20,7 +20,7 @@ export default function IntroBackground() {
   });
 
   return (
-    <div className="absolute top-0 left-0 -z-50 h-full w-full overflow-hidden">
+    <div className="absolute top-0 left-0 -z-50 h-full min-h-screen w-full overflow-hidden">
       <div className="relative h-full w-full scale-110 blur-2xl">
         <Stage
           ref={stage}

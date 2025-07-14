@@ -10,6 +10,21 @@ export default tseslint.config([
   globalIgnores(["dist", "node_modules"]),
   ...eslintPluginAstro.configs.recommended,
   {
+    files: ["**/*.astro"],
+    languageOptions: {
+      globals: globals.browser,
+      parserOptions: {
+        ecmaVersion: 2020,
+        sourceType: "module",
+      },
+    },
+    parser: "astro-eslint-parser",
+    rules: {
+      "astro/no-unknown-element": "error",
+      "astro/no-unused-vars": "warn",
+    },
+  },
+  {
     files: ["**/*.{ts,tsx}"],
     extends: [
       js.configs.recommended,

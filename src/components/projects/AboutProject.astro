@@ -2,7 +2,6 @@
 import PointSpan from "@components/commons/PointSpan.astro";
 import LeftLine from "@components/commons/LeftLine.astro";
 import AboutSubHeader from "@components/about/SubHeader.astro";
-import LinkWithIcon from "@components/commons/LinkWithIcon";
 import type { MarkdownInstance } from "astro";
 
 interface ProjectAbout {
@@ -21,9 +20,15 @@ const projectAboutPosts = Object.values(
 ---
 
 <div class="flex flex-col gap-8 my-12 w-[420px]:gap-4">
-  <h2>
-    <PointSpan text="Projects" className="text-5xl font-bold" />
-  </h2>
+  <div class="flex justify-between items-baseline">
+    <h2>
+      <PointSpan text="Projects" className="text-5xl font-bold" />
+    </h2>
+    <!-- TODO: link to project page -->
+    <a class="border p-2 py-1 rounded-lg text-gray-600 border-gray-600 hover:bg-gray-200 transition-[background-color] text-sm cursor-pointer">
+      더보기 →
+    </a>
+  </div>
   <LeftLine>
     {
       projectAboutPosts.map((post) => (
@@ -32,20 +37,7 @@ const projectAboutPosts = Object.values(
             {post.frontmatter.title}
           </div>
         </AboutSubHeader>
-        <div class="flex flex-wrap gap-3 my-2">
-          {
-            post.frontmatter.urls.map(
-              (url: { src: string; alt: string }) => (
-                <LinkWithIcon title={url.alt} href={url.src} />
-            ))
-          }
-          {
-            post.frontmatter.stacks.map((stack: string) => (
-              <span class="text-gray-500">{stack}</span>
-            ))
-          }
-          <div>{post.frontmatter.summerize}</div>
-        </div>
+        <div>{post.frontmatter.summerize}</div>
       ))
     }
   </LeftLine>

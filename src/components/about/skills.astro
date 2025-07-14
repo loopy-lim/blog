@@ -27,7 +27,7 @@ const skills = [
       <li class="list-none text-sm">
         <ul class="flex items-center gap-2">
           <div
-            class="flex h-4 w-4 items-center justify-center rounded-full border border-[#0048fd] bg-[#0048fd] text-xs font-semibold text-white"
+            class="border-primary bg-primary flex h-4 w-4 items-center justify-center rounded-full border text-xs font-semibold text-white"
           >
             1
           </div>
@@ -35,7 +35,7 @@ const skills = [
         </ul>
         <ul class="flex items-center gap-2">
           <div
-            class="flex h-4 w-4 items-center justify-center rounded-full border border-[#0048fd] bg-[#80a3fa] text-xs font-semibold text-white"
+            class="border-primary flex h-4 w-4 items-center justify-center rounded-full border bg-[#80a3fa] text-xs font-semibold text-white"
           >
             2
           </div>
@@ -43,7 +43,7 @@ const skills = [
         </ul>
         <ul class="flex items-center gap-2">
           <div
-            class="flex h-4 w-4 items-center justify-center rounded-full border border-[#0048fd] bg-white text-xs font-semibold text-[#0048fd] dark:bg-[#0048fd]/20"
+            class="border-primary text-primary dark:bg-primary/20 flex h-4 w-4 items-center justify-center rounded-full border bg-white text-xs font-semibold"
           >
             3
           </div>
@@ -65,10 +65,9 @@ const skills = [
                 <ul class="flex items-center gap-1">
                   <div
                     class={cn(
-                      "flex h-5 w-5 items-center justify-center rounded-full border border-[#0048fd] bg-[#0048fd] text-xs font-semibold text-white",
+                      "border-primary bg-primary flex h-5 w-5 items-center justify-center rounded-full border text-xs font-semibold text-white",
                       {
-                        "bg-white text-[#0048fd] dark:bg-[#0048fd]/20":
-                          level === 3,
+                        "text-primary dark:bg-primary/20 bg-white": level === 3,
                         "bg-[#80a3fa]": level === 2,
                         "": level === 1,
                       },

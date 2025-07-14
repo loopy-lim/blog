@@ -4,27 +4,17 @@ import Gnb from "@components/commons/gnb.astro";
 import IntroBackground from "@components/intro/background";
 import IntroAboutMe from "@components/intro/me.astro";
 import IntroLinks from "@components/intro/links.astro";
-import AboutMe from "@components/about/me.astro";
-import Skills from "@components/about/skills.astro";
-import Experiences from "@components/about/experiences.astro";
-import Projects from "@components/projects/AboutProject.astro";
 ---
 
-<BaseLayout title="About Me">
+<BaseLayout title="Loopy's Blog - Home">
   <Gnb />
   <main class="mx-auto max-w-7xl px-4">
-    <section class="flex min-h-screen flex-col items-center justify-center">
-      <IntroBackground client:only={true} />
+    <IntroBackground client:only={true} />
+    <section
+      class="-mb-24 flex min-h-screen flex-col items-center justify-center"
+    >
       <IntroAboutMe />
       <IntroLinks />
-    </section>
-    <section class="mx-auto my-16 w-full max-w-3xl pt-16" id="about-me">
-      <AboutMe />
-      <Skills />
-      <Experiences />
-    </section>
-    <section class="mx-auto w-full max-w-3xl" id="about-me">
-      <Projects />
     </section>
   </main>
 </BaseLayout>

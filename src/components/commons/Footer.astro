@@ -1,0 +1,22 @@
+<footer class="min-h-24 py-4">
+  <div class="mx-auto max-w-7xl px-4 text-center">
+    <p class="text-sm text-gray-500">
+      &copy; {new Date().getFullYear()} loopy-lim. All rights reserved.
+    </p>
+  </div>
+</footer>
+
+<style>
+  footer {
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+  }
+
+  html.swup-enabled footer {
+    opacity: 1;
+  }
+  html.is-animating footer,
+  html.is-rendering footer {
+    opacity: 0;
+  }
+</style>
