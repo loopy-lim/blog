@@ -1,11 +1,13 @@
 {
-  "extends": "astro/tsconfigs/strict",
-  "include": [
-    ".astro/types.d.ts",
-    "src/**/*.ts(x)?",
-    "src/**/*.astro"
-  ],
+  "extends": "astro/tsconfigs/base",
+  "include": [".astro/types.d.ts", "/**/*.ts(x)?", "/**/*.astro"],
   "compilerOptions": {
+    "plugins": [
+      {
+        "name": "@astrojs/ts-plugin"
+      }
+    ],
+
     /* linting */
     "strict": true,
     "noUnusedLocals": true,
@@ -15,35 +17,17 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "@components/*": [
-        "src/components/*"
-      ],
-      "@layouts/*": [
-        "src/layouts/*"
-      ],
-      "@pages/*": [
-        "src/pages/*"
-      ],
-      "@styles/*": [
-        "src/styles/*"
-      ],
-      "@lib/*": [
-        "src/lib/*"
-      ],
-      "@hooks/*": [
-        "src/hooks/*"
-      ],
-      "@contents/*": [
-        "src/contents/*"
-      ]
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@pages/*": ["src/pages/*"],
+      "@styles/*": ["src/styles/*"],
+      "@lib/*": ["src/lib/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@contents/*": ["src/contents/*"]
     },
     "jsxImportSource": "react",
     "jsx": "react-jsx"
   },
-  "exclude": [
-    "dist"
-  ]
+  "exclude": ["dist"]
 }

@@ -18,32 +18,32 @@ const skills = [
 ];
 ---
 
-<div class="flex flex-col gap-8 my-12">
-  <div class="flex justify-between flex-wrap gap-3">
+<div class="my-12 flex flex-col gap-8">
+  <div class="flex flex-wrap justify-between gap-3">
     <h2>
       <PointSpan text="Skills" className="text-5xl font-bold" id="skills" />
     </h2>
-    <div class="flex gap-2 justify-end">
+    <div class="flex justify-end gap-2">
       <li class="list-none text-sm">
-        <ul class="flex gap-2 items-center">
+        <ul class="flex items-center gap-2">
           <div
-            class="bg-[#0048fd] w-4 h-4 rounded-full flex items-center justify-center font-semibold text-white border-[#0048fd] border text-xs"
+            class="flex h-4 w-4 items-center justify-center rounded-full border border-[#0048fd] bg-[#0048fd] text-xs font-semibold text-white"
           >
             1
           </div>
           <div>프로젝트를 진행할 수 있어요</div>
         </ul>
-        <ul class="flex gap-2 items-center">
+        <ul class="flex items-center gap-2">
           <div
-            class="bg-[#80a3fa] w-4 h-4 rounded-full flex items-center justify-center font-semibold text-white border-[#0048fd] border text-xs"
+            class="flex h-4 w-4 items-center justify-center rounded-full border border-[#0048fd] bg-[#80a3fa] text-xs font-semibold text-white"
           >
             2
           </div>
           <div>어느정도 사용할 줄 알아요</div>
         </ul>
-        <ul class="flex gap-2 items-center">
+        <ul class="flex items-center gap-2">
           <div
-            class="text-[#0048fd] bg-white w-4 h-4 rounded-full flex items-center justify-center font-semibold border-[#0048fd] border text-xs dark:bg-[#0048fd]/20"
+            class="flex h-4 w-4 items-center justify-center rounded-full border border-[#0048fd] bg-white text-xs font-semibold text-[#0048fd] dark:bg-[#0048fd]/20"
           >
             3
           </div>
@@ -57,17 +57,17 @@ const skills = [
       {
         skills.map(([skill, ...stacks]) => (
           <div class="flex gap-4 max-[420px]:flex-col">
-            <h3 class="text-2xl font-semibold text-right min-w-[120px] max-[420px]:text-center">
+            <h3 class="min-w-[120px] text-right text-2xl font-semibold max-[420px]:text-center">
               {skill}
             </h3>
-            <li class="flex-1 flex gap-4 flex-wrap list-none max-[420px]:justify-center">
+            <li class="flex flex-1 list-none flex-wrap gap-4 max-[420px]:justify-center">
               {stacks.map(([stack, level]) => (
                 <ul class="flex items-center gap-1">
                   <div
                     class={cn(
-                      "bg-[#0048fd] w-5 h-5 rounded-full flex items-center justify-center font-semibold text-white border-[#0048fd] border text-xs",
+                      "flex h-5 w-5 items-center justify-center rounded-full border border-[#0048fd] bg-[#0048fd] text-xs font-semibold text-white",
                       {
-                        "text-[#0048fd] bg-white dark:bg-[#0048fd]/20":
+                        "bg-white text-[#0048fd] dark:bg-[#0048fd]/20":
                           level === 3,
                         "bg-[#80a3fa]": level === 2,
                         "": level === 1,

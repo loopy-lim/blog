@@ -1,6 +1,6 @@
 ---
 interface Props {
-  title: string;
+  title?: string;
   description?: string;
   period?: string;
 }
@@ -9,9 +9,9 @@ const { title, description, period } = Astro.props;
 ---
 
 <div
-  class="flex items-center gap-4 my-2 max-[420px]:flex-col max-[420px]:gap-1 max-[420px]:items-start flex-wrap"
+  class="my-2 flex flex-wrap items-center gap-4 max-[420px]:flex-col max-[420px]:items-start max-[420px]:gap-1"
 >
-  <h3 class="text-xl font-semibold">{title}</h3>
+  <h3 class="text-xl font-semibold"><slot name="title">{title}</slot></h3>
   {
     description && (
       <>
@@ -20,7 +20,7 @@ const { title, description, period } = Astro.props;
       </>
     )
   }
-  <span class="flex-1 h-[1px] bg-gray-900"></span>
-  {period && <span class="text-gray-500 text-sm">{period}</span>}
-  <span class="w-full h-[1px] bg-gray-900 min-[420px]:hidden"></span>
+  <span class="h-[1px] flex-1 bg-gray-900"></span>
+  {period && <span class="text-sm text-gray-500">{period}</span>}
+  <span class="h-[1px] w-full bg-gray-900 min-[420px]:hidden"></span>
 </div>
