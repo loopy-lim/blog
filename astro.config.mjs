@@ -12,4 +12,12 @@ export default defineConfig({
     plugins: [tailwindcss(), tsconfigPaths()],
   },
   integrations: [react(), swup({ animationClass: "swup-" })],
+  image: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.amazonaws.com",
+      },
+    ],
+  },
 });

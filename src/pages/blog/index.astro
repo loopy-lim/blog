@@ -1,0 +1,51 @@
+---
+import BlogLayout from "@/layouts/BlogLayout.astro";
+import { getCollection } from "astro:content";
+
+const posts = await getCollection("blog").then((posts) =>
+  posts
+    .filter((post) => post.data.properties.publishAt?.start)
+    .sort(
+      (a, b) =>
+        new Date(b.data.properties.publishAt?.start!).getTime() -
+        new Date(a.data.properties.publishAt?.start!).getTime()
+    )
+);
+---
+
+<BlogLayout>
+  <div class="grid grid-cols-2 gap-4 not-lg:grid-cols-1">
+    {
+      posts.map((post) => (
+        <a
+          href={`/blog/${post.id}`}
+          class="flex justify-center gap-4 overflow-hidden rounded-2xl border border-gray-400 transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg active:translate-y-0 active:scale-95 active:shadow-none"
+        >
+          <div class="aspect-square w-42">
+            {post.data.cover && (
+              <img
+                class="h-full w-full object-cover"
+                src={
+                  post.data.cover?.type === "external"
+                    ? post.data.cover.external.url
+                    : post.data.cover.file.url
+                }
+                alt={post.data.properties.title}
+              />
+            )}
+          </div>
+          <div class="flex-1 p-2">
+            <span class="text-xl">{post.data.properties.title}</span>
+            {post.data.properties.publishAt && (
+              <div>
+                {new Date(
+                  post.data.properties.publishAt?.start
+                ).toLocaleDateString()}
+              </div>
+            )}
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</BlogLayout>

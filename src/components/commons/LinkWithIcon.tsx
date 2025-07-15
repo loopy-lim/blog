@@ -1,4 +1,4 @@
-import { Icons } from "@contents/common/icons";
+import { Icons } from "@/contents/common/icons";
 interface LinkwithIconProps {
   href: string;
   title: string;

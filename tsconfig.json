@@ -1,25 +1,7 @@
 {
   "extends": "astro/tsconfigs/base",
-  "include": [
-    ".astro/types.d.ts",
-    "/**/*.ts(x)?",
-    "/**/*.astro",
-    "src/components/commons/Footer.tsx"
-  ],
   "compilerOptions": {
-    "plugins": [
-      {
-        "name": "@astrojs/ts-plugin"
-      }
-    ],
-
-    /* linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
+    /* 기본 경로 및 별칭 설정 */
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
@@ -31,8 +13,14 @@
       "@hooks/*": ["src/hooks/*"],
       "@contents/*": ["src/contents/*"]
     },
+
+    "jsx": "react-jsx",
     "jsxImportSource": "react",
-    "jsx": "react-jsx"
-  },
-  "exclude": ["dist"]
+
+    "strict": true,
+    "strictNullChecks": true,
+    "allowJs": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  }
 }

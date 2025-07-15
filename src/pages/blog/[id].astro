@@ -1,0 +1,45 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import BlogLayout from "@/layouts/BlogLayout.astro";
+import DefaultProse from "@/components/commons/DefaultProse.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map(({ id }) => ({
+    params: { id },
+  }));
+}
+
+const { id } = Astro.params;
+
+const post = await getEntry("blog", id);
+if (!post) {
+  throw new Error(`Post with id ${id} not found`);
+}
+
+const { Content } = await render(post);
+---
+
+<BlogLayout>
+  {
+    post.data.cover && (
+      <div class="h-52">
+        <img
+          class="absolute inset-0 top-0 -z-50 h-64 w-full object-cover"
+          src={
+            post.data.cover?.type === "external"
+              ? post.data.cover.external.url
+              : "/" + post.data.cover.file.url
+          }
+          alt={post.data.properties.title}
+        />
+      </div>
+    )
+  }
+  <div class="bg-background">
+    <DefaultProse>
+      <h1>{post.data.properties.title}</h1>
+      <Content />
+    </DefaultProse>
+  </div>
+</BlogLayout>

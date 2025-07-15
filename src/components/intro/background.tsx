@@ -38,7 +38,6 @@ export default function IntroBackground() {
             <BackgroundBottom />
           </Layer>
         </Stage>
-        <div className="to-background pointer-events-none absolute bottom-0 h-[7vh] w-full bg-gradient-to-b from-transparent to-50%" />
       </div>
     </div>
   );
