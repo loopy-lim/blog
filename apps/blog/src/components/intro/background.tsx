@@ -2,7 +2,6 @@ import Konva from "konva";
 import { useRef } from "react";
 import { Group, Layer, Stage } from "react-konva";
 import BackgroundCircle from "./backgroundCircle";
-import BackgroundBottom from "./backgroundBottom";
 import useResize from "../hooks/useResize";
 
 const CIRCLE_COUNT = 20;
@@ -33,9 +32,6 @@ export default function IntroBackground() {
                 <BackgroundCircle key={index} index={index} />
               ))}
             </Group>
-          </Layer>
-          <Layer>
-            <BackgroundBottom />
           </Layer>
         </Stage>
       </div>

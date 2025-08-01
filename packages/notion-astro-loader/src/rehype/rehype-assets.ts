@@ -25,7 +25,7 @@ export function rehypeAssets() {
           node.properties.src = src;
 
           // Add Astro metadata
-          if (file.data.astro) file.data.astro.imagePaths = assetPaths;
+          if (file.data.astro) file.data.astro.localImagePaths = assetPaths;
 
           // Handle Astro image optimization
           if (node.tagName === 'img' && assetPaths?.includes(src) && isAstroImageFormat(src)) {
@@ -44,8 +44,10 @@ export function rehypeAssets() {
             return; // Skip further processing for Astro images
           }
 
+          console.debug(`Processing asset: ${src}`);
+
           // Convert relative paths (assets in /src) to absolute paths (served from /public)
-          if (src.startsWith('../')) node.properties.src = src.replace(/^(..\/)+/, '/');
+          if (src.startsWith('../')) node.properties.src = src.replaceAll(/^(..\/)+/, '/');
           if (src.startsWith('src/')) node.properties.src = src.replace(/^src\//, '/');
         }
 
