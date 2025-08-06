@@ -3,7 +3,6 @@ dist/
 # generated types
 .astro/
 assets/
-.turbo/
 
 # dependencies
 node_modules/
