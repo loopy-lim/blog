@@ -1,10 +1,10 @@
 import { z, defineCollection } from "astro:content";
-import { notionLoader } from "notion-astro-loader";
+import { notionLoader } from "@chlorinec-pkgs/notion-astro-loader";
 import {
   notionPageSchema,
   transformedPropertySchema,
   propertySchema,
-} from "notion-astro-loader/schemas";
+} from "@chlorinec-pkgs/notion-astro-loader/schemas";
 
 import "dotenv/config";
 
@@ -18,6 +18,7 @@ const blog = defineCollection({
   loader: notionLoader({
     auth: process.env.NOTION_API_KEY,
     database_id: process.env.NOTION_DATABASE_ID,
+    imageSavePath: "public/images/blog",
     filter: {
       property: "draft",
       checkbox: {
