@@ -1,6 +1,0 @@
-onlyBuiltDependencies:
-  - '@tailwindcss/oxide'
-  - canvas
-  - esbuild
-  - sharp
-  - swup

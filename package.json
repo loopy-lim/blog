@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.31.0",
+    "@ntcho/notion-astro-loader": "^1.2.2",
     "@shikijs/rehype": "^3.9.2",
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.11",
