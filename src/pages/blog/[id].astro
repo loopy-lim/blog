@@ -2,6 +2,7 @@
 import { getCollection, getEntry, render } from "astro:content";
 import BlogLayout from "@/layouts/BlogLayout.astro";
 import DefaultProse from "@/components/commons/DefaultProse.astro";
+import { publicUrlRemover } from "@/lib/utils";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -30,7 +31,7 @@ const { Content } = await render(post);
             backgroundImage: `url(${
               post.data.cover?.type === "external"
                 ? post.data.cover.external.url
-                : post.data.cover?.file.url
+                : publicUrlRemover(post.data.cover?.file.url || "")
             })`,
           }}
         >

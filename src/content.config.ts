@@ -8,7 +8,6 @@ import {
 import rehypeShiki from "@shikijs/rehype";
 
 import "dotenv/config";
-import type { RehypePlugins } from "astro";
 
 if (!process.env.NOTION_API_KEY || !process.env.NOTION_DATABASE_ID) {
   throw new Error(
@@ -26,13 +25,14 @@ const blog = defineCollection({
         equals: false,
       },
     },
+    assetPath: "../public/assets/blog",
     rehypePlugins: [
       [
         rehypeShiki,
         {
           theme: "github-dark",
         },
-      ] as RehypePlugins[0],
+      ],
     ],
   }),
   schema: notionPageSchema({

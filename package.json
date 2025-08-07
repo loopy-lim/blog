@@ -12,7 +12,6 @@
   "dependencies": {
     "@astrojs/react": "^4.3.0",
     "@astrojs/ts-plugin": "^1.10.4",
-    "@chlorinec-pkgs/notion-astro-loader": "^1.1.2",
     "@lucide/astro": "^0.525.0",
     "@swup/astro": "^1.6.0",
     "astro": "^5.11.1",
@@ -32,6 +31,7 @@
     "@eslint/js": "^9.31.0",
     "@ntcho/notion-astro-loader": "^1.2.2",
     "@shikijs/rehype": "^3.9.2",
+    "@chlorinec-pkgs/notion-astro-loader": "^1.1.2",
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.11",
     "@types/react": "^19.1.8",
