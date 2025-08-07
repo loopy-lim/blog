@@ -5,8 +5,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 This is an Astro.js-based static site generator project, likely a personal blog or portfolio. It uses:
+
 - Astro 5.x for static site generation
-- React components 
+- React components
 - Tailwind CSS for styling
 - TypeScript for type safety
 - SWUP for page transitions
@@ -15,7 +16,7 @@ This is an Astro.js-based static site generator project, likely a personal blog 
 
 - `src/` - Main source code directory containing:
   - `components/` - Reusable React components
-  - `layouts/` - Page layouts 
+  - `layouts/` - Page layouts
   - `pages/` - Astro pages (routes)
   - `contents/` - Content files (markdown, etc.)
 - `astro.config.mjs` - Astro configuration with React integration and SWUP page transitions
@@ -33,8 +34,9 @@ This is an Astro.js-based static site generator project, likely a personal blog 
 ## Architecture Notes
 
 The project uses a typical Astro structure with:
+
 - Astro pages in `src/pages/` that define routes
-- Components in `src/components/` 
+- Components in `src/components/`
 - Content in `src/contents/`
 - Layouts in `src/layouts/`
 - Global styles in `src/styles/`

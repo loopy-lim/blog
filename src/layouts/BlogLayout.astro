@@ -21,16 +21,24 @@ const { title } = Astro.props;
     class="bg-white text-gray-900 antialiased dark:bg-gray-900 dark:text-gray-100"
   >
     <Gnb />
-    <div class="py-18"></div>
-    <div class="mx-auto min-h-[calc(100vh-18rem)] max-w-5xl px-4">
-      <slot />
-    </div>
-  </body>
-  <Footer />
+    <main id="swup" class="transition-fade">
+      <div class="py-18"></div>
+      <div class="mx-auto min-h-[calc(100vh-18rem)] max-w-5xl px-4">
+        <slot />
+      </div>
+    </main>
+  </body><Footer />
 
   <style is:global>
     html {
       scroll-behavior: smooth;
+    }
+    main.transition-fade {
+      transition: opacity 0.4s;
+      opacity: 1;
+    }
+    html.is-animating main.transition-fade {
+      opacity: 0;
     }
   </style>
 </html>

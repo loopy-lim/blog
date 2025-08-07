@@ -8,8 +8,8 @@ const posts = await getCollection("blog").then((posts) =>
     .sort(
       (a, b) =>
         new Date(b.data.properties.publishAt?.start!).getTime() -
-        new Date(a.data.properties.publishAt?.start!).getTime()
-    )
+        new Date(a.data.properties.publishAt?.start!).getTime(),
+    ),
 );
 ---
 
@@ -39,7 +39,7 @@ const posts = await getCollection("blog").then((posts) =>
             {post.data.properties.publishAt && (
               <div>
                 {new Date(
-                  post.data.properties.publishAt?.start
+                  post.data.properties.publishAt?.start,
                 ).toLocaleDateString()}
               </div>
             )}
