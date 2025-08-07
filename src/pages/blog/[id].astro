@@ -36,10 +36,8 @@ const { Content } = await render(post);
       </div>
     )
   }
-  <div class="bg-background">
-    <DefaultProse>
-      <h1>{post.data.properties.title}</h1>
-      <Content />
-    </DefaultProse>
-  </div>
+  <DefaultProse>
+    <h1>{post.data.properties.title}</h1>
+    <Content />
+  </DefaultProse>
 </BlogLayout>

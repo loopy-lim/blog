@@ -3,5 +3,13 @@
 
 @theme {
   --color-primary: #0048fd;
-  --color-background: #fff;
+}
+
+/* Enhanced code block styling for coding blog */
+.prose pre {
+  @apply bg-gray-900 text-gray-100 dark:bg-gray-800 dark:text-gray-200 rounded-lg p-4 overflow-x-auto text-sm;
+}
+
+.prose pre code {
+  @apply bg-transparent p-0 rounded-none;
 }

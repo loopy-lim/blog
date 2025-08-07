@@ -5,8 +5,10 @@ import {
   transformedPropertySchema,
   propertySchema,
 } from "@chlorinec-pkgs/notion-astro-loader/schemas";
+import rehypeShiki from "@shikijs/rehype";
 
 import "dotenv/config";
+import type { RehypePlugins } from "astro";
 
 if (!process.env.NOTION_API_KEY || !process.env.NOTION_DATABASE_ID) {
   throw new Error(
@@ -25,6 +27,14 @@ const blog = defineCollection({
         equals: false,
       },
     },
+    rehypePlugins: [
+      [
+        rehypeShiki,
+        {
+          theme: "github-dark",
+        },
+      ] as RehypePlugins[0],
+    ],
   }),
   schema: notionPageSchema({
     properties: z.object({
