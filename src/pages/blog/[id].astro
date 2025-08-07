@@ -21,7 +21,14 @@ if (!post) {
 const { Content } = await render(post);
 ---
 
-<BlogLayout>
+<BlogLayout
+  title={post.data.properties.title}
+  description={post.data.properties.description || ""}
+  ogType="article"
+  ogImage={post.data.cover?.type === "external"
+    ? post.data.cover.external.url
+    : publicUrlRemover(post.data.cover?.file.url || "")}
+>
   <div class="absolute top-0 left-0 z-10 w-full">
     <div class="relative">
       <div class="scale-90">

@@ -14,7 +14,12 @@ const posts = await getCollection("blog").then((posts) =>
 );
 ---
 
-<BlogLayout>
+<BlogLayout
+  title="Blog"
+  description="Loopy's Blog"
+  ogType="website"
+  ogImage="/favicon.svg"
+>
   <div class="grid grid-cols-2 gap-4 not-lg:grid-cols-1">
     {
       posts.map((post) => (
