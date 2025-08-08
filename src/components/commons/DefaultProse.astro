@@ -14,6 +14,34 @@ const className = cn(
   <slot />
 </div>
 
+<script is:inline>
+  if (typeof document !== "undefined") {
+    document.querySelectorAll(".notion-image").forEach((image) => {
+      const imgElement = image.querySelector("img");
+      if (imgElement.attributes.getNamedItem("src")) return;
+      if (imgElement.attributes.getNamedItem("__astro_image_")) {
+        const data = JSON.parse(
+          imgElement.attributes.getNamedItem("__astro_image_").value
+        );
+        const publicIndex = data.src.indexOf("/public/");
+        imgElement.setAttribute("src", data.src.slice(publicIndex + 7));
+        imgElement.setAttribute(
+          "alt",
+          data.alt || data.src.split("/").pop() || ""
+        );
+        imgElement.removeAttribute("__astro_image_");
+        imgElement.addEventListener("error", () => {
+          imgElement.classList.add("hidden");
+          const caption = image.querySelector(".notion-caption");
+          if (caption) {
+            caption.classList.add("hidden");
+          }
+        });
+      }
+    });
+  }
+</script>
+
 <style is:global>
   @reference "tailwindcss";
 
