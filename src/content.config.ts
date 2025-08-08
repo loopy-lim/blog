@@ -8,6 +8,7 @@ import {
 import rehypeShiki from "@shikijs/rehype";
 
 import "dotenv/config";
+import rehypeNotionImage from "@/lib/rehype-notion-image";
 
 if (!process.env.NOTION_API_KEY || !process.env.NOTION_DATABASE_ID) {
   throw new Error(
@@ -19,13 +20,13 @@ const blog = defineCollection({
   loader: notionLoader({
     auth: process.env.NOTION_API_KEY,
     database_id: process.env.NOTION_DATABASE_ID,
+    assetPath: "../public/assets/blog",
     filter: {
       property: "draft",
       checkbox: {
         equals: false,
       },
     },
-    assetPath: "../public/assets/blog",
     rehypePlugins: [
       [
         rehypeShiki,
@@ -33,6 +34,7 @@ const blog = defineCollection({
           theme: "github-dark",
         },
       ],
+      rehypeNotionImage,
     ],
   }),
   schema: notionPageSchema({

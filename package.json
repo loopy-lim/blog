@@ -25,15 +25,18 @@
     "react-konva": "^19.0.7",
     "sharp": "^0.34.3",
     "tailwind-merge": "^3.3.1",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
+    "@chlorinec-pkgs/notion-astro-loader": "^1.1.2",
     "@eslint/js": "^9.31.0",
     "@ntcho/notion-astro-loader": "^1.2.2",
     "@shikijs/rehype": "^3.9.2",
-    "@chlorinec-pkgs/notion-astro-loader": "^1.1.2",
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.11",
+    "@types/hast": "^3.0.4",
+    "@types/node": "^24.2.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@typescript-eslint/parser": "^8.37.0",
