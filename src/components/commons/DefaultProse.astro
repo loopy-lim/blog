@@ -5,6 +5,7 @@ const className = cn(
   "w-full max-w-fit break-words break-keep",
   "prose prose-neutral dark:prose-invert prose-li:my-0 prose-ul:my-0 prose-p:my-0",
   "prose:[&_*]:break-words prose:[&_*]:break-keep",
+  "prose-img:rounded-2xl prose-img:text-center prose-img:scale-90 prose-img:-my-4 prose-img:pointer-events-none prose-img:place-self-center",
   "prose-code:after:content-none prose-code:before:content-none prose-code:bg-gray-200 prose-code:py-0.5 prose-code:px-2 prose-code:rounded-lg"
 );
 ---
@@ -12,3 +13,21 @@ const className = cn(
 <div class={className}>
   <slot />
 </div>
+
+<style is:global>
+  @reference "tailwindcss";
+
+  .notion-caption {
+    @apply text-center;
+  }
+  .with-caption {
+    @apply my-4;
+  }
+
+  .notion-video {
+    @apply mx-auto w-full max-w-3xl;
+    iframe {
+      @apply aspect-video w-full;
+    }
+  }
+</style>
