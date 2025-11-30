@@ -24,3 +24,6 @@ public/images
 
 # jetbrains setting folder
 .idea/
+
+# claude
+.claude/settings.json
