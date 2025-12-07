@@ -1,8 +1,8 @@
 import fs from 'fs/promises'
 import path from 'path'
 import { config } from 'dotenv'
-import { getBuildDatabase, getBuildAllPostSlugs, getBuildPostBySlug } from './notion-client'
-import { siteConfig } from '../site.config'
+import { getBuildDatabase } from './notion-client'
+import { siteConfig } from '../site.config
 
 // 환경변수 로드
 config({ path: '.env.local' })

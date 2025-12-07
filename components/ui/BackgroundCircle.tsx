@@ -4,11 +4,11 @@ import Konva from "konva";
 import { useEffect, useRef, useState } from "react";
 import { Circle } from "react-konva";
 
-const MAX_RADIUS = 1000;
-const MIN_RADIUS = 800;
+const MAX_RADIUS = 600; // 줄여서 성능 개선
+const MIN_RADIUS = 400; // 줄여서 성능 개선
 
 const COLOR = ["202, 26, 255", "244, 179, 0", "56, 255, 92"];
-const CIRCLE_COLORS = COLOR.map((color) => `rgba(${color}, 0.3)`);
+const CIRCLE_COLORS = COLOR.map((color) => `rgba(${color}, 0.2)`); // 투명도 낮춤
 const CIRCLE_COLORS_GRADIENT = COLOR.map((color) => `rgba(${color}, 0)`);
 
 interface BackgroundCircleProps {
@@ -19,16 +19,15 @@ export default function BackgroundCircle({ index }: BackgroundCircleProps) {
   const circleRef = useRef<Konva.Circle | null>(null);
 
   const velocityRef = useRef({
-    x: (Math.random() - 0.5) * 4, // Increased speed range
-    y: (Math.random() - 0.5) * 4,
+    x: (Math.random() - 0.5) * 2, // 속도 줄임
+    y: (Math.random() - 0.5) * 2, // 속도 줄임
   });
 
   const [initialProps] = useState(() => {
     // Ensure window is defined (client-side)
     const width = typeof window !== 'undefined' ? window.innerWidth : 1000;
     const height = typeof window !== 'undefined' ? window.innerHeight : 1000;
-    
-    // Increased radius variance
+
     const radius = Math.random() * (MAX_RADIUS - MIN_RADIUS) + MIN_RADIUS;
     return {
       radius: radius,
@@ -52,7 +51,7 @@ export default function BackgroundCircle({ index }: BackgroundCircleProps) {
       const newX = node.x() + velocity.x;
       const newY = node.y() + velocity.y;
 
-      // Wrap around instead of bounce for smoother flow
+      // Wrap around for smooth flow
       if (newX < -initialProps.radius) node.x(stageWidth + initialProps.radius);
       else if (newX > stageWidth + initialProps.radius) node.x(-initialProps.radius);
       else node.x(newX);
@@ -60,7 +59,7 @@ export default function BackgroundCircle({ index }: BackgroundCircleProps) {
       if (newY < -initialProps.radius) node.y(stageHeight + initialProps.radius);
       else if (newY > stageHeight + initialProps.radius) node.y(-initialProps.radius);
       else node.y(newY);
-      
+
     }, node.getLayer());
 
     animation.start();

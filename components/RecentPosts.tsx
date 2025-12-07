@@ -9,7 +9,7 @@ interface BlogPost {
   description?: string
   slug: string
   publishAt?: string
-  tags?: Array<{ name: string }>
+  tags?: string[]
 }
 
 interface RecentPostsProps {
@@ -62,10 +62,10 @@ export function RecentPosts({ posts }: RecentPostsProps) {
                   <div className="flex flex-wrap gap-2 mb-4">
                     {post.tags.slice(0, 3).map((tag) => (
                       <span
-                        key={tag.name}
+                        key={tag}
                         className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200"
                       >
-                        {tag.name}
+                        {tag}
                       </span>
                     ))}
                   </div>

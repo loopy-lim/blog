@@ -5,6 +5,17 @@ const nextConfig = {
   trailingSlash: true,
   distDir: 'out',
 
+  // 개발 서버 최적화
+  onDemandEntries: {
+    maxInactiveAge: 25 * 1000,
+    pagesBufferLength: 5,
+  },
+  // watchOptions은 export 모드에서 지원되지 않음
+  experimental: {
+    // 데이터 변경 시 재빌드 루프 방지
+    incrementalCacheHandlerPath: undefined,
+  },
+
   images: {
     // 정적 호스팅을 위해 unoptimized 설정 (Cloudflare 이미지 최적화 대체)
     unoptimized: true,
@@ -47,11 +58,6 @@ const nextConfig = {
   // 성능 최적화 설정
   poweredByHeader: false,
   compress: true,
-
-  // 빌드 최적화 (swcMinify는 기본값이라 제거)
-
-  // 헤더 최적화는 export 모드에서 지원되지 않음
-  // Cloudflare Pages에서 캐시 설정으로 대체
 }
 
 export default nextConfig

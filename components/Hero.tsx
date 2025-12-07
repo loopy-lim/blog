@@ -2,15 +2,7 @@
 
 import Link from "next/link";
 import { resume } from "@/lib/data";
-import dynamic from "next/dynamic";
-
-const GradientBackground = dynamic(
-  () => import("@/components/ui/GradientBackground"),
-  {
-    loading: () => <div className="absolute top-0 left-0 -z-50 h-full min-h-screen w-full overflow-hidden bg-white dark:bg-gray-950" />,
-    ssr: false
-  }
-);
+import GradientBackground from "@/components/ui/GradientBackground";
 
 export function Hero() {
   return (
