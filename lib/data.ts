@@ -64,8 +64,8 @@ export const resume = {
       role: "Frontend Engineer & Team Leader",
       tech: ["React", "TypeScript", "Yjs", "Socket.io", "Zustand", "WebRTC"],
       links: {
-        github: "https://github.com/boostcampwm-2024/web06-codesync",
-        demo: "https://youtu.be/XrGj_wkjvuY",
+        github: "https://github.com/jungle-6-3/code-sync-fe",
+        demo: "https://jungle.krafton.com/news/59",
       },
       highlights: [
         "**실시간 협업 환경 구축**: CRDT(Yjs)와 Socket.io를 활용한 충돌 없는 동시 편집 및 커서 공유 구현.",
