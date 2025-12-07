@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222.2 84% 4.9%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96%;
+  --accent-foreground: 222.2 84% 4.9%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  --radius: 0.5rem;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+}
+
+/* Notion content styling */
+.notion-content {
+  max-width: none;
+  line-height: 1.7;
+}
+
+/* Prose 스타일과 Notion 콘텐츠 병합 */
+.prose.notion-content {
+  line-height: 1.75;
+}
+
+.prose.notion-content h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 1rem;
+  margin-top: 2rem;
+}
+
+.prose.notion-content h2 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+.prose.notion-content h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.prose.notion-content p {
+  margin-bottom: 1rem;
+  line-height: 1.625;
+}
+
+.prose.notion-content img {
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.prose.notion-content pre {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  overflow-x: visible;
+  margin: 0;
+}
+
+.prose.notion-content code {
+  color: var(--foreground);
+  background-color: rgb(243 244 246);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.dark .prose.notion-content code {
+  background-color: rgb(31 41 55);
+}
+
+.prose.notion-content pre code {
+  background-color: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.prose.notion-content ul,
+.prose.notion-content ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.prose.notion-content li {
+  margin-bottom: 0.25rem;
+}
+
+.prose.notion-content blockquote {
+  border-left: 4px solid rgb(209 213 219);
+  padding-left: 1rem;
+  font-style: italic;
+  color: rgb(75 85 99);
+}
+
+.dark .prose.notion-content blockquote {
+  border-left-color: rgb(75 85 99);
+  color: rgb(156 163 175);
+}
+
+
+@theme {
+  --animate-fade-in-up: fade-in-up 0.8s ease-out forwards;
+
+  @keyframes fade-in-up {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
