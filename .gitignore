@@ -1,5 +1,6 @@
 # build output
 dist/
+.next/
 # generated types
 .astro/
 assets/
@@ -16,6 +17,7 @@ pnpm-debug.log*
 
 # environment variables
 .env
+.env.local
 .env.production
 public/images
 
@@ -24,3 +26,8 @@ public/images
 
 # jetbrains setting folder
 .idea/
+
+# claude
+.claude/settings.json
+
+out

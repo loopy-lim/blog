@@ -1,2 +1,0 @@
-- 10개 이상의 가상 서버를 ESXi와 Proxmox로 관리하며 개발 환경 안정화에 기여 및 인프라 운영 경험
-- [JavaScript](https://github.com/JS-GreenTea), [TypeScript](https://github.com/JNU-econovation/hotsix-study), [CSS](https://github.com/JNU-econovation/css-is-awesome) 스터디 운영으로 동아리원 20명 이상의 기술 역량 강화를 지원
