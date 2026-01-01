@@ -2,10 +2,11 @@ import fs from 'fs/promises'
 import path from 'path'
 import { config } from 'dotenv'
 import { getBuildDatabase } from './notion-client'
-import { siteConfig } from '../site.config
+import { siteConfig } from '../site.config'
 
-// 환경변수 로드
+// 환경변수 로드 (로컬: .env.local, Cloudflare: 대시보드에서 설정)
 config({ path: '.env.local' })
+config({ path: '.env' })
 
 // 데이터 저장 경로
 const DATA_DIR = path.join(process.cwd(), 'data')

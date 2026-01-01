@@ -2,8 +2,9 @@ import fs from 'fs'
 import path from 'path'
 import dotenv from 'dotenv'
 
-// .env.local 파일 로드
+// 환경변수 로드 (로컬: .env.local, Cloudflare: 대시보드에서 설정)
 dotenv.config({ path: '.env.local' })
+dotenv.config({ path: '.env' })
 
 const IMAGES_DIR = path.join(process.cwd(), 'public', 'images', 'notion')
 
@@ -167,6 +168,19 @@ async function getPageBlocks(pageId: string): Promise<Array<unknown>> {
   return blocks
 }
 
+function extractCoverUrl(post: Record<string, unknown>): string | null {
+  const cover = post.cover as { type: string; external?: { url: string }; file?: { url: string } } | null
+  if (!cover) return null
+
+  if (cover.type === 'external' && cover.external?.url) {
+    return cover.external.url
+  }
+  if (cover.type === 'file' && cover.file?.url) {
+    return cover.file.url
+  }
+  return null
+}
+
 export async function downloadNotionImages(): Promise<void> {
   console.log('Starting Notion image download...')
 
@@ -179,10 +193,18 @@ export async function downloadNotionImages(): Promise<void> {
 
     const allImageUrls: string[] = []
 
-    // 각 포스트에서 이미지 URL 수집
+    // 각 포스트에서 이미지 URL 수집 (커버 이미지 포함)
     for (const post of posts) {
       const title = post.properties.title.title[0]?.plain_text || 'Untitled'
       console.log(`Processing: ${title}`)
+
+      // 커버 이미지 URL 추출
+      const coverUrl = extractCoverUrl(post as Record<string, unknown>)
+      if (coverUrl) {
+        console.log(`  Found cover image`)
+        allImageUrls.push(coverUrl)
+      }
+
       const blocks = await getPageBlocks(post.id)
       const imageUrls = extractImageUrls(blocks)
       allImageUrls.push(...imageUrls)
