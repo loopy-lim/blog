@@ -3,6 +3,8 @@ import { Suspense } from 'react'
 import { getPostBySlug, getAllPostSlugs } from '@/lib/notion'
 import { NotionContent } from '@/components/blog/NotionContent'
 import { BlogPostingJsonLd, BreadcrumbJsonLd } from '@/components/seo/JsonLd'
+import { ReadingProgress } from '@/components/blog/ReadingProgress'
+import { TableOfContents } from '@/components/blog/TableOfContents'
 import Link from 'next/link'
 import { formatDateString } from '@/lib/utils'
 import { getLocalImagePath, getDefaultCover } from '@/lib/image-utils'
@@ -114,6 +116,7 @@ export default async function BlogPostPage({
       <>
         <BlogPostingJsonLd {...jsonLdData} />
         <BreadcrumbJsonLd items={breadcrumbData} />
+        <ReadingProgress />
         <main className="relative min-h-screen pb-20">
         {/* Header / Cover Image Area */}
         <div className="absolute top-0 left-0 w-full z-0">
@@ -123,13 +126,14 @@ export default async function BlogPostPage({
                  className="relative h-[400px] sm:h-[600px] w-full rounded-[2rem] sm:rounded-[2.5rem] bg-cover bg-center overflow-hidden select-none"
                  style={{ backgroundImage: bgImage ? `url(${bgImage})` : undefined }}
                >
-                 {/* Blur / Overlay */}
-                  <div className="absolute inset-0 bg-white/30 dark:bg-gray-900/30 backdrop-blur-sm backdrop-brightness-110"></div>
+                 {/* Glassmorphism Overlay */}
+                  <div className="absolute inset-0 bg-white/20 backdrop-blur-md"></div>
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/50"></div>
 
-                 {/* Back Button positioned inside the image area like original */}
+                 {/* Back Button with glass effect */}
                   <Link
                     href="/blog"
-                    className="absolute bottom-6 left-6 inline-flex items-center justify-center rounded-full bg-white/90 p-3 text-gray-700 transition-transform hover:-translate-x-1 hover:text-gray-900 dark:bg-gray-950/90 dark:text-gray-300 dark:hover:text-white shadow-lg backdrop-blur-sm"
+                    className="absolute bottom-6 left-6 inline-flex items-center justify-center rounded-full glass p-3 text-gray-700 transition-all hover:-translate-x-1 hover:text-gray-900 hover-glow"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -138,9 +142,9 @@ export default async function BlogPostPage({
                </div>
              </div>
 
-             {/* Title - Centered on top of the image (or slightly below depending on design preference, original was absolute) */}
+             {/* Title with enhanced styling */}
              <div className="absolute top-1/2 left-1/2 w-full max-w-4xl -translate-x-1/2 -translate-y-1/2 text-center px-4 pointer-events-none">
-               <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-gray-900 dark:text-white drop-shadow-lg break-keep leading-tight">
+               <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-gray-900 drop-shadow-lg break-keep leading-tight animate-fade-in-up">
                  {title}
                </h1>
              </div>
@@ -150,34 +154,43 @@ export default async function BlogPostPage({
         {/* Spacer for the absolute header */}
         <div className="h-[450px] sm:h-[650px]"></div>
 
-        <article className="container mx-auto px-4 max-w-4xl relative z-10 bg-transparent">
-          <header className="mb-12 text-center">
-            <div className="flex flex-wrap items-center justify-center gap-4 text-gray-600 dark:text-gray-400">
-              {publishedAt && (
-                <time dateTime={publishedAt} className="text-sm font-medium">
-                  {formatDateString(publishedAt)}
-                </time>
-              )}
+        {/* Content with sticky TOC */}
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex gap-8 justify-center">
+            {/* Main Article */}
+            <article className="max-w-4xl w-full bg-transparent">
+              <header className="mb-12 text-center">
+                <div className="flex flex-wrap items-center justify-center gap-4 text-gray-600">
+                  {publishedAt && (
+                    <time dateTime={publishedAt} className="text-sm font-medium glass px-4 py-2 rounded-full">
+                      {formatDateString(publishedAt)}
+                    </time>
+                  )}
 
-              {tags.length > 0 && (
-                <div className="flex gap-2">
-                  {tags.map(tag => (
-                    <span
-                      key={tag}
-                      className="px-2.5 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-xs font-medium"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                  {tags.length > 0 && (
+                    <div className="flex gap-2">
+                      {tags.map(tag => (
+                        <span
+                          key={tag}
+                          className="tag-pill px-3 py-1.5 bg-blue-50 text-blue-600 rounded-full text-xs font-medium"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          </header>
+              </header>
 
-          <Suspense fallback={<PostSkeleton />}>
-            <NotionContent pageId={post.id} />
-          </Suspense>
-        </article>
+              <Suspense fallback={<PostSkeleton />}>
+                <NotionContent pageId={post.id} />
+              </Suspense>
+            </article>
+
+            {/* Sticky TOC */}
+            <TableOfContents />
+          </div>
+        </div>
       </main>
       </>
     )
@@ -191,12 +204,12 @@ function PostSkeleton() {
   return (
     <div className="animate-pulse">
       <div className="space-y-4">
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/5"></div>
-        <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+        <div className="h-4 bg-gray-200 rounded w-full"></div>
+        <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+        <div className="h-4 bg-gray-200 rounded w-4/5"></div>
+        <div className="h-64 bg-gray-200 rounded w-full"></div>
+        <div className="h-4 bg-gray-200 rounded w-full"></div>
+        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
       </div>
     </div>
   )

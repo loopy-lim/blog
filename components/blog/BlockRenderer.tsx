@@ -67,21 +67,21 @@ export async function BlockRenderer({ block }: BlockRendererProps) {
 
     case 'heading_1':
       return (
-        <h1 className="text-3xl font-bold mb-4 mt-6">
+        <h1 id={block.id} className="text-3xl font-bold mb-4 mt-6">
           {renderRichText(block.heading_1.rich_text)}
         </h1>
       )
 
     case 'heading_2':
       return (
-        <h2 className="text-2xl font-bold mb-3 mt-5">
+        <h2 id={block.id} className="text-2xl font-bold mb-3 mt-5">
           {renderRichText(block.heading_2.rich_text)}
         </h2>
       )
 
     case 'heading_3':
       return (
-        <h3 className="text-xl font-bold mb-2 mt-4">
+        <h3 id={block.id} className="text-xl font-bold mb-2 mt-4">
           {renderRichText(block.heading_3.rich_text)}
         </h3>
       )

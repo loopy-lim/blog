@@ -11,14 +11,14 @@ export function Hero() {
 
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="mb-8 text-6xl font-black tracking-tight text-gray-900 dark:text-white sm:text-7xl lg:text-8xl animate-fade-in-up">
+          <h1 className="mb-8 text-6xl font-black tracking-tight text-gray-900 sm:text-7xl lg:text-8xl animate-fade-in-up">
             <span className="block">{resume.basics.name}</span>
-            <span className="block text-3xl font-bold text-gray-500 dark:text-gray-400 sm:text-4xl mt-4">
+            <span className="block text-3xl font-bold text-gray-500 sm:text-4xl mt-4">
               {resume.basics.label}
             </span>
           </h1>
 
-          <p className="mx-auto mb-12 max-w-2xl text-xl text-gray-600 dark:text-gray-300 sm:text-2xl leading-relaxed font-bold animate-fade-in-up delay-100">
+          <p className="mx-auto mb-12 max-w-2xl text-xl text-gray-600 sm:text-2xl leading-relaxed font-bold animate-fade-in-up delay-100">
             {resume.basics.shortSummary}
           </p>
 
@@ -27,7 +27,7 @@ export function Hero() {
               href={resume.basics.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-full border border-gray-900 bg-gray-900 px-8 py-3 text-lg font-bold text-white transition-colors hover:bg-transparent hover:text-gray-900 dark:border-white dark:bg-white dark:text-gray-900 dark:hover:bg-transparent dark:hover:text-white"
+              className="inline-flex items-center justify-center rounded-full border border-gray-900 bg-gray-900 px-8 py-3 text-lg font-bold text-white transition-colors hover:bg-transparent hover:text-gray-900"
             >
               <span className="mr-2">GitHub</span>
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -54,7 +54,7 @@ export function Hero() {
       </div>
 
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
-        <div className="flex flex-col items-center gap-2 text-gray-400 dark:text-gray-500">
+        <div className="flex flex-col items-center gap-2 text-gray-400">
           <span className="text-xs uppercase tracking-widest">Scroll</span>
         </div>
       </div>
