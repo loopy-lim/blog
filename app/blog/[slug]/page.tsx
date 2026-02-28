@@ -19,6 +19,19 @@ function toAbsoluteSiteUrl(urlOrPath: string): string {
   }
 }
 
+function safeGetLocalImagePath(imageUrl: string | null | undefined): string | null {
+  if (!imageUrl) {
+    return null
+  }
+
+  try {
+    return getLocalImagePath(imageUrl)
+  } catch (error) {
+    console.error('Error resolving cover image path:', imageUrl, error)
+    return null
+  }
+}
+
 export async function generateStaticParams() {
   try {
     const posts = await getAllPostSlugs()
@@ -86,7 +99,7 @@ export default async function BlogPostPage({
     const publishedAt = post.properties.publishAt?.date?.start
     const tags = post.properties.tags?.multi_select?.map((tag) => tag.name) || []
     const coverUrl = post.cover?.type === 'external' ? post.cover.external?.url : post.cover?.file?.url
-    const localCoverImage = coverUrl ? getLocalImagePath(coverUrl) : null
+    const localCoverImage = safeGetLocalImagePath(coverUrl)
     const bgImage = localCoverImage ?? getDefaultCover(post.id)
     const jsonLdImage = localCoverImage ? toAbsoluteSiteUrl(localCoverImage) : null
 

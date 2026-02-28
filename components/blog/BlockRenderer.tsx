@@ -152,8 +152,26 @@ export async function BlockRenderer({ block, numberedIndex }: BlockRendererProps
       const originalImageUrl = block.image.type === 'external'
         ? block.image.external.url
         : block.image.file.url
-      const imageUrl = getLocalImagePath(originalImageUrl)
       const caption = block.image.caption[0]?.plain_text
+      let imageUrl: string
+
+      try {
+        imageUrl = getLocalImagePath(originalImageUrl)
+      } catch (error) {
+        console.error('Error resolving local image path:', originalImageUrl, error)
+        return (
+          <figure className="my-12 space-y-3">
+            <div className="rounded-2xl border border-border bg-gray-50 p-6 text-sm font-bold text-muted-foreground">
+              Image unavailable.
+            </div>
+            {caption && (
+              <figcaption className="text-center text-[11px] font-bold text-muted uppercase tracking-[0.15em] italic opacity-60">
+                {caption}
+              </figcaption>
+            )}
+          </figure>
+        )
+      }
 
       return (
         <figure className="my-12 space-y-3 group/img">

@@ -8,6 +8,20 @@ const NOTION_SIGNED_IMAGE_HOSTS = new Set([
   's3.us-west-2.amazonaws.com',
 ])
 
+interface NotionBlockNode {
+  id: string
+  type: string
+  has_children?: boolean
+  children?: NotionBlockNode[]
+  [key: string]: unknown
+}
+
+interface NotionBlocksResponse {
+  results: NotionBlockNode[]
+  next_cursor?: string
+  has_more: boolean
+}
+
 async function ensureDirExists(dirPath: string) {
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true })
@@ -89,6 +103,11 @@ function extractImageUrls(blocks: unknown[]): string[] {
     }
 
     // 재귀적으로 하위 블록에서 이미지 URL 추출
+    const directChildren = typedBlock.children as unknown[] | undefined
+    if (Array.isArray(directChildren) && directChildren.length > 0) {
+      urls.push(...extractImageUrls(directChildren))
+    }
+
     const blockContent = typedBlock[typedBlock.type as string] as { children?: unknown[] } | undefined
     if (blockContent?.children) {
       urls.push(...extractImageUrls(blockContent.children))
@@ -201,12 +220,12 @@ async function getDatabase() {
   return await response.json()
 }
 
-async function getPageBlocks(pageId: string): Promise<Array<unknown>> {
-  const blocks = []
+async function fetchBlockChildren(blockId: string): Promise<NotionBlockNode[]> {
+  const blocks: NotionBlockNode[] = []
   let cursor: string | undefined = undefined
 
   while (true) {
-    const url = new URL(`https://api.notion.com/v1/blocks/${pageId}/children`)
+    const url = new URL(`https://api.notion.com/v1/blocks/${blockId}/children`)
     url.searchParams.set('page_size', '100')
     if (cursor) {
       url.searchParams.set('start_cursor', cursor)
@@ -224,13 +243,31 @@ async function getPageBlocks(pageId: string): Promise<Array<unknown>> {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
 
-    const data = await response.json()
-    blocks.push(...data.results)
+    const data = await response.json() as NotionBlocksResponse
+
+    for (const block of data.results) {
+      if (block.has_children) {
+        const children = await fetchBlockChildren(block.id)
+        block.children = children
+
+        const blockContent = block[block.type]
+        if (blockContent && typeof blockContent === 'object' && !Array.isArray(blockContent)) {
+          ;(blockContent as Record<string, unknown>).children = children
+        }
+      }
+
+      blocks.push(block)
+    }
+
     if (!data.next_cursor) break
     cursor = data.next_cursor
   }
 
   return blocks
+}
+
+async function getPageBlocks(pageId: string): Promise<Array<unknown>> {
+  return fetchBlockChildren(pageId)
 }
 
 function extractCoverUrl(post: Record<string, unknown>): string | null {
