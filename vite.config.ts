@@ -1,4 +1,5 @@
 import vinext from "vinext";
+import { cloudflare } from "@cloudflare/vite-plugin";
 import { defineConfig, loadEnv } from "vite";
 
 export default defineConfig(({ mode }) => {
@@ -6,7 +7,12 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), ['NEXT_PUBLIC_', 'NOTION_', 'GA_', 'GTM_']);
 
   return {
-    plugins: [vinext()],
+    plugins: [
+      vinext(),
+      cloudflare({
+        viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },
+      }),
+    ],
     define: {
       'process.env.NOTION_API_KEY': JSON.stringify(env.NOTION_API_KEY),
       'process.env.NOTION_DATABASE_ID': JSON.stringify(env.NOTION_DATABASE_ID),

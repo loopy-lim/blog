@@ -1,6 +1,7 @@
 # build output
 dist/
 .next/
+.wrangler/
 # generated types
 .astro/
 assets/
@@ -33,3 +34,6 @@ public/images
 out
 tsconfig.tsbuildinfo
 image-map.json
+
+data/
+feed.xml
