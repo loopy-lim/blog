@@ -6,7 +6,7 @@
     "dev": "vite dev",
     "build-data": "tsx scripts/build-data.ts",
     "download-images": "tsx scripts/download-images.ts",
-    "build": "bun run download-images && bun run build-data && bun run generate-og-images && bun run generate-rss && vite build",
+    "build": "bun run download-images && bun run build-data && bun run generate-og-images && bun run generate-rss && vinext build",
     "generate-og-images": "tsx scripts/generate-og-images.ts",
     "generate-rss": "tsx scripts/generate-rss.ts",
     "start": "vite preview",
