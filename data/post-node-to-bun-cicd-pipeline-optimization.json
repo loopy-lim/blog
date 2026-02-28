@@ -4,5 +4,8 @@
   "slug": "node-to-bun-cicd-pipeline-optimization",
   "description": "yarn에서 Bun으로 전환하고, Docker 캐시 전략을 최적화해 배포 시간을 13분에서 4분대로 줄인 과정을 정리했다.",
   "publishedAt": "2026-02-26",
-  "tags": []
+  "tags": [
+    "Bun",
+    "Performance"
+  ]
 }

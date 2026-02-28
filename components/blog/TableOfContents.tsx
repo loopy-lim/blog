@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 
 interface TOCItem {
   id: string
@@ -20,12 +21,10 @@ export function TableOfContents() {
   useEffect(() => {
     if (!mounted) return
 
-    // Notion 콘텐츠가 로드될 때까지 대기
     const findHeadings = () => {
       const article = document.querySelector('article')
       if (!article) return false
 
-      // id가 있는 heading만 선택 (BlockRenderer에서 이미 id 부여됨)
       const elements = article.querySelectorAll('h1[id], h2[id], h3[id]')
       if (elements.length === 0) return false
 
@@ -38,10 +37,8 @@ export function TableOfContents() {
       return true
     }
 
-    // 즉시 시도
     if (findHeadings()) return
 
-    // 콘텐츠 로드 대기 (MutationObserver 사용)
     const observer = new MutationObserver(() => {
       if (findHeadings()) {
         observer.disconnect()
@@ -49,7 +46,6 @@ export function TableOfContents() {
     })
 
     observer.observe(document.body, { childList: true, subtree: true })
-
     return () => observer.disconnect()
   }, [mounted])
 
@@ -65,7 +61,7 @@ export function TableOfContents() {
         })
       },
       {
-        rootMargin: '-80px 0px -80% 0px',
+        rootMargin: '-100px 0px -70% 0px',
         threshold: 0,
       }
     )
@@ -78,42 +74,51 @@ export function TableOfContents() {
     return () => observer.disconnect()
   }, [headings])
 
-  // 서버에서는 렌더링하지 않음
   if (!mounted || headings.length === 0) return null
 
   return (
-    <aside className="hidden lg:block w-56 xl:w-64 shrink-0">
-      <nav className="sticky top-24 max-h-[70vh] overflow-y-auto">
-        <div className="glass rounded-2xl p-4">
-        <h4 className="text-sm font-semibold text-gray-500 mb-3 uppercase tracking-wider">
-          목차
-        </h4>
-        <ul className="space-y-2">
-          {headings.map((heading) => (
-            <li key={heading.id}>
+    <nav className="space-y-1 relative">
+      {/* Vertical Indicator Line */}
+      <div className="absolute left-0 top-0 bottom-0 w-px bg-border" />
+      
+      <ul className="relative z-10">
+        {headings.map((heading) => {
+          const isActive = activeId === heading.id
+          
+          return (
+            <li key={heading.id} className="relative">
+              {isActive && (
+                <motion.div 
+                  layoutId="toc-active"
+                  className="absolute left-0 top-0 bottom-0 w-0.5 bg-accent"
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                />
+              )}
               <a
                 href={`#${heading.id}`}
                 onClick={(e) => {
                   e.preventDefault()
                   document.getElementById(heading.id)?.scrollIntoView({
                     behavior: 'smooth',
+                    block: 'start'
                   })
                 }}
-                className={`toc-item block text-sm transition-colors ${
-                  heading.level === 2 ? 'ml-0' : heading.level === 3 ? 'ml-3' : ''
+                className={`block py-1.5 pr-4 text-[13px] font-bold leading-snug transition-all duration-300 border-l-2 border-transparent hover:text-foreground ${
+                  heading.level === 1 ? 'pl-4' : 
+                  heading.level === 2 ? 'pl-4' : 
+                  'pl-8 text-[12px] opacity-80'
                 } ${
-                  activeId === heading.id
-                    ? 'active text-blue-600'
-                    : 'text-gray-600 hover:text-gray-900'
+                  isActive
+                    ? 'text-accent border-accent/30'
+                    : 'text-muted/40'
                 }`}
               >
                 {heading.text}
               </a>
             </li>
-          ))}
-        </ul>
-        </div>
-      </nav>
-    </aside>
+          )
+        })}
+      </ul>
+    </nav>
   )
 }

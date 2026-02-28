@@ -10,10 +10,10 @@ export async function NotionContent({ pageId }: NotionContentProps) {
   const blocks = await getPageBlocks(pageId)
 
   return (
-    <article className="prose prose-lg dark:prose-invert max-w-none notion-content">
+    <div className="notion-content prose prose-neutral max-w-none">
       {blocks.map((block) => (
         <BlockRenderer key={block.id} block={block as BlockObjectResponse} />
       ))}
-    </article>
+    </div>
   )
 }
