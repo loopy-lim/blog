@@ -1,9 +1,7 @@
-import { Inter } from 'next/font/google'
 import './globals.css'
 import { siteConfig } from '@/site.config'
 import { WebsiteJsonLd } from '@/components/seo/JsonLd'
-
-const inter = Inter({ subsets: ['latin'] })
+import { Navbar } from '@/components/layout/Navbar'
 
 export const metadata = {
   title: {
@@ -56,9 +54,12 @@ export default function RootLayout({
           author={siteConfig.author}
         />
       </head>
-      <body className={inter.className}>
-        <div className="min-h-screen bg-background font-sans antialiased">
-          {children}
+      <body className="bg-background text-foreground">
+        <div className="flex min-h-screen flex-col antialiased">
+          <Navbar />
+          <main className="flex-1 w-full">
+            {children}
+          </main>
         </div>
       </body>
     </html>
