@@ -1,31 +1,48 @@
-import fs from 'fs'
-import path from 'path'
+import 'server-only'
+import imageMapData from './image-map.json'
 
-const IMAGE_MAP_PATH = path.join(process.cwd(), 'lib', 'image-map.json')
+const NOTION_SIGNED_IMAGE_HOSTS = new Set([
+  'prod-files-secure.s3.us-west-2.amazonaws.com',
+  's3.us-west-2.amazonaws.com',
+])
+const NOTION_IMAGE_HOSTS = new Set([
+  ...NOTION_SIGNED_IMAGE_HOSTS,
+  'www.notion.so',
+])
 
 interface ImageMap {
   [url: string]: string
 }
 
-let imageMap: ImageMap | null = null
+const imageMap: ImageMap = imageMapData as ImageMap
 
 function loadImageMap(): ImageMap {
-  if (imageMap !== null) {
-    return imageMap
-  }
+  return imageMap
+}
 
-  if (!imageMap) {
-    try {
-      const mapData = fs.readFileSync(IMAGE_MAP_PATH, 'utf-8')
-      imageMap = JSON.parse(mapData)
-    } catch (error) {
-      // 파일이 없거나 파싱 에러시 빈 객체 반환
-      console.error('Error loading image map:', error)
-      imageMap = {}
+function normalizeImageUrlForCache(imageUrl: string): string {
+  try {
+    const parsed = new URL(imageUrl)
+    const base = `${parsed.origin}${parsed.pathname}`
+
+    // Notion presigned S3 URLs change their query string frequently.
+    if (NOTION_SIGNED_IMAGE_HOSTS.has(parsed.hostname)) {
+      return base
     }
-  }
 
-  return imageMap as ImageMap
+    return parsed.search ? `${base}${parsed.search}` : base
+  } catch {
+    return imageUrl
+  }
+}
+
+function isNotionManagedUrl(imageUrl: string): boolean {
+  try {
+    const parsed = new URL(imageUrl)
+    return NOTION_IMAGE_HOSTS.has(parsed.hostname)
+  } catch {
+    return false
+  }
 }
 
 export function getLocalImagePath(notionImageUrl: string): string {
@@ -36,7 +53,19 @@ export function getLocalImagePath(notionImageUrl: string): string {
     return map[notionImageUrl]
   }
 
-  // 매핑이 없으면 원본 URL 반환 (fallback)
+  // Presigned URL 쿼리 제거 키로 재시도
+  const normalizedUrl = normalizeImageUrlForCache(notionImageUrl)
+  if (map[normalizedUrl]) {
+    return map[normalizedUrl]
+  }
+
+  if (isNotionManagedUrl(notionImageUrl)) {
+    throw new Error(
+      `Missing local image mapping for Notion image: ${notionImageUrl}. Run \`bun run download-images\` and rebuild.`
+    )
+  }
+
+  // Non-Notion external images still fall back to original URL.
   return notionImageUrl
 }
 

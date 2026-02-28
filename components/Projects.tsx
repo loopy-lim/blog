@@ -1,41 +1,85 @@
+'use client'
+
 import Link from "next/link";
 import { resume } from "@/lib/data";
+import { motion } from "framer-motion";
+import { Github, ExternalLink, Rocket, Star } from "lucide-react";
 
 export function Projects() {
   return (
-    <section className="py-24 bg-gray-50 dark:bg-gray-900/50">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-        <h2 className="mb-12 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl text-center">
-          주요 프로젝트
-        </h2>
+    <section className="py-32 bg-white">
+      <div className="container mx-auto px-6 lg:px-8 max-w-5xl">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-24"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-accent/5 text-accent text-xs font-black uppercase tracking-widest mb-4 border border-accent/10">
+            Builds & Creations
+          </div>
+          <h2 className="text-4xl font-black tracking-tight text-foreground sm:text-6xl text-gradient">
+            Projects.
+          </h2>
+        </motion.div>
 
-        <div className="grid gap-8">
-          {resume.projects.map((project) => (
-            <div
+        <div className="grid gap-12">
+          {resume.projects.map((project, index) => (
+            <motion.div
               key={project.name}
-              className="group overflow-hidden rounded-2xl border border-gray-200 bg-white transition-colors hover:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:hover:border-blue-400"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1, duration: 0.6 }}
+              className="group relative rounded-3xl border border-border bg-gray-50/20 p-8 sm:p-12 overflow-hidden transition-all duration-500 hover:bg-white hover:shadow-xl"
             >
-              <div className="p-8">
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                      {project.name}
-                    </h3>
-                    <p className="mt-2 text-gray-600 dark:text-gray-300">
-                      {project.description}
-                    </p>
+              {/* Background Decor */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 blur-[80px] rounded-[4rem] rotate-45 -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+              
+              <div className="relative z-10 flex flex-col lg:flex-row gap-12">
+                <div className="flex-1">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="p-3 rounded-2xl bg-white shadow-xs text-accent border border-border">
+                      <Rocket size={22} />
+                    </div>
+                    <div>
+                      <h3 className="text-3xl font-black text-foreground tracking-tight group-hover:text-accent transition-colors duration-300">
+                        {project.name}
+                      </h3>
+                      <p className="text-[13px] font-bold text-muted uppercase tracking-widest">
+                        {project.period}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex gap-3 shrink-0">
+
+                  <p className="text-lg text-muted font-medium mb-10 leading-relaxed max-w-2xl">
+                    {project.description}
+                  </p>
+
+                  <div className="mb-10">
+                    <h4 className="text-[10px] font-black text-foreground uppercase tracking-[0.2em] mb-4 opacity-40">Stack</h4>
+                    <div className="flex flex-wrap gap-2">
+                       {project.tech.map((keyword) => (
+                        <span
+                          key={keyword}
+                          className="inline-flex items-center rounded-xl bg-white px-3 py-1.5 text-[12px] font-bold text-foreground border border-border shadow-xs"
+                        >
+                          {keyword}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
                     {project.links?.github && (
                        <Link
                         href={project.links.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-foreground text-background text-sm font-black transition-all hover:bg-accent hover:scale-105 active:scale-95"
                       >
-                        <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                          <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                        </svg>
+                        <Github size={18} />
+                        View Source
                       </Link>
                     )}
                     {project.links?.demo && (
@@ -43,46 +87,32 @@ export function Projects() {
                         href={project.links.demo}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white border border-border text-foreground text-sm font-black transition-all hover:bg-gray-50 hover:scale-105 active:scale-95 shadow-xs"
                       >
-                         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
+                         <ExternalLink size={18} />
+                         Live Demo
                       </Link>
                     )}
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-2">Technologies</h4>
-                    <div className="flex flex-wrap gap-2">
-                       {project.tech.map((keyword) => (
-                        <span
-                          key={keyword}
-                          className="inline-flex items-center rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                        >
-                          {keyword}
-                        </span>
+                <div className="lg:w-1/3 flex flex-col gap-6">
+                  <div className="p-8 rounded-3xl bg-white border border-border shadow-xs hover:shadow-md transition-shadow duration-500">
+                    <h4 className="text-[10px] font-black text-accent uppercase tracking-[0.2em] mb-8 flex items-center gap-2">
+                      <Star size={12} fill="currentColor" /> Highlights
+                    </h4>
+                    <ul className="space-y-5 pl-3 border-l border-border/40 ml-1">
+                      {project.highlights.map((highlight, i) => (
+                        <li key={i} className="flex items-start gap-3 text-[14px] text-foreground/90 leading-relaxed font-medium group/hl">
+                          <div className="mt-2 h-1.5 w-1.5 rounded-sm bg-accent/30 group-hover/hl:bg-accent shrink-0 rotate-45 transition-all" />
+                          <span dangerouslySetInnerHTML={{ __html: highlight.replace(/\*\*(.*?)\*\*/g, '<strong class="font-black text-foreground">$1</strong>') }} />
+                        </li>
                       ))}
-                    </div>
+                    </ul>
                   </div>
-                  
-                  {project.highlights && (
-                    <div>
-                      <h4 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-2">Highlights</h4>
-                      <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-300 text-sm">
-                        {project.highlights.map((highlight, index) => (
-                          <li key={index} className="leading-relaxed">
-                            <span dangerouslySetInnerHTML={{ __html: highlight.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900 dark:text-white">$1</strong>') }} />
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

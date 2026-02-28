@@ -1,0 +1,11 @@
+{
+  "id": "4d561a5c-4ef0-4e35-a40d-b3693a74b55d",
+  "title": "Flutter OOM 트러블슈팅 — 메모리 1.5GB → 700MB, 53% 절감한 과정",
+  "slug": "flutter-oom-troubleshooting",
+  "description": "Crashlytics → DevTools 프로파일링 → 가설 검증으로 Flutter 앱 메모리 문제를 해결한 과정",
+  "publishedAt": "2026-02-27",
+  "tags": [
+    "Flutter",
+    "Performance"
+  ]
+}

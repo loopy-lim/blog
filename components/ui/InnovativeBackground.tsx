@@ -65,10 +65,13 @@ export default function InnovativeBackground() {
       }
 
       draw() {
-        ctx!.beginPath() // Use non-null assertion as ctx is checked above
-        ctx!.arc(this.x, this.y, this.size, 0, Math.PI * 2)
         ctx!.fillStyle = this.color
-        ctx!.fill()
+        // Changed from circular arc to square for a more unique, non-AI look
+        ctx!.save()
+        ctx!.translate(this.x, this.y)
+        ctx!.rotate(Math.PI / 4) // Diamond shape
+        ctx!.fillRect(-this.size / 2, -this.size / 2, this.size, this.size)
+        ctx!.restore()
       }
     }
 

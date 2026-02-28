@@ -31,3 +31,5 @@ public/images
 .claude/settings.json
 
 out
+tsconfig.tsbuildinfo
+image-map.json

@@ -4,17 +4,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a personal blog migrated from Astro 5 to **Next.js 15**, using Notion as a headless CMS for blog content. The migration was completed on 2025-11-30 and follows modern Next.js patterns with Server Components.
+This is a personal blog built with **vinext** (Vite-based Next.js reimplementation), using Notion as a headless CMS for blog content. The project was migrated from Next.js 15 to vinext on 2026-02-28 for improved performance and Cloudflare Workers compatibility.
 
 ## Development Commands
 
-Use `pnpm` as the package manager (specified in packageManager field).
+Use `bun` as the package manager (specified in packageManager field).
 
-- `pnpm dev` - Start development server at `localhost:3000`
-- `pnpm build` - Build production site to `./.next/`
-- `pnpm start` - Start production server
-- `pnpm lint` - Next.js ESLint
-- `pnpm type-check` - TypeScript type checking
+- `bun dev` - Start development server at `localhost:3000`
+- `bun build` - Build production site to `./dist/`
+- `bun start` - Preview production build at `localhost:4173`
+- `bun lint` - ESLint
+- `bun type-check` - TypeScript type checking
 
 ## Architecture
 
@@ -22,24 +22,24 @@ Use `pnpm` as the package manager (specified in packageManager field).
 - Blog content is loaded from Notion database using `@notionhq/client` (official SDK)
 - Server Components with React cache() for data fetching optimization
 - Requires `NOTION_API_KEY` and `NOTION_DATABASE_ID` environment variables
-- ISR (Incremental Static Regeneration) with 1-hour revalidation
+- Static export mode for Cloudflare Pages deployment
 
 ### Key Technologies
-- **Next.js 15** with App Router
+- **vinext** - Vite-based Next.js reimplementation
+- **Vite 7** for fast builds and HMR
 - **React 19** with Server Components
 - **TypeScript** with strict mode
 - **Tailwind CSS** with typography plugin
 - **@notionhq/client** for Notion API integration
-- **React cache()** for data caching
 
 ### Directory Structure
 ```
-app/                           # Next.js App Router
+app/                           # vinext App Router
 ├── layout.tsx                 # Root layout (Server Component)
 ├── page.tsx                   # Homepage
 ├── globals.css                # Global styles + Notion content styling
 ├── blog/
-│   ├── page.tsx              # Blog list (Server Component + ISR)
+│   ├── page.tsx              # Blog list (Server Component)
 │   └── [slug]/
 │       └── page.tsx          # Individual post (Server Component)
 components/                   # React components
@@ -50,17 +50,20 @@ components/                   # React components
 lib/                         # Utility functions
 ├── notion.ts                # Notion API wrapper with caching
 └── utils.ts                 # Shared utilities
-src_old/                     # Backup of original Astro code (not used)
+dist/                        # Build output
+├── client/                  # Static assets for deployment
+│   └── data/               # Blog post JSON data
+└── server/                  # Server-side code
 ```
 
 ### Page Structure
 - `/` - Homepage with blog navigation
-- `/blog` - Blog index page with all posts (ISR, 1h revalidate)
-- `/blog/[slug]` - Individual blog post pages (SSG with generateStaticParams)
+- `/blog` - Blog index page with all posts
+- `/blog/[slug]` - Individual blog post pages
 
 ### Key Features
 - **Server Components**: All data fetching happens on the server
-- **ISR**: Blog posts are statically generated and revalidated every hour
+- **Static Export**: Pre-rendered pages for fast CDN delivery
 - **Type Safety**: Full TypeScript coverage with proper Notion API types
 - **Performance**: React cache() prevents duplicate API calls
 - **SEO**: Automatic metadata generation from Notion content
@@ -81,20 +84,22 @@ Blog posts should include these properties:
 - `slug` (rich_text) - URL slug
 - `draft` (checkbox) - Draft status (false = published)
 
-## Migration Status (2025-11-30)
+## vinext Migration Notes (2026-02-28)
 
-✅ **Completed**:
-- Next.js 15 + App Router setup
-- Server Components with React cache()
-- Notion API integration (@notionhq/client)
-- TypeScript configuration
-- Tailwind CSS styling
-- Build system working
-- ISR configuration
+### What Changed
+- Replaced `next` with `vinext` as the framework
+- Build output moved from `out/` to `dist/client/`
+- Development server now uses Vite instead of Next.js dev server
+- All `next/*` imports work automatically via vinext shims
 
-⚠️ **Known Issues**:
-- Notion API query method may need runtime debugging
-- Some TypeScript types use `@ts-expect-error` for API compatibility
+### Known vinext Limitations
+- `next/font/google`: Fonts loaded from CDN, not self-hosted
+- `next/image`: Uses @unpic/react (no local optimization)
+- Images already configured with `unoptimized: true` for Cloudflare
+
+### Configuration Files
+- `vite.config.ts` - Vite configuration with vinext plugin
+- `next.config.js` - Still read by vinext for redirects, rewrites, headers, basePath, i18n, images, output
 
 ## Development Guidelines
 
@@ -106,7 +111,7 @@ Blog posts should include these properties:
 
 ### Performance
 - All data fetching should use React `cache()`
-- Leverage ISR for content that changes periodically
+- Static export mode for optimal CDN delivery
 - Use Suspense boundaries for loading states
 
 ### Notion Integration
