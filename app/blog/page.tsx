@@ -10,20 +10,20 @@ export default async function BlogPage() {
   return (
     <main className="relative min-h-screen bg-[#fbfbfa]">
       {/* Background Decor */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120%] h-[50vh] bg-accent/5 blur-[120px] rounded-full pointer-events-none -z-10" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120%] h-[50vh] bg-accent/5 blur-[120px] rounded-[4rem] rotate-12 pointer-events-none -z-10" />
       
       <div className="container mx-auto px-6 pt-32 pb-40 max-w-7xl">
         <header className="mb-24 text-center">
           <Link 
             href="/"
-            className="inline-flex items-center gap-2 mb-10 px-4 py-2 rounded-full bg-white border border-gray-100 text-sm font-black text-muted-foreground hover:text-accent hover:border-accent/20 transition-all hover:-translate-x-1 shadow-sm"
+            className="inline-flex items-center gap-2 mb-10 px-4 py-2 rounded-lg bg-white border border-gray-100 text-sm font-black text-muted-foreground hover:text-accent hover:border-accent/20 transition-all hover:-translate-x-1 shadow-sm"
           >
             <ChevronLeft size={16} />
             Back to Home
           </Link>
 
           <div className="flex flex-col items-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/5 text-accent text-xs font-black uppercase tracking-widest mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-accent/5 text-accent text-xs font-black uppercase tracking-widest mb-6 border border-accent/10">
               <Layers size={14} />
               Writing & Thoughts
             </div>
@@ -50,9 +50,9 @@ function PostListSkeleton() {
       {[...Array(6)].map((_, i) => (
         <div key={i} className="rounded-[2.5rem] border border-gray-100 bg-white p-6 h-[450px] animate-pulse">
            <div className="aspect-[16/10] w-full rounded-[1.75rem] bg-gray-50 mb-8" />
-           <div className="h-6 bg-gray-50 rounded-full w-3/4 mb-4" />
-           <div className="h-4 bg-gray-50 rounded-full w-full mb-2" />
-           <div className="h-4 bg-gray-50 rounded-full w-5/6" />
+           <div className="h-6 bg-gray-50 rounded-lg w-3/4 mb-4" />
+           <div className="h-4 bg-gray-50 rounded-lg w-full mb-2" />
+           <div className="h-4 bg-gray-50 rounded-lg w-5/6" />
         </div>
       ))}
     </div>

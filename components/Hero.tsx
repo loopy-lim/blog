@@ -72,7 +72,7 @@ export function Hero() {
             <span className="text-2xl font-black text-foreground/80 sm:text-4xl tracking-tight">
               {resume.basics.label}
             </span>
-            <div className="mt-4 h-1 w-20 bg-accent rounded-full opacity-20" />
+            <div className="mt-4 h-1.5 w-20 bg-accent rounded-sm opacity-20" />
           </motion.div>
 
           {/* Summary */}
@@ -119,9 +119,9 @@ export function Hero() {
         </div>
       </motion.div>
 
-      {/* Background Decor */}
-      <div className="absolute top-[20%] left-[10%] w-[30vw] h-[30vw] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-[20%] right-[10%] w-[25vw] h-[25vw] bg-green-500/5 blur-[100px] rounded-full pointer-events-none" />
+      {/* Background Decor - Changed from full rounded to more geometric */}
+      <div className="absolute top-[20%] left-[10%] w-[30vw] h-[30vw] bg-accent/5 blur-[120px] rounded-[4rem] rotate-12 pointer-events-none" />
+      <div className="absolute bottom-[20%] right-[10%] w-[25vw] h-[25vw] bg-green-500/5 blur-[100px] rounded-[4rem] -rotate-12 pointer-events-none" />
 
       {/* Scroll Indicator */}
       <motion.div 

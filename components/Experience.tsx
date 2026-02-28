@@ -14,7 +14,7 @@ export function Experience() {
           viewport={{ once: true }}
           className="text-center mb-24"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/5 text-accent text-xs font-black uppercase tracking-widest mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-accent/5 text-accent text-xs font-black uppercase tracking-widest mb-4 border border-accent/10">
             Professional Journey
           </div>
           <h2 className="text-4xl font-black tracking-tight text-foreground sm:text-6xl text-gradient">
@@ -35,8 +35,8 @@ export function Experience() {
               transition={{ delay: index * 0.1 }}
               className="relative pl-10 sm:pl-16"
             >
-              {/* Dot on Timeline */}
-              <div className="absolute left-0 top-2 h-4 w-4 rounded-full border-4 border-background bg-accent ml-[1px] sm:-ml-[7.5px]" />
+              {/* Square on Timeline */}
+              <div className="absolute left-0 top-2 h-3.5 w-3.5 rounded-sm border-2 border-background bg-accent ml-[1.5px] sm:-ml-[6.5px] rotate-45" />
               
               <div className="flex flex-col items-start p-8 rounded-3xl bg-white border border-border shadow-sm transition-shadow hover:shadow-md">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full mb-4 gap-4">
@@ -48,7 +48,7 @@ export function Experience() {
                       {exp.position}
                     </p>
                   </div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-50 text-[11px] font-black text-muted uppercase tracking-widest border border-border shadow-xs whitespace-nowrap h-fit">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50 text-[11px] font-black text-muted uppercase tracking-widest border border-border shadow-xs whitespace-nowrap h-fit">
                     <Calendar size={12} className="text-accent" />
                     {exp.period}
                   </div>
@@ -58,12 +58,10 @@ export function Experience() {
                   {exp.description}
                 </p>
 
-                <ul className="space-y-3 w-full">
+                <ul className="space-y-4 w-full pl-3 border-l border-border/40 ml-1 mt-6">
                   {exp.highlights.map((highlight, i) => (
-                    <li key={i} className="flex items-start gap-3 text-[15px] text-foreground/90 leading-relaxed font-medium">
-                      <div className="mt-1.5 p-0.5 rounded-full bg-accent/10 text-accent shrink-0">
-                        <CheckCircle2 size={12} />
-                      </div>
+                    <li key={i} className="flex items-start gap-3 text-[15px] text-foreground/90 leading-relaxed font-medium group/hl">
+                      <div className="mt-2 h-1.5 w-1.5 rounded-sm bg-accent/30 group-hover/hl:bg-accent shrink-0 rotate-45 transition-all" />
                       <span
                         dangerouslySetInnerHTML={{
                           __html: highlight.replace(

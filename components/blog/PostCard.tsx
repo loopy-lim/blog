@@ -52,7 +52,7 @@ export function PostCard({ post }: PostCardProps) {
         )}
         
         {/* Date Badge */}
-        <div className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-border text-[10px] font-black text-muted uppercase tracking-widest shadow-xs">
+        <div className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/90 backdrop-blur-md border border-border text-[10px] font-black text-muted uppercase tracking-widest shadow-xs">
           <Calendar size={10} className="text-accent" />
           {post.publishedAt ? formatDateString(post.publishedAt) : 'Recent'}
         </div>

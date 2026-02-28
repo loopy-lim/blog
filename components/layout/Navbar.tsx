@@ -39,7 +39,7 @@ export function Navbar() {
           mass: 1
         }}
         style={{ 
-          borderRadius: scrolled ? '9999px' : '1rem',
+          borderRadius: scrolled ? '2rem' : '1rem',
         }}
         className={`flex items-center justify-between pointer-events-auto overflow-hidden border shadow-black/5 ${
           scrolled 
@@ -84,7 +84,7 @@ export function Navbar() {
               <Link 
                 key={item.name}
                 href={item.href}
-                className={`relative px-4 py-2 text-[13px] font-black transition-colors duration-300 rounded-full group ${
+                className={`relative px-4 py-2 text-[13px] font-black transition-colors duration-300 rounded-xl group ${
                   isActive 
                     ? 'text-foreground' 
                     : 'text-muted hover:text-foreground'
@@ -94,7 +94,7 @@ export function Navbar() {
                 {isActive && (
                   <motion.div 
                     layoutId="pill-active"
-                    className="absolute inset-0 bg-gray-100 rounded-full -z-0"
+                    className="absolute inset-0 bg-gray-100 rounded-xl -z-0"
                     transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                   />
                 )}

@@ -8,8 +8,8 @@ export function About() {
   return (
     <section id="about" className="relative pt-32 pb-24 overflow-hidden bg-[#fbfbfa]">
       {/* Dynamic Background Accents */}
-      <div className="absolute top-[10%] left-[-5%] w-[40vw] h-[40vw] rounded-full bg-accent/5 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-5%] w-[35vw] h-[35vw] rounded-full bg-green-500/5 blur-[100px] pointer-events-none" />
+      <div className="absolute top-[10%] left-[-5%] w-[40vw] h-[40vw] rounded-[4rem] rotate-12 bg-accent/5 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-5%] w-[35vw] h-[35vw] rounded-[4rem] -rotate-12 bg-green-500/5 blur-[100px] pointer-events-none" />
 
       <div className="container relative z-10 mx-auto max-w-4xl px-6 lg:px-8">
         <motion.div
@@ -19,7 +19,7 @@ export function About() {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/5 text-accent text-xs font-black uppercase tracking-widest mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-accent/5 text-accent text-xs font-black uppercase tracking-widest mb-4 border border-accent/10">
             Introduction
           </div>
           <h2 className="text-4xl font-black tracking-tight text-foreground sm:text-6xl text-gradient">

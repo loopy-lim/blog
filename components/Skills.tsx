@@ -33,7 +33,7 @@ export function Skills() {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/5 text-accent text-xs font-black uppercase tracking-widest mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-accent/5 text-accent text-xs font-black uppercase tracking-widest mb-4 border border-accent/10">
             Technical Arsenal
           </div>
           <h2 className="text-4xl font-black tracking-tight text-foreground sm:text-6xl text-gradient">

@@ -1,8 +1,6 @@
 import 'server-only'
-import fs from 'fs'
-import path from 'path'
+import imageMapData from './image-map.json'
 
-const IMAGE_MAP_PATH = path.join(process.cwd(), 'lib', 'image-map.json')
 const NOTION_SIGNED_IMAGE_HOSTS = new Set([
   'prod-files-secure.s3.us-west-2.amazonaws.com',
   's3.us-west-2.amazonaws.com',
@@ -12,25 +10,10 @@ interface ImageMap {
   [url: string]: string
 }
 
-let imageMap: ImageMap | null = null
+const imageMap: ImageMap = imageMapData as ImageMap
 
 function loadImageMap(): ImageMap {
-  if (imageMap !== null) {
-    return imageMap
-  }
-
-  if (!imageMap) {
-    try {
-      const mapData = fs.readFileSync(IMAGE_MAP_PATH, 'utf-8')
-      imageMap = JSON.parse(mapData)
-    } catch (error) {
-      // 파일이 없거나 파싱 에러시 빈 객체 반환
-      console.error('Error loading image map:', error)
-      imageMap = {}
-    }
-  }
-
-  return imageMap as ImageMap
+  return imageMap
 }
 
 function normalizeImageUrlForCache(imageUrl: string): string {

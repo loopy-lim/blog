@@ -47,7 +47,7 @@ export function RecentPosts({ posts }: RecentPostsProps) {
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/5 text-accent text-xs font-black uppercase tracking-widest mb-4"
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-accent/5 text-accent text-xs font-black uppercase tracking-widest mb-4 border border-accent/10"
             >
               <Layers size={14} />
               Recent Writing
@@ -114,7 +114,7 @@ export function RecentPosts({ posts }: RecentPostsProps) {
                   )}
                   
                   {/* Date Badge */}
-                  <div className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-white/50 text-[10px] font-black text-muted-foreground uppercase tracking-widest shadow-sm">
+                  <div className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/80 backdrop-blur-md border border-white/50 text-[10px] font-black text-muted-foreground uppercase tracking-widest shadow-sm">
                     <Calendar size={12} className="text-accent" />
                     {formatDate(post.publishAt)}
                   </div>
@@ -149,7 +149,7 @@ export function RecentPosts({ posts }: RecentPostsProps) {
                     <span className="text-[11px] font-black text-accent uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1.5">
                       Read Article <ArrowRight size={14} />
                     </span>
-                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-accent/10 group-hover:text-accent transition-all duration-500">
+                    <div className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-accent/10 group-hover:text-accent transition-all duration-500">
                       <BookOpen size={14} />
                     </div>
                   </div>
