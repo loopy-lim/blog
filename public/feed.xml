@@ -5,7 +5,7 @@
     <link>http://localhost:3000</link>
     <description>A blog built with Next.js and Notion</description>
     <language>ko-KR</language>
-    <lastBuildDate>Sat, 28 Feb 2026 13:52:04 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 28 Feb 2026 14:09:49 GMT</lastBuildDate>
     <atom:link href="http://localhost:3000/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>http://localhost:3000/images/og/default.jpg</url>
