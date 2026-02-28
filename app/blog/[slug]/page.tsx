@@ -11,6 +11,14 @@ import { getLocalImagePath, getDefaultCover } from '@/lib/image-utils'
 import { siteConfig } from '@/site.config'
 import { Calendar, ChevronLeft, Clock } from 'lucide-react'
 
+function toAbsoluteSiteUrl(urlOrPath: string): string {
+  try {
+    return new URL(urlOrPath, siteConfig.url).toString()
+  } catch {
+    return `${siteConfig.url}${urlOrPath.startsWith('/') ? '' : '/'}${urlOrPath}`
+  }
+}
+
 export async function generateStaticParams() {
   try {
     const posts = await getAllPostSlugs()
@@ -78,14 +86,16 @@ export default async function BlogPostPage({
     const publishedAt = post.properties.publishAt?.date?.start
     const tags = post.properties.tags?.multi_select?.map((tag) => tag.name) || []
     const coverUrl = post.cover?.type === 'external' ? post.cover.external?.url : post.cover?.file?.url
-    const bgImage = coverUrl ? getLocalImagePath(coverUrl) : getDefaultCover(post.id)
+    const localCoverImage = coverUrl ? getLocalImagePath(coverUrl) : null
+    const bgImage = localCoverImage ?? getDefaultCover(post.id)
+    const jsonLdImage = localCoverImage ? toAbsoluteSiteUrl(localCoverImage) : null
 
     const jsonLdData = {
       title,
       description: post.properties.description?.rich_text[0]?.plain_text || '',
       publishedAt: publishedAt || new Date().toISOString(),
       author: siteConfig.author,
-      images: coverUrl ? [coverUrl] : [],
+      images: jsonLdImage ? [jsonLdImage] : [],
       url: `${siteConfig.url}/blog/${slug}`,
     }
 

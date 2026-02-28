@@ -288,6 +288,7 @@ export async function downloadNotionImages(): Promise<void> {
     // 이미지 다운로드
     let successCount = 0
     let failureCount = 0
+    const failedImages: string[] = []
 
     for (const [cacheKey, urls] of imageGroups) {
       const sourceUrl = urls.values().next().value
@@ -307,6 +308,7 @@ export async function downloadNotionImages(): Promise<void> {
         successCount++
       } else {
         failureCount++
+        failedImages.push(sourceUrl)
       }
     }
 
@@ -314,6 +316,13 @@ export async function downloadNotionImages(): Promise<void> {
     console.log(`✅ Successful: ${successCount}`)
     console.log(`❌ Failed: ${failureCount}`)
     console.log(`⏭ Skipped: ${imageGroups.size - successCount - failureCount}`)
+
+    if (failureCount > 0) {
+      const preview = failedImages.slice(0, 5).join('\n  - ')
+      throw new Error(
+        `Failed to download ${failureCount} image(s). Build aborted.\n  - ${preview}`
+      )
+    }
 
     console.log('Image download completed!')
 
@@ -342,9 +351,13 @@ export async function downloadNotionImages(): Promise<void> {
 
   } catch (error) {
     console.error('Error downloading images:', error)
+    throw error
   }
 }
 
 // CLI에서 실행 가능
 loadEnvWithLocalFallback()
-downloadNotionImages()
+downloadNotionImages().catch((error) => {
+  console.error(error)
+  process.exit(1)
+})
