@@ -1,0 +1,8 @@
+{
+  "id": "3132c39d-6e1f-80d1-8d5b-c3e1d2caf600",
+  "title": "Node → Bun 전환으로 CI/CD 파이프라인 49% 단축한 이야기",
+  "slug": "node-to-bun-cicd-pipeline-optimization",
+  "description": "yarn에서 Bun으로 전환하고, Docker 캐시 전략을 최적화해 배포 시간을 13분에서 4분대로 줄인 과정을 정리했다.",
+  "publishedAt": "2026-02-26",
+  "tags": []
+}
