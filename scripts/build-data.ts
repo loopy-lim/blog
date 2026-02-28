@@ -1,12 +1,54 @@
 import fs from 'fs/promises'
+import fsSync from 'fs'
 import path from 'path'
-import { config } from 'dotenv'
 import { getBuildDatabase } from './notion-client'
 import { siteConfig } from '../site.config'
 
-// 환경변수 로드 (로컬: .env.local, Cloudflare: 대시보드에서 설정)
-config({ path: '.env.local' })
-config({ path: '.env' })
+function stripOptionalQuotes(value: string): string {
+  const trimmed = value.trim()
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1)
+  }
+  return trimmed
+}
+
+function loadEnvFile(filePath: string, overrideExisting = false) {
+  if (!fsSync.existsSync(filePath)) return
+
+  const content = fsSync.readFileSync(filePath, 'utf-8')
+  const lines = content.split(/\r?\n/)
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim()
+    if (!line || line.startsWith('#')) continue
+
+    const equalsIndex = line.indexOf('=')
+    if (equalsIndex <= 0) continue
+
+    const key = line.slice(0, equalsIndex).trim()
+    const value = stripOptionalQuotes(line.slice(equalsIndex + 1))
+    if (!key) continue
+
+    if (overrideExisting || process.env[key] === undefined) {
+      process.env[key] = value
+    }
+  }
+}
+
+function loadEnvWithLocalFallback() {
+  const envPath = path.join(process.cwd(), '.env')
+  const envLocalPath = path.join(process.cwd(), '.env.local')
+
+  // Base: .env
+  loadEnvFile(envPath, false)
+  // Fallback: .env.local (only if key is missing)
+  loadEnvFile(envLocalPath, false)
+}
+
+loadEnvWithLocalFallback()
 
 // 데이터 저장 경로
 const DATA_DIR = path.join(process.cwd(), 'data')
