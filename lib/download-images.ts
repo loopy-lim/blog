@@ -1,12 +1,32 @@
 import fs from 'fs'
 import path from 'path'
+import crypto from 'crypto'
 import { getDatabase, getPageBlocks } from './notion.js'
 
 const IMAGES_DIR = path.join(process.cwd(), 'public', 'images', 'notion')
+const NOTION_SIGNED_IMAGE_HOSTS = new Set([
+  'prod-files-secure.s3.us-west-2.amazonaws.com',
+  's3.us-west-2.amazonaws.com',
+])
 
 async function ensureDirExists(dirPath: string) {
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true })
+  }
+}
+
+function normalizeImageUrlForCache(imageUrl: string): string {
+  try {
+    const parsed = new URL(imageUrl)
+    const base = `${parsed.origin}${parsed.pathname}`
+
+    if (NOTION_SIGNED_IMAGE_HOSTS.has(parsed.hostname)) {
+      return base
+    }
+
+    return parsed.search ? `${base}${parsed.search}` : base
+  } catch {
+    return imageUrl
   }
 }
 
@@ -48,18 +68,23 @@ async function downloadImage(url: string, filename: string): Promise<void> {
   }
 }
 
-function generateImageUrl(url: string): string {
-  // URL에서 파일 이름 생성
-  const urlParts = url.split('/')
-  const filename = urlParts[urlParts.length - 1] || 'image'
+function generateImageFilename(cacheKey: string): string {
+  let extension = 'png'
 
-  // 확장자 추출 및 정리
-  const extensionMatch = filename.match(/\.([a-zA-Z]+)(\?.*)?$/)
-  const extension = extensionMatch ? extensionMatch[1] : 'png'
+  try {
+    const parsed = new URL(cacheKey)
+    const extensionMatch = parsed.pathname.match(/\.([a-zA-Z0-9]+)$/)
+    if (extensionMatch) {
+      extension = extensionMatch[1].toLowerCase()
+    }
+  } catch {
+    const extensionMatch = cacheKey.match(/\.([a-zA-Z0-9]+)(?:\?|$)/)
+    if (extensionMatch) {
+      extension = extensionMatch[1].toLowerCase()
+    }
+  }
 
-  // 해시 생성 (URL 기반)
-  const hash = Buffer.from(url).toString('base64').replace(/[+/=]/g, '').substring(0, 8)
-
+  const hash = crypto.createHash('sha256').update(cacheKey).digest('hex').slice(0, 16)
   return `${hash}.${extension}`
 }
 
@@ -90,13 +115,21 @@ export async function downloadNotionImages(): Promise<void> {
       allImageUrls.push(...imageUrls)
     }
 
-    // 중복 제거
-    const uniqueUrls = [...new Set(allImageUrls)]
-    console.log(`Found ${uniqueUrls.length} unique images`)
+    const imageGroups = new Map<string, Set<string>>()
+    for (const url of allImageUrls) {
+      const cacheKey = normalizeImageUrlForCache(url)
+      const group = imageGroups.get(cacheKey) ?? new Set<string>()
+      group.add(url)
+      imageGroups.set(cacheKey, group)
+    }
+    console.log(`Found ${imageGroups.size} unique images`)
 
     // 이미지 다운로드
-    for (const url of uniqueUrls) {
-      const filename = generateImageUrl(url)
+    for (const [cacheKey, urls] of imageGroups) {
+      const sourceUrl = urls.values().next().value
+      if (!sourceUrl) continue
+
+      const filename = generateImageFilename(cacheKey)
       const filePath = path.join(IMAGES_DIR, filename)
 
       // 이미 존재하면 스킵
@@ -105,16 +138,21 @@ export async function downloadNotionImages(): Promise<void> {
         continue
       }
 
-      await downloadImage(url, filename)
+      await downloadImage(sourceUrl, filename)
     }
 
     console.log('Image download completed!')
 
     // 이미지 맵 파일 생성 (URL -> 로컬 경로)
     const imageMap: Record<string, string> = {}
-    for (const url of uniqueUrls) {
-      const filename = generateImageUrl(url)
-      imageMap[url] = `/images/notion/${filename}`
+    for (const [cacheKey, urls] of imageGroups) {
+      const filename = generateImageFilename(cacheKey)
+      const localPath = `/images/notion/${filename}`
+      imageMap[cacheKey] = localPath
+
+      for (const url of urls) {
+        imageMap[url] = localPath
+      }
     }
 
     const mapPath = path.join(process.cwd(), 'lib', 'image-map.json')

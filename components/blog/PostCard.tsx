@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { formatDateString } from '@/lib/utils'
-import { getDefaultCover } from '@/lib/image-utils'
+import { getDefaultCover, getLocalImagePath } from '@/lib/image-utils'
 
 interface PostCardProps {
   post: {
@@ -16,7 +16,9 @@ interface PostCardProps {
 }
 
 export function PostCard({ post }: PostCardProps) {
-  const coverImage = post.coverImage || getDefaultCover(post.id)
+  const coverImage = post.coverImage
+    ? getLocalImagePath(post.coverImage)
+    : getDefaultCover(post.id)
 
   return (
     <Link

@@ -2,6 +2,10 @@ import fs from 'fs'
 import path from 'path'
 
 const IMAGE_MAP_PATH = path.join(process.cwd(), 'lib', 'image-map.json')
+const NOTION_SIGNED_IMAGE_HOSTS = new Set([
+  'prod-files-secure.s3.us-west-2.amazonaws.com',
+  's3.us-west-2.amazonaws.com',
+])
 
 interface ImageMap {
   [url: string]: string
@@ -28,12 +32,34 @@ function loadImageMap(): ImageMap {
   return imageMap as ImageMap
 }
 
+function normalizeImageUrlForCache(imageUrl: string): string {
+  try {
+    const parsed = new URL(imageUrl)
+    const base = `${parsed.origin}${parsed.pathname}`
+
+    // Notion presigned S3 URLs change their query string frequently.
+    if (NOTION_SIGNED_IMAGE_HOSTS.has(parsed.hostname)) {
+      return base
+    }
+
+    return parsed.search ? `${base}${parsed.search}` : base
+  } catch {
+    return imageUrl
+  }
+}
+
 export function getLocalImagePath(notionImageUrl: string): string {
   const map = loadImageMap()
 
   // URL 매핑이 있으면 로컬 경로 반환
   if (map[notionImageUrl]) {
     return map[notionImageUrl]
+  }
+
+  // Presigned URL 쿼리 제거 키로 재시도
+  const normalizedUrl = normalizeImageUrlForCache(notionImageUrl)
+  if (map[normalizedUrl]) {
+    return map[normalizedUrl]
   }
 
   // 매핑이 없으면 원본 URL 반환 (fallback)
