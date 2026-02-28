@@ -7,12 +7,10 @@ import { ReadingProgress } from '@/components/blog/ReadingProgress'
 import { TableOfContents } from '@/components/blog/TableOfContents'
 import Link from 'next/link'
 import { formatDateString } from '@/lib/utils'
-import { getLocalImagePath, getDefaultCover } from '@/lib/image-utils'
+import { getLocalImagePath } from '@/lib/image-utils'
 import { siteConfig } from '@/site.config'
+import { Calendar, ChevronLeft, Clock } from 'lucide-react'
 
-// 정적 사이트로 변경 - revalidate 제거
-
-// 정적 경로 생성
 export async function generateStaticParams() {
   try {
     const posts = await getAllPostSlugs()
@@ -23,23 +21,17 @@ export async function generateStaticParams() {
   }
 }
 
-// 페이지별 Metadata 생성
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params
     const post = await getPostBySlug(slug)
-
     if (!post) return {}
 
     const title = post.properties.title.title[0]?.plain_text || 'Untitled'
     const description = post.properties.description?.rich_text[0]?.plain_text || ''
     const publishedAt = post.properties.publishAt?.date?.start
     const tags = post.properties.tags?.multi_select?.map((tag) => tag.name) || []
-
-    // 커버 이미지 URL 추출
-    const coverUrl = post.cover?.type === 'external'
-      ? post.cover.external?.url
-      : post.cover?.file?.url
+    const coverUrl = post.cover?.type === 'external' ? post.cover.external?.url : post.cover?.file?.url
 
     return {
       title,
@@ -52,19 +44,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         type: 'article',
         publishedTime: publishedAt,
         tags,
-        images: coverUrl ? [{
-          url: coverUrl,
-          width: 1200,
-          height: 630,
-          alt: title,
-        }] : [],
+        images: coverUrl ? [{ url: coverUrl, width: 1200, height: 630, alt: title }] : [],
       },
-      twitter: {
-        card: 'summary_large_image',
-        title,
-        description,
-        images: coverUrl ? [coverUrl] : [],
-      },
+      twitter: { card: 'summary_large_image', title, description, images: coverUrl ? [coverUrl] : [] },
     }
   } catch (error) {
     console.error('Error generating metadata:', error)
@@ -80,23 +62,14 @@ export default async function BlogPostPage({
   try {
     const { slug } = await params
     const post = await getPostBySlug(slug)
-
-    if (!post) {
-      notFound()
-    }
+    if (!post) notFound()
 
     const title = post.properties.title.title[0]?.plain_text || 'Untitled'
     const publishedAt = post.properties.publishAt?.date?.start
     const tags = post.properties.tags?.multi_select?.map((tag) => tag.name) || []
+    const coverUrl = post.cover?.type === 'external' ? post.cover.external?.url : post.cover?.file?.url
+    const bgImage = coverUrl ? getLocalImagePath(coverUrl) : null
 
-    const coverUrl = post.cover?.type === 'external'
-      ? post.cover.external?.url
-      : post.cover?.file?.url
-
-    // 로컬 이미지 경로 (또는 원본 URL) -> 없으면 랜덤 디폴트 이미지
-    const bgImage = coverUrl ? getLocalImagePath(coverUrl) : getDefaultCover(post.id)
-
-    // JSON-LD용 데이터
     const jsonLdData = {
       title,
       description: post.properties.description?.rich_text[0]?.plain_text || '',
@@ -107,92 +80,100 @@ export default async function BlogPostPage({
     }
 
     const breadcrumbData = [
-      { name: '홈', url: siteConfig.url },
-      { name: '블로그', url: `${siteConfig.url}/blog` },
+      { name: 'Home', url: siteConfig.url },
+      { name: 'Blog', url: `${siteConfig.url}/blog` },
       { name: title, url: `${siteConfig.url}/blog/${slug}` },
     ]
 
     return (
-      <>
+      <div className="bg-background min-h-screen">
         <BlogPostingJsonLd {...jsonLdData} />
         <BreadcrumbJsonLd items={breadcrumbData} />
         <ReadingProgress />
-        <main className="relative min-h-screen pb-20">
-        {/* Header / Cover Image Area */}
-        <div className="absolute top-0 left-0 w-full z-0">
-          <div className="relative pt-6 px-4 sm:px-6">
-             <div className="max-w-7xl mx-auto transform scale-95 sm:scale-90 transition-transform">
-               <div
-                 className="relative h-[400px] sm:h-[600px] w-full rounded-[2rem] sm:rounded-[2.5rem] bg-cover bg-center overflow-hidden select-none"
-                 style={{ backgroundImage: bgImage ? `url(${bgImage})` : undefined }}
-               >
-                 {/* Glassmorphism Overlay */}
-                  <div className="absolute inset-0 bg-white/20 backdrop-blur-md"></div>
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/50"></div>
+        
+        <main className="relative pt-32 pb-16 px-6">
+          <div className="container mx-auto max-w-5xl">
+            {/* Contrast-Fixed Premium Post Card */}
+            <div className={`relative rounded-[3rem] overflow-hidden border border-border shadow-2xl shadow-black/[0.03] group min-h-[500px] sm:min-h-[600px] flex flex-col ${!bgImage ? 'bg-foreground' : 'bg-white'}`}>
+              
+              {/* Cover Background */}
+              <div className="absolute inset-0 z-0">
+                {bgImage ? (
+                  <>
+                    <img 
+                      src={bgImage} 
+                      alt="" 
+                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+                    />
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/95 via-black/40 via-40% to-transparent" />
+                  </>
+                ) : (
+                  <div className="w-full h-full bg-linear-to-br from-gray-900 via-black to-gray-800 opacity-90" />
+                )}
+              </div>
 
-                 {/* Back Button with glass effect */}
-                  <Link
-                    href="/blog"
-                    className="absolute bottom-6 left-6 inline-flex items-center justify-center rounded-full glass p-3 text-gray-700 transition-all hover:-translate-x-1 hover:text-gray-900 hover-glow"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                  </Link>
-               </div>
-             </div>
+              {/* Back Button */}
+              <div className="relative z-20 p-8">
+                <Link 
+                  href="/blog"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-[13px] font-black text-white transition-all hover:-translate-x-1 shadow-sm"
+                >
+                  <ChevronLeft size={14} />
+                  Back
+                </Link>
+              </div>
 
-             {/* Title with enhanced styling */}
-             <div className="absolute top-1/2 left-1/2 w-full max-w-4xl -translate-x-1/2 -translate-y-1/2 text-center px-4 pointer-events-none">
-               <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-gray-900 drop-shadow-lg break-keep leading-tight animate-fade-in-up">
-                 {title}
-               </h1>
-             </div>
-          </div>
-        </div>
-
-        {/* Spacer for the absolute header */}
-        <div className="h-[450px] sm:h-[650px]"></div>
-
-        {/* Content with sticky TOC */}
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex gap-8 justify-center">
-            {/* Main Article */}
-            <article className="max-w-4xl w-full bg-transparent">
-              <header className="mb-12 text-center">
-                <div className="flex flex-wrap items-center justify-center gap-4 text-gray-600">
-                  {publishedAt && (
-                    <time dateTime={publishedAt} className="text-sm font-medium glass px-4 py-2 rounded-full">
-                      {formatDateString(publishedAt)}
-                    </time>
-                  )}
-
-                  {tags.length > 0 && (
-                    <div className="flex gap-2">
-                      {tags.map(tag => (
-                        <span
-                          key={tag}
-                          className="tag-pill px-3 py-1.5 bg-blue-50 text-blue-600 rounded-full text-xs font-medium"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+              {/* Title & Info Section */}
+              <div className="relative z-10 mt-auto p-10 sm:p-20 flex flex-col items-center text-center">
+                <div className="mb-8 flex flex-wrap justify-center gap-3">
+                  {tags.map(tag => (
+                    <span key={tag} className="px-3 py-1 rounded-lg bg-white/10 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-widest border border-white/20">
+                      {tag}
+                    </span>
+                  ))}
                 </div>
-              </header>
 
-              <Suspense fallback={<PostSkeleton />}>
-                <NotionContent pageId={post.id} />
-              </Suspense>
-            </article>
+                <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight mb-10 leading-[1.1] drop-shadow-2xl break-keep max-w-4xl">
+                  {title}
+                </h1>
 
-            {/* Sticky TOC */}
-            <TableOfContents />
+                <div className="flex flex-wrap items-center justify-center gap-6 text-[12px] font-black text-white/80 uppercase tracking-widest">
+                  <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full border border-white/10 backdrop-blur-sm">
+                     <Calendar size={14} className="text-accent" />
+                     {publishedAt ? formatDateString(publishedAt) : 'Recent'}
+                  </div>
+                  <div className="w-1 h-1 rounded-full bg-white/30" />
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-xs">
+                     <Clock size={14} className="text-accent" />
+                     Article
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </main>
-      </>
+
+          {/* Article Body Area - Adjusted Max Width & Sidebar Alignment */}
+          <div className="container mx-auto px-6 max-w-7xl pt-16 pb-40">
+            <div className="flex flex-col lg:flex-row gap-12 justify-center items-start">
+              {/* Main Content */}
+              <article className="max-w-3xl w-full flex flex-col min-w-0">
+                <Suspense fallback={<PostSkeleton />}>
+                  <NotionContent pageId={post.id} />
+                </Suspense>
+              </article>
+
+              {/* Improved TOC Sidebar */}
+              <aside className="hidden lg:block w-64 shrink-0 sticky top-32 self-start">
+                <div className="pl-8 border-l border-border">
+                  <h4 className="text-[11px] font-black text-foreground uppercase tracking-[0.2em] mb-8">On this page</h4>
+                  <TableOfContents />
+                </div>
+              </aside>
+            </div>
+          </div>
+        </main>
+      </div>
     )
   } catch (error) {
     console.error('Error loading post:', error)
@@ -202,15 +183,13 @@ export default async function BlogPostPage({
 
 function PostSkeleton() {
   return (
-    <div className="animate-pulse">
+    <div className="space-y-12 animate-pulse w-full">
       <div className="space-y-4">
-        <div className="h-4 bg-gray-200 rounded w-full"></div>
-        <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-        <div className="h-4 bg-gray-200 rounded w-4/5"></div>
-        <div className="h-64 bg-gray-200 rounded w-full"></div>
-        <div className="h-4 bg-gray-200 rounded w-full"></div>
-        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="h-4 bg-gray-100 rounded-full w-full"></div>
+        ))}
       </div>
+      <div className="h-96 bg-gray-100 rounded-3xl w-full"></div>
     </div>
   )
 }
