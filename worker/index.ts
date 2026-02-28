@@ -8,6 +8,10 @@
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
 
+type Fetcher = {
+  fetch(input: Request | string | URL, init?: RequestInit): Promise<Response>;
+};
+
 interface Env {
   ASSETS: Fetcher;
   IMAGES: {
@@ -17,6 +21,8 @@ interface Env {
       };
     };
   };
+  NOTION_API_KEY: string;
+  NOTION_DATABASE_ID: string;
 }
 
 export default {
@@ -36,6 +42,16 @@ export default {
         },
       }, allowedWidths);
     }
+
+    // Set process.env for compatibility with code that uses process.env
+    // @ts-ignore
+    globalThis.process = globalThis.process || {};
+    // @ts-ignore
+    globalThis.process.env = {
+      ...globalThis.process.env,
+      NOTION_API_KEY: env.NOTION_API_KEY,
+      NOTION_DATABASE_ID: env.NOTION_DATABASE_ID,
+    };
 
     // Delegate everything else to vinext
     return handler.fetch(request);
