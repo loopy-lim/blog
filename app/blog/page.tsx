@@ -5,6 +5,38 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ChevronLeft, Layers, Search } from 'lucide-react'
 import { getDefaultCover, getLocalImagePath } from '@/lib/image-utils'
+import { siteConfig } from '@/site.config'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Blog',
+  description: '기술적인 도전, 배움의 기록, 그리고 일상의 생각들을 공유합니다.',
+  openGraph: {
+    title: `Blog | ${siteConfig.title}`,
+    description: '기술적인 도전, 배움의 기록, 그리고 일상의 생각들을 공유합니다.',
+    url: `${siteConfig.url}/blog`,
+    siteName: siteConfig.title,
+    locale: 'ko_KR',
+    type: 'website',
+    images: [
+      {
+        url: '/images/og/default.jpg',
+        width: 1200,
+        height: 630,
+        alt: siteConfig.title,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `Blog | ${siteConfig.title}`,
+    description: '기술적인 도전, 배움의 기록, 그리고 일상의 생각들을 공유합니다.',
+    images: ['/images/og/default.jpg'],
+  },
+  alternates: {
+    canonical: `${siteConfig.url}/blog`,
+  },
+}
 
 export default async function BlogPage() {
   return (

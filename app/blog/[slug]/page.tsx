@@ -31,7 +31,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const description = post.properties.description?.rich_text[0]?.plain_text || ''
     const publishedAt = post.properties.publishAt?.date?.start
     const tags = post.properties.tags?.multi_select?.map((tag) => tag.name) || []
-    const coverUrl = post.cover?.type === 'external' ? post.cover.external?.url : post.cover?.file?.url
+
+    // Use generated OG image for this post
+    const ogImageUrl = `${siteConfig.url}/images/og/${slug}.jpg`
 
     return {
       title,
@@ -44,9 +46,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         type: 'article',
         publishedTime: publishedAt,
         tags,
-        images: coverUrl ? [{ url: coverUrl, width: 1200, height: 630, alt: title }] : [],
+        images: [{ url: ogImageUrl, width: 1200, height: 630, alt: title }],
       },
-      twitter: { card: 'summary_large_image', title, description, images: coverUrl ? [coverUrl] : [] },
+      twitter: {
+        card: 'summary_large_image',
+        title,
+        description,
+        images: [ogImageUrl],
+      },
+      alternates: {
+        canonical: `${siteConfig.url}/blog/${slug}`,
+      },
     }
   } catch (error) {
     console.error('Error generating metadata:', error)
