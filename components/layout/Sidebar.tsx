@@ -12,8 +12,7 @@ import {
   ChevronLeft, 
   Menu,
   Github,
-  Mail,
-  ExternalLink
+  Mail
 } from 'lucide-react'
 import { siteConfig } from '@/site.config'
 
