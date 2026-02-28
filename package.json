@@ -3,11 +3,11 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "next dev",
+    "dev": "vite dev",
     "build-data": "tsx scripts/build-data.ts",
-    "build": "pnpm download-images && pnpm build-data && next build && node scripts/post-build.js",
+    "build": "bun download-images && bun build-data && vite build && node scripts/post-build.js",
     "download-images": "tsx scripts/download-images.ts",
-    "start": "next start",
+    "start": "vite preview",
     "lint": "next lint",
     "type-check": "tsc --noEmit"
   },
@@ -39,6 +39,7 @@
     "@types/react": "19",
     "@types/react-dom": "19",
     "@typescript-eslint/parser": "^8.37.0",
+    "@vitejs/plugin-rsc": "^0.5.21",
     "autoprefixer": "^10.4.22",
     "eslint": "^9.32.0",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -47,14 +48,17 @@
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
+    "react-server-dom-webpack": "^19.2.4",
     "shiki": "^3.9.2",
     "tailwindcss": "^4.1.17",
     "tsx": "^4.21.0",
     "typescript": "~5.8.3",
-    "typescript-eslint": "^8.37.0"
+    "typescript-eslint": "^8.37.0",
+    "vinext": "^0.0.15",
+    "vite": "^7.3.1"
   },
   "overrides": {
     "ajv": "^8.17.1"
   },
-  "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad"
+  "packageManager": "bun@1.3.6"
 }
