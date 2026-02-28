@@ -37,13 +37,15 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <main className="min-h-screen bg-background">
       <About />
       <Skills />
       <Experience />
       <Projects />
-      <Contact />
+      <Contact currentYear={currentYear} />
     </main>
   );
 }

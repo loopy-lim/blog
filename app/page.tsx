@@ -3,6 +3,7 @@ import { Contact } from "@/components/Contact";
 import { RecentPosts } from "@/components/RecentPosts";
 import { getStaticDatabase } from "@/lib/static-data";
 import { getDefaultCover, getLocalImagePath } from "@/lib/image-utils";
+import { formatDateString } from "@/lib/utils";
 import { siteConfig } from "@/site.config";
 import type { Metadata } from "next";
 
@@ -42,7 +43,7 @@ interface BlogPost {
   title: string;
   description?: string;
   slug: string;
-  publishAt?: string;
+  publishedAtLabel?: string;
   tags?: string[];
   coverImage?: string;
 }
@@ -57,7 +58,7 @@ async function getRecentPosts(): Promise<BlogPost[]> {
       title: post.title,
       description: post.description,
       slug: post.slug,
-      publishAt: post.publishedAt,
+      publishedAtLabel: post.publishedAt ? formatDateString(post.publishedAt) : "Recent",
       tags: post.tags,
       coverImage: post.coverImage ? getLocalImagePath(post.coverImage) : getDefaultCover(post.id),
     }));
@@ -69,6 +70,7 @@ async function getRecentPosts(): Promise<BlogPost[]> {
 
 export default async function Home() {
   let recentPosts: BlogPost[] = [];
+  const currentYear = new Date().getFullYear();
 
   try {
     recentPosts = await getRecentPosts();
@@ -80,7 +82,7 @@ export default async function Home() {
     <main className="min-h-screen">
       <Hero />
       <RecentPosts posts={recentPosts} />
-      <Contact />
+      <Contact currentYear={currentYear} />
     </main>
   );
 }

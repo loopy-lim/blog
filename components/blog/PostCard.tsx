@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Calendar, ArrowRight, BookOpen } from 'lucide-react'
-import { formatDateString } from '@/lib/utils'
 
 interface PostCardProps {
   post: {
@@ -11,7 +10,7 @@ interface PostCardProps {
     title: string
     slug: string
     description?: string
-    publishedAt?: string
+    publishedAtLabel?: string
     tags?: string[]
     coverImage?: string
   }
@@ -54,7 +53,7 @@ export function PostCard({ post }: PostCardProps) {
         {/* Date Badge */}
         <div className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/90 backdrop-blur-md border border-border text-[10px] font-black text-muted uppercase tracking-widest shadow-xs">
           <Calendar size={10} className="text-accent" />
-          {post.publishedAt ? formatDateString(post.publishedAt) : 'Recent'}
+          {post.publishedAtLabel || 'Recent'}
         </div>
       </div>
 

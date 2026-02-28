@@ -68,7 +68,7 @@ export default function RootLayout({
           author={siteConfig.author}
         />
       </head>
-      <body className="bg-background text-foreground">
+      <body className="bg-background text-foreground" suppressHydrationWarning>
         <GoogleAnalytics
           gaId={process.env.NEXT_PUBLIC_GA_ID}
           gtmId={process.env.NEXT_PUBLIC_GTM_ID}

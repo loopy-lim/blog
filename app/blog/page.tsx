@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ChevronLeft, Layers, Search } from 'lucide-react'
 import { getDefaultCover, getLocalImagePath } from '@/lib/image-utils'
+import { formatDateString } from '@/lib/utils'
 import { siteConfig } from '@/site.config'
 import type { Metadata } from 'next'
 
@@ -115,6 +116,7 @@ async function PostList() {
             key={post.id}
             post={{
               ...post,
+              publishedAtLabel: post.publishedAt ? formatDateString(post.publishedAt) : 'Recent',
               coverImage: post.coverImage ? getLocalImagePath(post.coverImage) : getDefaultCover(post.id),
             }}
           />

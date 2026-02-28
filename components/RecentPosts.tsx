@@ -10,22 +10,13 @@ interface BlogPost {
   title: string
   description?: string
   slug: string
-  publishAt?: string
+  publishedAtLabel?: string
   tags?: string[]
   coverImage?: string
 }
 
 interface RecentPostsProps {
   posts: BlogPost[]
-}
-
-function formatDate(dateString?: string): string {
-  if (!dateString) return ''
-  return new Date(dateString).toLocaleDateString('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
 }
 
 export function RecentPosts({ posts }: RecentPostsProps) {
@@ -116,7 +107,7 @@ export function RecentPosts({ posts }: RecentPostsProps) {
                   {/* Date Badge */}
                   <div className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/80 backdrop-blur-md border border-white/50 text-[10px] font-black text-muted-foreground uppercase tracking-widest shadow-sm">
                     <Calendar size={12} className="text-accent" />
-                    {formatDate(post.publishAt)}
+                    {post.publishedAtLabel || 'Recent'}
                   </div>
                 </div>
 

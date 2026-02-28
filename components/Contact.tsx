@@ -5,7 +5,11 @@ import { Mail, Github, ArrowUpRight } from "lucide-react";
 import { resume } from "@/lib/data";
 import Link from "next/link";
 
-export function Contact() {
+interface ContactProps {
+  currentYear: number;
+}
+
+export function Contact({ currentYear }: ContactProps) {
   return (
     <section id="contact" className="relative py-24 overflow-hidden bg-background">
       {/* Background Decor - Changed from full rounded to more geometric */}
@@ -82,7 +86,7 @@ export function Contact() {
 
         <div className="mt-24 pt-10 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-6">
           <p className="text-[11px] font-black text-muted uppercase tracking-[0.2em]">
-            © {new Date().getFullYear()} {resume.basics.name}
+            © {currentYear} {resume.basics.name}
           </p>
           <div className="flex gap-8">
             <Link href="/" className="text-[11px] font-black text-foreground hover:text-accent transition-colors uppercase tracking-widest">Home</Link>
