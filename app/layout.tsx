@@ -2,6 +2,7 @@ import './globals.css'
 import { siteConfig } from '@/site.config'
 import { WebsiteJsonLd } from '@/components/seo/JsonLd'
 import { Navbar } from '@/components/layout/Navbar'
+import TopLoader from '@/components/layout/TopLoader'
 
 export const metadata = {
   title: {
@@ -55,6 +56,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-background text-foreground">
+        <TopLoader />
         <div className="flex min-h-screen flex-col antialiased">
           <Navbar />
           <main className="flex-1 w-full">

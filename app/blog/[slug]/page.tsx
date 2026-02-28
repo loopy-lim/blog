@@ -7,7 +7,7 @@ import { ReadingProgress } from '@/components/blog/ReadingProgress'
 import { TableOfContents } from '@/components/blog/TableOfContents'
 import Link from 'next/link'
 import { formatDateString } from '@/lib/utils'
-import { getLocalImagePath } from '@/lib/image-utils'
+import { getLocalImagePath, getDefaultCover } from '@/lib/image-utils'
 import { siteConfig } from '@/site.config'
 import { Calendar, ChevronLeft, Clock } from 'lucide-react'
 
@@ -68,7 +68,7 @@ export default async function BlogPostPage({
     const publishedAt = post.properties.publishAt?.date?.start
     const tags = post.properties.tags?.multi_select?.map((tag) => tag.name) || []
     const coverUrl = post.cover?.type === 'external' ? post.cover.external?.url : post.cover?.file?.url
-    const bgImage = coverUrl ? getLocalImagePath(coverUrl) : null
+    const bgImage = coverUrl ? getLocalImagePath(coverUrl) : getDefaultCover(post.id)
 
     const jsonLdData = {
       title,
@@ -139,12 +139,12 @@ export default async function BlogPostPage({
                 </h1>
 
                 <div className="flex flex-wrap items-center justify-center gap-6 text-[12px] font-black text-white/80 uppercase tracking-widest">
-                  <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full border border-white/10 backdrop-blur-sm">
+                  <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 backdrop-blur-sm">
                      <Calendar size={14} className="text-accent" />
                      {publishedAt ? formatDateString(publishedAt) : 'Recent'}
                   </div>
-                  <div className="w-1 h-1 rounded-full bg-white/30" />
-                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-xs">
+                  <div className="w-1.5 h-1.5 rounded-sm bg-white/30 rotate-45" />
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 backdrop-blur-xs">
                      <Clock size={14} className="text-accent" />
                      Article
                   </div>
@@ -186,7 +186,7 @@ function PostSkeleton() {
     <div className="space-y-12 animate-pulse w-full">
       <div className="space-y-4">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-4 bg-gray-100 rounded-full w-full"></div>
+          <div key={i} className="h-4 bg-gray-100 rounded-lg w-full"></div>
         ))}
       </div>
       <div className="h-96 bg-gray-100 rounded-3xl w-full"></div>

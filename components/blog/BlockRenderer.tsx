@@ -2,10 +2,12 @@ import type { BlockObjectResponse } from '@notionhq/client'
 import { getLocalImagePath } from '@/lib/image-utils'
 import { highlightCode } from '@/lib/highlight'
 import { CodeBlock } from './CodeBlock'
+import { ZoomableImage } from './ZoomableImage'
 import { Info } from 'lucide-react'
 
 interface BlockRendererProps {
   block: BlockObjectResponse
+  numberedIndex?: number
 }
 
 // YouTube URL에서 ID 추출하는 함수
@@ -25,6 +27,47 @@ function extractYouTubeId(url: string): string | null {
 }
 
 type RichTextList = Extract<BlockObjectResponse, { type: 'paragraph' }>['paragraph']['rich_text']
+type BlockWithChildren = BlockObjectResponse & { children?: BlockObjectResponse[] }
+
+const getChildBlocks = (block: BlockWithChildren): BlockObjectResponse[] => {
+  if (Array.isArray(block.children)) {
+    return block.children as BlockObjectResponse[]
+  }
+
+  const blockRecord = block as Record<string, unknown>
+  const blockContent = blockRecord[block.type] as { children?: unknown } | undefined
+  if (blockContent && Array.isArray(blockContent.children)) {
+    return blockContent.children as BlockObjectResponse[]
+  }
+
+  return []
+}
+
+const renderChildBlocks = (children: BlockObjectResponse[], className: string) => {
+  if (!children.length) {
+    return null
+  }
+
+  let nestedNumberedIndex = 0
+
+  return (
+    <div className={`${className} pl-3 border-l border-border/40 ml-1 mt-4 space-y-4`}>
+      {children.map((child, index) => {
+        let childNumberedIndex: number | undefined
+
+        if (child.type === 'numbered_list_item') {
+          const prev = children[index - 1]
+          nestedNumberedIndex = prev?.type === 'numbered_list_item' ? nestedNumberedIndex + 1 : 1
+          childNumberedIndex = nestedNumberedIndex
+        } else {
+          nestedNumberedIndex = 0
+        }
+
+        return <BlockRenderer key={child.id} block={child} numberedIndex={childNumberedIndex} />
+      })}
+    </div>
+  )
+}
 
 // Helper function for rendering rich text with annotations
 const renderRichText = (richText: RichTextList) => {
@@ -73,7 +116,9 @@ const renderRichText = (richText: RichTextList) => {
   })
 }
 
-export async function BlockRenderer({ block }: BlockRendererProps) {
+export async function BlockRenderer({ block, numberedIndex }: BlockRendererProps) {
+  const blockWithChildren = block as BlockWithChildren
+
   switch (block.type) {
     case 'paragraph':
       return (
@@ -112,13 +157,11 @@ export async function BlockRenderer({ block }: BlockRendererProps) {
 
       return (
         <figure className="my-12 space-y-3 group/img">
-          <div className="relative w-full rounded-2xl overflow-hidden border border-border/40 shadow-sm flex justify-center mx-auto transition-shadow duration-500 hover:shadow-md">
-            <img
-              src={imageUrl}
-              alt={caption || 'Content image'}
-              className="max-w-full h-auto object-contain block mx-auto transition-transform duration-700 group-hover/img:scale-[1.01] max-h-[75vh]"
-            />
-          </div>
+          <ZoomableImage 
+            src={imageUrl} 
+            alt={caption || 'Content image'} 
+            caption={caption} 
+          />
           {caption && (
             <figcaption className="text-center text-[11px] font-bold text-muted uppercase tracking-[0.15em] italic opacity-60">
               {caption}
@@ -150,13 +193,18 @@ export async function BlockRenderer({ block }: BlockRendererProps) {
       )
 
     case 'callout':
+      const calloutChildren = getChildBlocks(blockWithChildren)
+
       return (
         <div className="my-8 flex gap-4 p-6 rounded-2xl bg-gray-50 border border-border shadow-xs transition-all hover:bg-white hover:shadow-md">
-          <div className="flex-shrink-0 text-accent">
-             <Info size={24} />
+          <div className="flex-shrink-0 text-accent pt-0.5">
+            <Info size={24} />
           </div>
-          <div className="text-[16px] font-bold text-foreground leading-relaxed">
-            {renderRichText(block.callout.rich_text)}
+          <div className="min-w-0 flex-1">
+            <div className="text-[16px] font-bold text-foreground leading-relaxed">
+              {renderRichText(block.callout.rich_text)}
+            </div>
+            {renderChildBlocks(calloutChildren, 'mt-4 space-y-3')}
           </div>
         </div>
       )
@@ -165,25 +213,106 @@ export async function BlockRenderer({ block }: BlockRendererProps) {
       return <hr className="my-12 border-border" />
 
     case 'bulleted_list_item':
+      const bulletedChildren = getChildBlocks(blockWithChildren)
+
       return (
-        <li className="ml-6 list-none mb-4 flex items-start gap-3">
-          <div className="mt-2.5 h-1.5 w-1.5 rounded-full bg-accent shrink-0" />
-          <span className="text-[17px] font-medium text-foreground/80 leading-relaxed">
-            {renderRichText(block.bulleted_list_item.rich_text)}
-          </span>
+        <li className="ml-1 list-none mb-4 group/item">
+          <div className="flex items-start gap-3">
+            <div className="mt-2.5 h-1.5 w-1.5 rounded-sm bg-accent/40 group-hover/item:bg-accent shrink-0 rotate-45 transition-colors" />
+            <span className="text-[17px] font-medium text-foreground/80 leading-relaxed">
+              {renderRichText(block.bulleted_list_item.rich_text)}
+            </span>
+          </div>
+          {renderChildBlocks(bulletedChildren, '')}
         </li>
       )
 
     case 'numbered_list_item':
+      const numberedChildren = getChildBlocks(blockWithChildren)
+      const marker = numberedIndex ?? 1
+
       return (
-        <li className="ml-6 list-none mb-4 flex items-start gap-3">
-          <span className="text-accent font-black text-sm mt-1">
-             •
-          </span>
-          <span className="text-[17px] font-medium text-foreground/80 leading-relaxed">
-            {renderRichText(block.numbered_list_item.rich_text)}
-          </span>
+        <li className="ml-1 list-none mb-4 group/item">
+          <div className="flex items-start gap-3">
+            <span className="text-accent/60 group-hover/item:text-accent font-black text-sm mt-1 min-w-[1rem] text-right transition-colors">
+              {marker}.
+            </span>
+            <span className="text-[17px] font-medium text-foreground/80 leading-relaxed">
+              {renderRichText(block.numbered_list_item.rich_text)}
+            </span>
+          </div>
+          {renderChildBlocks(numberedChildren, '')}
         </li>
+      )
+
+    case 'table':
+      const tableRows = getChildBlocks(blockWithChildren).filter(
+        (child): child is Extract<BlockObjectResponse, { type: 'table_row' }> => child.type === 'table_row'
+      )
+
+      if (!tableRows.length) {
+        return null
+      }
+
+      const tableWidth =
+        block.table.table_width || Math.max(...tableRows.map((row) => row.table_row.cells.length), 0)
+      const hasColumnHeader = block.table.has_column_header
+      const hasRowHeader = block.table.has_row_header
+      const headerRow = hasColumnHeader ? tableRows[0] : null
+      const bodyRows = hasColumnHeader ? tableRows.slice(1) : tableRows
+
+      const normalizeCells = (cells: Array<RichTextList>) => {
+        if (!tableWidth) return cells
+        return Array.from({ length: tableWidth }, (_, index) => cells[index] || [])
+      }
+
+      return (
+        <div className="my-10 overflow-x-auto rounded-2xl border border-border/70">
+          <table className="w-full min-w-[560px] border-collapse text-left text-sm">
+            {headerRow && (
+              <thead className="bg-gray-50">
+                <tr>
+                  {normalizeCells(headerRow.table_row.cells as Array<RichTextList>).map((cell, cellIndex) => (
+                    <th
+                      key={`${headerRow.id}-h-${cellIndex}`}
+                      scope="col"
+                      className="border-b border-border/70 px-4 py-3 font-black text-foreground"
+                    >
+                      {renderRichText(cell)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+            )}
+            <tbody>
+              {bodyRows.map((row) => (
+                <tr key={row.id} className="odd:bg-white even:bg-gray-50/40">
+                  {normalizeCells(row.table_row.cells as Array<RichTextList>).map((cell, cellIndex) => {
+                    const isRowHeader = hasRowHeader && cellIndex === 0
+
+                    if (isRowHeader) {
+                      return (
+                        <th
+                          key={`${row.id}-r-${cellIndex}`}
+                          scope="row"
+                          className="border-t border-border/60 px-4 py-3 font-bold text-foreground"
+                        >
+                          {renderRichText(cell)}
+                        </th>
+                      )
+                    }
+
+                    return (
+                      <td key={`${row.id}-d-${cellIndex}`} className="border-t border-border/60 px-4 py-3 text-foreground/85">
+                        {renderRichText(cell)}
+                      </td>
+                    )
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )
 
     default:

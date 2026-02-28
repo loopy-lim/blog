@@ -37,13 +37,64 @@ interface NotionPageResponse {
 }
 
 interface NotionBlocksResponse {
-  results: Array<{
-    id: string
-    type: string
-    [key: string]: unknown
-  }>
+  results: NotionBlockNode[]
   next_cursor?: string
   has_more: boolean
+}
+
+interface NotionBlockNode {
+  id: string
+  type: string
+  has_children?: boolean
+  children?: NotionBlockNode[]
+  [key: string]: unknown
+}
+
+async function fetchBlockChildren(blockId: string): Promise<NotionBlockNode[]> {
+  const blocks: NotionBlockNode[] = []
+  let cursor: string | undefined = undefined
+
+  while (true) {
+    const url = new URL(`https://api.notion.com/v1/blocks/${blockId}/children`)
+    url.searchParams.set('page_size', '100')
+    if (cursor) {
+      url.searchParams.set('start_cursor', cursor)
+    }
+
+    const response = await fetch(url.toString(), {
+      headers: {
+        'Authorization': `Bearer ${process.env.NOTION_API_KEY}`,
+        'Content-Type': 'application/json',
+        'Notion-Version': '2022-06-28',
+      },
+      next: { revalidate: 3600 }, // 1시간 캐시
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const data = await response.json() as NotionBlocksResponse
+
+    for (const block of data.results) {
+      if (block.has_children) {
+        const children = await fetchBlockChildren(block.id)
+        block.children = children
+
+        const blockContent = block[block.type]
+        if (blockContent && typeof blockContent === 'object' && !Array.isArray(blockContent)) {
+          ;(blockContent as Record<string, unknown>).children = children
+        }
+      }
+
+      blocks.push(block)
+    }
+
+    if (!data.next_cursor) break
+    cursor = data.next_cursor
+  }
+
+  return blocks
 }
 
 // 캐싱된 데이터베이스 쿼리
@@ -128,39 +179,12 @@ export const getPage = cache(async (pageId: string): Promise<NotionPageResponse>
 export const getPageBlocks = cache(async (pageId: string): Promise<Array<{
     id: string
     type: string
+    has_children?: boolean
+    children?: NotionBlockNode[]
     [key: string]: unknown
   }>> => {
   try {
-    const blocks = []
-    let cursor: string | undefined = undefined
-
-    while (true) {
-      const url = new URL(`https://api.notion.com/v1/blocks/${pageId}/children`)
-      url.searchParams.set('page_size', '100')
-      if (cursor) {
-        url.searchParams.set('start_cursor', cursor)
-      }
-
-      const response = await fetch(url.toString(), {
-        headers: {
-          'Authorization': `Bearer ${process.env.NOTION_API_KEY}`,
-          'Content-Type': 'application/json',
-          'Notion-Version': '2022-06-28',
-        },
-        next: { revalidate: 3600 } // 1시간 캐시
-      })
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-
-      const data = await response.json() as NotionBlocksResponse
-      blocks.push(...data.results)
-      if (!data.next_cursor) break
-      cursor = data.next_cursor
-    }
-
-    return blocks
+    return await fetchBlockChildren(pageId)
   } catch (error) {
     console.error('Error fetching page blocks:', error)
     throw new Error(`Failed to fetch page blocks: ${error instanceof Error ? error.message : 'Unknown error'}`)
