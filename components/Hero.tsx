@@ -29,7 +29,7 @@ export function Hero() {
   }
 
   return (
-    <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-20">
+    <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 sm:px-6 py-20">
       {/* Dynamic Animated Background */}
       <InnovativeBackground />
       
@@ -47,9 +47,9 @@ export function Hero() {
           {/* Icon Section */}
           <motion.div 
             variants={itemVariants}
-            className="mb-8 h-20 w-20 flex items-center justify-center relative"
+            className="mb-6 sm:mb-8 h-16 w-16 sm:h-20 sm:w-20 flex items-center justify-center relative"
           >
-            <div className="w-20 h-20 animate-float">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 animate-float">
               <img 
                 src="/favicon.png" 
                 alt="Profile Icon" 
@@ -62,23 +62,23 @@ export function Hero() {
           {/* Name/Title */}
           <motion.h1 
             variants={itemVariants}
-            className="text-6xl font-black tracking-tight text-foreground sm:text-8xl lg:text-9xl leading-[0.9] text-gradient"
+            className="text-4xl xs:text-5xl font-black tracking-tight text-foreground sm:text-8xl lg:text-9xl leading-[0.9] text-gradient"
           >
             {resume.basics.name}
           </motion.h1>
             
           {/* Label/Role */}
-          <motion.div variants={itemVariants} className="mt-8 flex flex-col items-center">
-            <span className="text-2xl font-black text-foreground/80 sm:text-4xl tracking-tight">
+          <motion.div variants={itemVariants} className="mt-6 sm:mt-8 flex flex-col items-center">
+            <span className="text-lg font-black text-foreground/80 sm:text-4xl tracking-tight">
               {resume.basics.label}
             </span>
-            <div className="mt-4 h-1.5 w-20 bg-accent rounded-sm opacity-20" />
+            <div className="mt-3 sm:mt-4 h-1.5 w-16 sm:w-20 bg-accent rounded-sm opacity-20" />
           </motion.div>
 
           {/* Summary */}
           <motion.p 
             variants={itemVariants}
-            className="mx-auto mt-10 mb-12 max-w-2xl text-lg text-muted sm:text-2xl leading-relaxed font-medium"
+            className="mx-auto mt-8 mb-10 sm:mt-10 sm:mb-12 max-w-2xl text-sm sm:text-2xl leading-relaxed font-medium px-2 sm:px-4 text-muted"
           >
             {resume.basics.shortSummary}
           </motion.p>
@@ -86,33 +86,33 @@ export function Hero() {
           {/* Action Buttons */}
           <motion.div 
             variants={itemVariants}
-            className="flex flex-wrap justify-center gap-5"
+            className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-5 w-full max-w-xs sm:max-w-none"
           >
             <Link
               href={resume.basics.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl bg-foreground text-background px-10 py-4 text-sm font-black transition-all shadow-xl"
+              className="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl bg-foreground text-background px-6 sm:px-10 py-3.5 sm:py-4 text-sm font-black transition-all shadow-xl"
             >
               <div className="absolute inset-0 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-              <Github size={20} className="relative z-10 mr-3" />
+              <Github size={18} className="relative z-10 mr-2 sm:mr-3" />
               <span className="relative z-10">GitHub</span>
             </Link>
 
             <Link
               href="/blog"
-              className="group inline-flex items-center justify-center rounded-2xl bg-white/80 border border-border backdrop-blur-xl px-10 py-4 text-sm font-black text-foreground transition-all hover:bg-white shadow-sm"
+              className="group inline-flex items-center justify-center rounded-2xl bg-white/80 border border-border backdrop-blur-xl px-6 sm:px-10 py-3.5 sm:py-4 text-sm font-black text-foreground transition-all hover:bg-white shadow-sm"
             >
-              <FileText size={20} className="mr-3 text-accent" />
+              <FileText size={18} className="mr-2 sm:mr-3 text-accent" />
               포스트 읽기
-              <ArrowRight size={18} className="ml-3 text-muted transition-transform group-hover:translate-x-1" />
+              <ArrowRight size={16} className="ml-2 sm:ml-3 text-muted transition-transform group-hover:translate-x-1" />
             </Link>
 
             <Link
               href="/about"
-              className="inline-flex items-center justify-center rounded-2xl bg-white/50 border border-border backdrop-blur-lg px-10 py-4 text-sm font-black text-foreground transition-all hover:bg-white/80 shadow-sm"
+              className="inline-flex items-center justify-center rounded-2xl bg-white/50 border border-border backdrop-blur-lg px-6 sm:px-10 py-3.5 sm:py-4 text-sm font-black text-foreground transition-all hover:bg-white/80 shadow-sm"
             >
-              <User size={20} className="mr-3 text-green-500" />
+              <User size={18} className="mr-2 sm:mr-3 text-green-500" />
               About Me
             </Link>
           </motion.div>

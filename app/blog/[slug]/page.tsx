@@ -118,48 +118,48 @@ export default async function BlogPostPage({
       { name: title, url: `${siteConfig.url}/blog/${slug}` },
     ]
 
-    return (
-      <div className="bg-background min-h-screen">
-        <BlogPostingJsonLd {...jsonLdData} />
-        <BreadcrumbJsonLd items={breadcrumbData} />
-        <ReadingProgress />
-        
-        <main className="relative pt-32 pb-16 px-6">
-          <div className="container mx-auto max-w-5xl">
-            {/* Contrast-Fixed Premium Post Card */}
-            <div className={`relative rounded-[3rem] overflow-hidden border border-border shadow-2xl shadow-black/[0.03] group min-h-[500px] sm:min-h-[600px] flex flex-col ${!bgImage ? 'bg-foreground' : 'bg-white'}`}>
-              
-              {/* Cover Background */}
-              <div className="absolute inset-0 z-0">
-                {bgImage ? (
-                  <>
-                    <img 
-                      src={bgImage} 
-                      alt="" 
-                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
-                    />
-                    <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
-                    <div className="absolute inset-0 bg-linear-to-t from-black/95 via-black/40 via-40% to-transparent" />
-                  </>
-                ) : (
-                  <div className="w-full h-full bg-linear-to-br from-gray-900 via-black to-gray-800 opacity-90" />
-                )}
-              </div>
-
-              {/* Back Button */}
-              <div className="relative z-20 p-8">
-                <Link 
-                  href="/blog"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-[13px] font-black text-white transition-all hover:-translate-x-1 shadow-sm"
-                >
-                  <ChevronLeft size={14} />
-                  Back
-                </Link>
-              </div>
-
-              {/* Title & Info Section */}
-              <div className="relative z-10 mt-auto p-10 sm:p-20 flex flex-col items-center text-center">
-                <div className="mb-8 flex flex-wrap justify-center gap-3">
+        return (
+          <div className="bg-background min-h-screen">
+            <BlogPostingJsonLd {...jsonLdData} />
+            <BreadcrumbJsonLd items={breadcrumbData} />
+            <ReadingProgress />
+            
+            <main className="relative pb-16">
+              {/* Header Section: Edge-to-edge on mobile, Containerized on Desktop */}
+              <div className="w-full sm:container sm:mx-auto sm:max-w-5xl sm:pt-32 sm:px-6">
+                {/* Contrast-Fixed Premium Post Card */}
+                <div className={`relative sm:rounded-[3rem] overflow-hidden border-b sm:border border-border shadow-2xl shadow-black/3 group min-h-screen sm:min-h-150 flex flex-col ${!bgImage ? 'bg-foreground' : 'bg-white'}`}>
+                  
+                  {/* Cover Background */}
+                  <div className="absolute inset-0 z-0">
+                    {bgImage ? (
+                      <>
+                        <img
+                          src={bgImage} 
+                          alt="" 
+                          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+                        />
+                        <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/95 via-black/40 via-40% to-transparent" />
+                      </>
+                    ) : (
+                      <div className="w-full h-full bg-linear-to-br from-gray-900 via-black to-gray-800 opacity-90" />
+                    )}
+                  </div>
+    
+                  {/* Back Button */}
+                  <div className="relative z-20 p-8 pt-32 sm:pt-8">
+                    <Link 
+                      href="/blog"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-[13px] font-black text-white transition-all hover:-translate-x-1 shadow-sm"
+                    >
+                      <ChevronLeft size={14} />
+                      Back
+                    </Link>
+                  </div>
+    
+                  {/* Title & Info Section */}
+                  <div className="relative z-10 mt-auto p-8 sm:p-20 flex flex-col items-center text-center pb-20 sm:pb-20">                <div className="mb-8 flex flex-wrap justify-center gap-3">
                   {tags.map(tag => (
                     <span key={tag} className="px-3 py-1 rounded-lg bg-white/10 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-widest border border-white/20">
                       {tag}
@@ -167,7 +167,7 @@ export default async function BlogPostPage({
                   ))}
                 </div>
 
-                <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight mb-10 leading-[1.1] drop-shadow-2xl break-keep max-w-4xl">
+                <h1 className="text-3xl sm:text-6xl font-black text-white tracking-tight mb-8 sm:mb-10 leading-[1.1] drop-shadow-2xl break-keep max-w-4xl px-2">
                   {title}
                 </h1>
 

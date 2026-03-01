@@ -20,55 +20,72 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // 스크롤 임계값을 조금 더 높여서 의도치 않은 깜빡임 방지
-      setScrolled(window.scrollY > 60)
+      setScrolled(window.scrollY > 20)
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [mobileMenuOpen])
+
+  // 페이지 이동 시 Navbar 상태 초기화 (글리치 방지)
+  useEffect(() => {
+    setScrolled(false)
+    setMobileMenuOpen(false)
+  }, [pathname])
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-[100] px-4 py-6 pointer-events-none flex justify-center">
+    <header className="fixed top-0 left-0 right-0 z-[100] px-4 py-4 sm:py-6 pointer-events-none flex justify-center">
       <motion.nav 
-        layout
         initial={false}
+        animate={{
+          backgroundColor: scrolled ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.45)',
+          backdropFilter: scrolled ? 'blur(24px) saturate(180%)' : 'blur(12px) saturate(100%)',
+          borderRadius: scrolled ? '2rem' : '1.25rem',
+          maxWidth: scrolled ? '420px' : '1024px',
+          width: '100%',
+          paddingLeft: scrolled ? '1.25rem' : '1.5rem',
+          paddingRight: scrolled ? '1.25rem' : '1.5rem',
+          paddingTop: scrolled ? '0.625rem' : '0.5rem',
+          paddingBottom: scrolled ? '0.625rem' : '0.5rem',
+          gap: scrolled ? '2rem' : '1rem',
+        }}
         transition={{ 
           type: 'spring', 
-          stiffness: 350, 
-          damping: 35,
-          mass: 1
+          stiffness: 260, 
+          damping: 30,
         }}
-        style={{ 
-          borderRadius: scrolled ? '2rem' : '1rem',
-        }}
-        className={`flex items-center justify-between pointer-events-auto overflow-hidden border shadow-black/5 ${
-          scrolled 
-            ? 'bg-white/80 backdrop-blur-xl border-white/20 shadow-2xl px-4 py-2 w-auto gap-8' 
-            : 'bg-transparent border-transparent py-2 w-full max-w-5xl px-6'
-        }`}
+        className="flex items-center justify-between pointer-events-auto overflow-hidden border border-white/20 shadow-black/5"
       >
         {/* Logo / Title Area */}
         <Link href="/" className="flex items-center gap-2 group shrink-0">
-          <motion.div 
-            layout
-            className="w-8 h-8 rounded-xl overflow-hidden flex items-center justify-center shadow-lg shadow-black/5 bg-white border border-border/50"
-          >
+          <div className="w-8 h-8 rounded-xl overflow-hidden flex items-center justify-center shadow-lg shadow-black/5 bg-white border border-border/50">
             <img 
               src="/favicon.png" 
               alt="Logo" 
               className="w-full h-full object-contain"
             />
-          </motion.div>
+          </div>
           
-          <AnimatePresence mode="popLayout">
+          <AnimatePresence>
             {!scrolled && (
               <motion.span 
                 key="nav-title"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.2 }}
-                className="text-[15px] font-black tracking-tight text-foreground whitespace-nowrap hidden sm:inline-block"
+                initial={{ opacity: 0, x: -10, width: 0 }}
+                animate={{ opacity: 1, x: 0, width: 'auto' }}
+                exit={{ opacity: 0, x: -10, width: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="text-[15px] font-black tracking-tight text-foreground whitespace-nowrap hidden sm:inline-block overflow-hidden"
               >
                 {siteConfig.title}
               </motion.span>
@@ -77,7 +94,7 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Nav Links */}
-        <div className="flex items-center gap-1">
+        <div className="hidden md:flex items-center gap-1">
           {navItems.map((item) => {
             const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
             return (
@@ -94,7 +111,7 @@ export function Navbar() {
                 {isActive && (
                   <motion.div 
                     layoutId="pill-active"
-                    className="absolute inset-0 bg-gray-100 rounded-xl -z-0"
+                    className="absolute inset-0 bg-gray-100/80 rounded-xl -z-0"
                     transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                   />
                 )}
@@ -114,30 +131,24 @@ export function Navbar() {
           </a>
         </div>
 
-        {/* Mobile Toggle - Only show when expanded */}
-        <AnimatePresence>
-          {!scrolled && (
-            <motion.button 
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-foreground shrink-0"
-            >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </motion.button>
-          )}
-        </AnimatePresence>
+        {/* Mobile Toggle - Show on small screens */}
+        <button 
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="md:hidden p-2 text-foreground shrink-0 pointer-events-auto"
+        >
+          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </motion.nav>
 
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="absolute top-24 left-4 right-4 bg-white/95 backdrop-blur-2xl rounded-[2.5rem] p-8 shadow-2xl shadow-black/10 md:hidden pointer-events-auto border border-white/20"
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="absolute top-20 sm:top-24 left-4 right-4 bg-white/95 backdrop-blur-2xl rounded-[2.5rem] p-8 shadow-2xl shadow-black/10 md:hidden pointer-events-auto border border-white/20 max-h-[80vh] overflow-y-auto"
           >
             <div className="flex flex-col gap-2">
               {navItems.map((item) => (

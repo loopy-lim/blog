@@ -25,14 +25,14 @@ export function RecentPosts({ posts }: RecentPostsProps) {
   }
 
   return (
-    <section className="relative py-32 bg-[#fbfbfa]/50">
+    <section className="relative py-24 sm:py-32 bg-[#fbfbfa]/50">
       {/* Background Decor */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent opacity-50" />
       
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 gap-6 sm:gap-8">
           <div className="max-w-2xl">
             <motion.div 
               initial={{ opacity: 0, x: -20 }}
@@ -48,7 +48,7 @@ export function RecentPosts({ posts }: RecentPostsProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-5xl font-black tracking-tight text-foreground sm:text-6xl"
+              className="text-3xl font-black tracking-tight text-foreground sm:text-6xl"
             >
               Featured <span className="text-gradient">Posts.</span>
             </motion.h2 >
@@ -57,14 +57,14 @@ export function RecentPosts({ posts }: RecentPostsProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="mt-6 text-xl text-muted-foreground font-medium max-w-lg leading-relaxed"
+              className="mt-4 sm:mt-6 text-base sm:text-xl text-muted-foreground font-medium max-w-lg leading-relaxed"
             >
               생각을 정리하고, 배운 것을 기록하며 성장의 발자취를 남깁니다.
             </motion.p>
           </div>
           <Link
             href="/blog"
-            className="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl bg-white border border-gray-200 px-8 py-4 text-sm font-black text-foreground transition-all hover:scale-105 active:scale-95 shadow-sm"
+            className="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl bg-white border border-gray-200 px-8 py-4 text-sm font-black text-foreground transition-all hover:scale-105 active:scale-95 shadow-sm w-full sm:w-auto"
           >
             모든 포스트 보기
             <ArrowRight size={18} className="ml-3 text-muted-foreground transition-transform group-hover:translate-x-2 group-hover:text-accent" />
