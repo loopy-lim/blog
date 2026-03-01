@@ -33,16 +33,6 @@ interface NotionPageResponse {
   properties: Record<string, unknown>
 }
 
-interface NotionBlocksResponse {
-  results: Array<{
-    id: string
-    type: string
-    [key: string]: unknown
-  }>
-  next_cursor?: string
-  has_more: boolean
-}
-
 // 빌드용 데이터베이스 쿼리 (캐시 없음)
 export async function getBuildDatabase(): Promise<NotionDatabaseResponse> {
   if (!process.env.NOTION_DATABASE_ID || !process.env.NOTION_API_KEY) {

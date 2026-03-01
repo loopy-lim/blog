@@ -11,22 +11,6 @@ interface BlockRendererProps {
   numberedIndex?: number
 }
 
-// YouTube URL에서 ID 추출하는 함수
-function extractYouTubeId(url: string): string | null {
-  const patterns = [
-    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/,
-    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]+)/,
-    /(?:https?:\/\/)?youtu\.be\/([a-zA-Z0-9_-]+)/
-  ]
-
-  for (const pattern of patterns) {
-    const match = url.match(pattern)
-    if (match) return match[1]
-  }
-
-  return null
-}
-
 type RichTextList = Extract<BlockObjectResponse, { type: 'paragraph' }>['paragraph']['rich_text']
 type BlockWithChildren = BlockObjectResponse & { children?: BlockObjectResponse[] }
 

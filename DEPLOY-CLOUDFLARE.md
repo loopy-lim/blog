@@ -32,20 +32,20 @@ NEXT_PUBLIC_AUTHOR_NAME=임채승
 
 ### 1. 기본 설정
 - **Framework preset**: `Next.js (Static HTML Export)`
-- **Build command**: `pnpm build`
+- **Build command**: `bun run build`
 - **Build output directory**: `out`
 - **Root directory**: `/`
 
 ### 2. 빌드 과정
 ```bash
 # 1. 이미지 다운로드
-pnpm download-images
+bun run download-images
 
 # 2. Notion 데이터 → JSON 변환  
-pnpm build-data
+bun run build-data
 
 # 3. Next.js 정적 사이트 빌드
-pnpm build
+bun run build
 ```
 
 ### 3. 배포 후 파일 구조
@@ -121,10 +121,14 @@ blog.ll3.kr/*                    - Cache Level: Cache Everything, Edge TTL: 4 ho
 - `/public/images/`에 있는 파일들만 배포됨
 - 빌드 후 불필요한 이미지 정리 필요
 
+### 4. Cloudflare Worker 미사용
+- 이 프로젝트는 Cloudflare Worker/Wrangler를 사용하지 않습니다.
+- Cloudflare Pages 정적 배포만 사용합니다.
+
 ## 🎉 배포 확인 체크리스트
 
 - [ ] 환경변수 설정 완료
-- [ ] 빌드 성공 확인 (`pnpm build`)
+- [ ] 빌드 성공 확인 (`bun run build`)
 - [ ] `out/` 디렉토리 생성 확인  
 - [ ] Cloudflare Pages 배포 성공
 - [ ] 도메인 연결 (blog.ll3.kr)

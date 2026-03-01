@@ -1,4 +1,5 @@
 import blogDataJson from '../data/blog.json'
+import { z } from 'zod'
 
 export interface PostData {
   id: string
@@ -20,58 +21,35 @@ const EMPTY_BLOG_DATA: BlogData = {
   lastUpdated: new Date().toISOString(),
 }
 
+const PostDataSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  slug: z.string(),
+  description: z.string(),
+  publishedAt: z.string(),
+  tags: z.array(z.string()),
+  coverImage: z.string().optional(),
+})
+
+const RawBlogDataSchema = z.object({
+  posts: z.array(z.unknown()).optional(),
+  lastUpdated: z.string().optional(),
+})
+
 function toSafeBlogData(raw: unknown): BlogData {
-  if (!raw || typeof raw !== 'object') {
+  const parsedBlogData = RawBlogDataSchema.safeParse(raw)
+  if (!parsedBlogData.success) {
     return EMPTY_BLOG_DATA
   }
 
-  const candidate = raw as { posts?: unknown; lastUpdated?: unknown }
-  if (!Array.isArray(candidate.posts)) {
-    return {
-      ...EMPTY_BLOG_DATA,
-      lastUpdated:
-        typeof candidate.lastUpdated === 'string'
-          ? candidate.lastUpdated
-          : EMPTY_BLOG_DATA.lastUpdated,
-    }
-  }
-
-  const posts: PostData[] = candidate.posts
-    .map((post): PostData | null => {
-      if (!post || typeof post !== 'object') return null
-
-      const item = post as Record<string, unknown>
-      if (
-        typeof item.id !== 'string' ||
-        typeof item.title !== 'string' ||
-        typeof item.slug !== 'string' ||
-        typeof item.description !== 'string' ||
-        typeof item.publishedAt !== 'string' ||
-        !Array.isArray(item.tags)
-      ) {
-        return null
-      }
-
-      const tags = item.tags.filter((tag): tag is string => typeof tag === 'string')
-
-      return {
-        id: item.id,
-        title: item.title,
-        slug: item.slug,
-        description: item.description,
-        publishedAt: item.publishedAt,
-        tags,
-        coverImage: typeof item.coverImage === 'string' ? item.coverImage : undefined,
-      }
-    })
-    .filter((post): post is PostData => post !== null)
+  const posts = (parsedBlogData.data.posts ?? [])
+    .map((post) => PostDataSchema.safeParse(post))
+    .filter((result): result is { success: true; data: PostData } => result.success)
+    .map((result) => result.data)
 
   return {
     posts,
-    lastUpdated:
-      typeof candidate.lastUpdated === 'string'
-        ? candidate.lastUpdated
-        : EMPTY_BLOG_DATA.lastUpdated,
+    lastUpdated: parsedBlogData.data.lastUpdated ?? EMPTY_BLOG_DATA.lastUpdated,
   }
 }
 

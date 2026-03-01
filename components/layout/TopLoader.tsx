@@ -1,10 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import NextTopLoaderImport from 'nextjs-toploader'
-
-// Vite/vinext 환경에서 ESM/CJS 인터옵 문제를 해결하기 위한 처리
-const NextTopLoader = (NextTopLoaderImport as any).default || NextTopLoaderImport
+import NextTopLoader from 'nextjs-toploader'
 
 export default function TopLoader() {
   const [mounted, setMounted] = useState(false)
@@ -13,7 +10,7 @@ export default function TopLoader() {
     setMounted(true)
   }, [])
 
-  if (!mounted || typeof NextTopLoader !== 'function') {
+  if (!mounted) {
     return null
   }
 

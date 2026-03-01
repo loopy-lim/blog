@@ -3,6 +3,9 @@ const nextConfig = {
   // 완전 정적 사이트로 변경
   output: 'export',
   trailingSlash: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 
   images: {
     // 정적 호스팅을 위해 unoptimized 설정 (Cloudflare 이미지 최적화 대체)

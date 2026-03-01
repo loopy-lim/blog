@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Calendar, Tag, ArrowRight, BookOpen, Layers } from 'lucide-react'
+import { Calendar, ArrowRight, BookOpen, Layers } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 // 포스트 타입 정의

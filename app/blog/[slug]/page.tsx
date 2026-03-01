@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
-import { getPostBySlug, getAllPostSlugs } from '@/lib/notion'
+import { getStaticPostBySlug, getStaticAllPostSlugs } from '@/lib/static-data'
 import { NotionContent } from '@/components/blog/NotionContent'
 import { BlogPostingJsonLd, BreadcrumbJsonLd } from '@/components/seo/JsonLd'
 import { ReadingProgress } from '@/components/blog/ReadingProgress'
@@ -34,7 +34,7 @@ function safeGetLocalImagePath(imageUrl: string | null | undefined): string | nu
 
 export async function generateStaticParams() {
   try {
-    const posts = await getAllPostSlugs()
+    const posts = await getStaticAllPostSlugs()
     return posts
   } catch (error) {
     console.error('Error generating static params:', error)
@@ -45,13 +45,13 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params
-    const post = await getPostBySlug(slug)
+    const post = await getStaticPostBySlug(slug)
     if (!post) return {}
 
-    const title = post.properties.title.title[0]?.plain_text || 'Untitled'
-    const description = post.properties.description?.rich_text[0]?.plain_text || ''
-    const publishedAt = post.properties.publishAt?.date?.start
-    const tags = post.properties.tags?.multi_select?.map((tag) => tag.name) || []
+    const title = post.title || 'Untitled'
+    const description = post.description || ''
+    const publishedAt = post.publishedAt
+    const tags = post.tags || []
 
     // Use generated OG image for this post
     const ogImageUrl = `${siteConfig.url}/images/og/${slug}.jpg`
@@ -92,20 +92,20 @@ export default async function BlogPostPage({
 }) {
   try {
     const { slug } = await params
-    const post = await getPostBySlug(slug)
+    const post = await getStaticPostBySlug(slug)
     if (!post) notFound()
 
-    const title = post.properties.title.title[0]?.plain_text || 'Untitled'
-    const publishedAt = post.properties.publishAt?.date?.start
-    const tags = post.properties.tags?.multi_select?.map((tag) => tag.name) || []
-    const coverUrl = post.cover?.type === 'external' ? post.cover.external?.url : post.cover?.file?.url
+    const title = post.title || 'Untitled'
+    const publishedAt = post.publishedAt
+    const tags = post.tags || []
+    const coverUrl = post.coverImage
     const localCoverImage = safeGetLocalImagePath(coverUrl)
     const bgImage = localCoverImage ?? getDefaultCover(post.id)
     const jsonLdImage = localCoverImage ? toAbsoluteSiteUrl(localCoverImage) : null
 
     const jsonLdData = {
       title,
-      description: post.properties.description?.rich_text[0]?.plain_text || '',
+      description: post.description || '',
       publishedAt: publishedAt || new Date().toISOString(),
       author: siteConfig.author,
       images: jsonLdImage ? [jsonLdImage] : [],

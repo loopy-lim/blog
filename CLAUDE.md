@@ -4,16 +4,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a personal blog built with **vinext** (Vite-based Next.js reimplementation), using Notion as a headless CMS for blog content. The project was migrated from Next.js 15 to vinext on 2026-02-28 for improved performance and Cloudflare Workers compatibility.
+This is a personal blog built with **Next.js 15** App Router, using Notion as a headless CMS.
+The deployment target is **Cloudflare Pages** with **static export** (`out/`).
 
 ## Development Commands
 
 Use `bun` as the package manager (specified in packageManager field).
 
 - `bun dev` - Start development server at `localhost:3000`
-- `bun build` - Build production site to `./dist/`
-- `bun start` - Preview production build at `localhost:4173`
-- `bun lint` - ESLint
+- `bun build` - Build static site to `./out/`
+- `bun start` - Serve `out/` locally at `localhost:3000`
+- `bun lint` - Oxlint
 - `bun type-check` - TypeScript type checking
 
 ## Architecture
@@ -25,8 +26,7 @@ Use `bun` as the package manager (specified in packageManager field).
 - Static export mode for Cloudflare Pages deployment
 
 ### Key Technologies
-- **vinext** - Vite-based Next.js reimplementation
-- **Vite 7** for fast builds and HMR
+- **Next.js 15** (App Router)
 - **React 19** with Server Components
 - **TypeScript** with strict mode
 - **Tailwind CSS** with typography plugin
@@ -34,7 +34,7 @@ Use `bun` as the package manager (specified in packageManager field).
 
 ### Directory Structure
 ```
-app/                           # vinext App Router
+app/                           # Next.js App Router
 ├── layout.tsx                 # Root layout (Server Component)
 ├── page.tsx                   # Homepage
 ├── globals.css                # Global styles + Notion content styling
@@ -50,10 +50,7 @@ components/                   # React components
 lib/                         # Utility functions
 ├── notion.ts                # Notion API wrapper with caching
 └── utils.ts                 # Shared utilities
-dist/                        # Build output
-├── client/                  # Static assets for deployment
-│   └── data/               # Blog post JSON data
-└── server/                  # Server-side code
+out/                         # Static export output
 ```
 
 ### Page Structure
@@ -83,23 +80,6 @@ Blog posts should include these properties:
 - `tags` (multi_select) - Post tags
 - `slug` (rich_text) - URL slug
 - `draft` (checkbox) - Draft status (false = published)
-
-## vinext Migration Notes (2026-02-28)
-
-### What Changed
-- Replaced `next` with `vinext` as the framework
-- Build output moved from `out/` to `dist/client/`
-- Development server now uses Vite instead of Next.js dev server
-- All `next/*` imports work automatically via vinext shims
-
-### Known vinext Limitations
-- `next/font/google`: Fonts loaded from CDN, not self-hosted
-- `next/image`: Uses @unpic/react (no local optimization)
-- Images already configured with `unoptimized: true` for Cloudflare
-
-### Configuration Files
-- `vite.config.ts` - Vite configuration with vinext plugin
-- `next.config.js` - Still read by vinext for redirects, rewrites, headers, basePath, i18n, images, output
 
 ## Development Guidelines
 

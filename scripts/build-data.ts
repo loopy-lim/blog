@@ -2,7 +2,6 @@ import fs from 'fs/promises'
 import fsSync from 'fs'
 import path from 'path'
 import { getBuildDatabase } from './notion-client'
-import { siteConfig } from '../site.config'
 
 function stripOptionalQuotes(value: string): string {
   const trimmed = value.trim()
@@ -61,7 +60,6 @@ export interface PostData {
   publishedAt: string
   tags: string[]
   coverImage?: string
-  content?: any
 }
 
 export interface BlogData {
