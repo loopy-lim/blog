@@ -1,0 +1,10 @@
+{
+  "ignorePatterns": [
+    ".next/**",
+    "node_modules/**",
+    "out/**",
+    "dist/**",
+    "src_old/**",
+    "next-env.d.ts"
+  ]
+}
