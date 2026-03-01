@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Script from 'next/script'
 
 interface GoogleAnalyticsProps {
@@ -8,8 +9,14 @@ interface GoogleAnalyticsProps {
 }
 
 export function GoogleAnalytics({ gaId, gtmId }: GoogleAnalyticsProps) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   // Don't render if no IDs provided
-  if (!gaId && !gtmId) {
+  if (!mounted || (!gaId && !gtmId)) {
     return null
   }
 
