@@ -3,6 +3,7 @@ import { getLocalImagePath } from '@/lib/image-utils'
 import { highlightCode } from '@/lib/highlight'
 import { CodeBlock } from './CodeBlock'
 import { ZoomableImage } from './ZoomableImage'
+import { renderMediaBlock } from './MediaBlockRenderer'
 import { Info } from 'lucide-react'
 import type { ReactNode } from 'react'
 
@@ -239,6 +240,11 @@ export async function BlockRenderer({ block, numberedIndex }: BlockRendererProps
           </div>
         </div>
       )
+
+    case 'video':
+    case 'embed':
+    case 'bookmark':
+      return renderMediaBlock({ block, renderRichText })
 
     case 'divider':
       return <hr className="my-12 border-border" />
