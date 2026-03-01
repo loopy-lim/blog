@@ -1,10 +1,35 @@
 import fs from 'fs/promises'
 import fsSync from 'fs'
 import path from 'path'
-import type { CanvasRenderingContext2D } from 'canvas'
 import { siteConfig } from '../site.config'
 
-type CanvasModule = typeof import('canvas')
+type CanvasRenderingContext2DLike = {
+  fillStyle: unknown
+  font: string
+  textAlign: string
+  strokeStyle: unknown
+  lineWidth: number
+  measureText(text: string): { width: number }
+  fillRect(x: number, y: number, width: number, height: number): void
+  fillText(text: string, x: number, y: number): void
+  createLinearGradient(x0: number, y0: number, x1: number, y1: number): {
+    addColorStop(offset: number, color: string): void
+  }
+  beginPath(): void
+  moveTo(x: number, y: number): void
+  lineTo(x: number, y: number): void
+  stroke(): void
+  drawImage(image: unknown, x: number, y: number, width: number, height: number): void
+}
+
+type CanvasModule = {
+  createCanvas(width: number, height: number): {
+    getContext(type: '2d'): CanvasRenderingContext2DLike
+    toBuffer(format: 'image/jpeg', options: { quality: number }): Uint8Array | Buffer
+  }
+  loadImage(src: string): Promise<unknown>
+}
+
 let canvasModule: CanvasModule | null = null
 
 function getCanvasModule(): CanvasModule {
@@ -12,6 +37,23 @@ function getCanvasModule(): CanvasModule {
     throw new Error('Canvas module is not initialized')
   }
   return canvasModule
+}
+
+async function loadCanvasModule(): Promise<CanvasModule | null> {
+  try {
+    const napiCanvasPkg = '@napi-rs/canvas'
+    const napiCanvas = (await import(napiCanvasPkg)) as unknown as CanvasModule
+    console.log('✓ Using @napi-rs/canvas for OG image generation')
+    return napiCanvas
+  } catch {}
+
+  try {
+    const nodeCanvas = (await import('canvas')) as unknown as CanvasModule
+    console.log('✓ Using canvas for OG image generation')
+    return nodeCanvas
+  } catch {}
+
+  return null
 }
 
 // Load environment
@@ -69,7 +111,7 @@ const GRADIENTS = [
 ]
 
 // Text wrap helper
-function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
+function wrapText(ctx: CanvasRenderingContext2DLike, text: string, maxWidth: number): string[] {
   const words = text.split(' ')
   const lines: string[] = []
   let currentLine = ''
@@ -98,7 +140,7 @@ function truncateText(text: string, maxLength: number): string {
 
 // Create gradient background
 function createGradientBackground(
-  ctx: CanvasRenderingContext2D,
+  ctx: CanvasRenderingContext2DLike,
   width: number,
   height: number,
   colors: string[]
@@ -111,7 +153,7 @@ function createGradientBackground(
 }
 
 // Create dark overlay
-function createDarkOverlay(ctx: CanvasRenderingContext2D, width: number, height: number) {
+function createDarkOverlay(ctx: CanvasRenderingContext2DLike, width: number, height: number) {
   ctx.fillStyle = 'rgba(0, 0, 0, 0.4)'
   ctx.fillRect(0, 0, width, height)
 }
@@ -238,14 +280,10 @@ async function generateOGImages() {
     return
   }
 
-  try {
-    canvasModule = await import('canvas')
-  } catch (error) {
-    console.warn('⚠️ Canvas native module is unavailable in this environment.')
+  canvasModule = await loadCanvasModule()
+  if (!canvasModule) {
+    console.warn('⚠️ No canvas runtime is available in this environment.')
     console.warn('   Skipping OG image generation and using existing files.')
-    if (error instanceof Error) {
-      console.warn(`   Reason: ${error.message}`)
-    }
     return
   }
 
