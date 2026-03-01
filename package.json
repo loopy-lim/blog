@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build-data": "bun scripts/build-data.ts",
     "download-images": "bun scripts/download-images.ts",
-    "build": "bun run download-images || echo '[build] image download failed; using existing cached images'; bun run build-data; bun run generate-og-images && bun run generate-rss && next build",
+    "build": "bun run download-images || echo '[build] image download failed; using existing cached images'; bun run build-data; bun run generate-og-images || echo '[build] OG image generation failed; using existing images'; bun run generate-rss && next build",
     "generate-og-images": "bun scripts/generate-og-images.ts",
     "generate-rss": "bun scripts/generate-rss.ts",
     "start": "python3 -m http.server 3000 --directory out",
@@ -50,5 +50,8 @@
     "tailwindcss": "^4.1.17",
     "typescript": "~5.8.3"
   },
+  "trustedDependencies": [
+    "canvas"
+  ],
   "packageManager": "bun@1.3.6"
 }

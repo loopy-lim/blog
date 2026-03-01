@@ -1,8 +1,18 @@
 import fs from 'fs/promises'
 import fsSync from 'fs'
 import path from 'path'
-import { createCanvas, loadImage, type CanvasRenderingContext2D } from 'canvas'
+import type { CanvasRenderingContext2D } from 'canvas'
 import { siteConfig } from '../site.config'
+
+type CanvasModule = typeof import('canvas')
+let canvasModule: CanvasModule | null = null
+
+function getCanvasModule(): CanvasModule {
+  if (!canvasModule) {
+    throw new Error('Canvas module is not initialized')
+  }
+  return canvasModule
+}
 
 // Load environment
 function loadEnvFile(filePath: string) {
@@ -108,6 +118,7 @@ function createDarkOverlay(ctx: CanvasRenderingContext2D, width: number, height:
 
 // Generate OG image for a single post
 async function generatePostOGImage(post: PostData, index: number): Promise<void> {
+  const { createCanvas, loadImage } = getCanvasModule()
   const canvas = createCanvas(OG_WIDTH, OG_HEIGHT)
   const ctx = canvas.getContext('2d')
 
@@ -178,6 +189,7 @@ async function generatePostOGImage(post: PostData, index: number): Promise<void>
 
 // Generate default OG image for home/blog-list/about pages
 async function generateDefaultOGImage(): Promise<void> {
+  const { createCanvas } = getCanvasModule()
   const canvas = createCanvas(OG_WIDTH, OG_HEIGHT)
   const ctx = canvas.getContext('2d')
 
@@ -220,6 +232,22 @@ async function generateDefaultOGImage(): Promise<void> {
 // Main function
 async function generateOGImages() {
   console.log('🖼️  Generating OG images...')
+
+  if (process.env.SKIP_OG_GENERATION === '1' || process.env.SKIP_OG_GENERATION === 'true') {
+    console.log('⏭ SKIP_OG_GENERATION is enabled. Skipping OG image generation.')
+    return
+  }
+
+  try {
+    canvasModule = await import('canvas')
+  } catch (error) {
+    console.warn('⚠️ Canvas native module is unavailable in this environment.')
+    console.warn('   Skipping OG image generation and using existing files.')
+    if (error instanceof Error) {
+      console.warn(`   Reason: ${error.message}`)
+    }
+    return
+  }
 
   // Ensure output directory exists
   await fs.mkdir(OUTPUT_DIR, { recursive: true })
