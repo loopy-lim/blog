@@ -44,7 +44,7 @@ export function CodeBlock({ html, code, language }: CodeBlockProps) {
         </button>
       </div>
       <div 
-        className="text-[13px] leading-relaxed overflow-x-auto p-4 shiki-container"
+        className="text-[12px] sm:text-[13px] leading-relaxed overflow-x-auto p-4 shiki-container"
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>

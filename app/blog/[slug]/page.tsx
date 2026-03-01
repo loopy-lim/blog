@@ -187,7 +187,7 @@ export default async function BlogPostPage({
           </div>
 
           {/* Article Body Area - Adjusted Max Width & Sidebar Alignment */}
-          <div className="container mx-auto px-6 max-w-7xl pt-16 pb-40">
+          <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-16 pb-40">
             <div className="flex flex-col lg:flex-row gap-12 justify-center items-start">
               {/* Main Content */}
               <article className="max-w-3xl w-full flex flex-col min-w-0">

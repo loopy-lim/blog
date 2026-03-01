@@ -80,7 +80,7 @@ const renderChildBlocks = (children: BlockObjectResponse[], className: string) =
     index += 1
   }
 
-  return <div className={`${className} pl-3 border-l border-border/40 ml-1 mt-4 space-y-4`}>{grouped}</div>
+  return <div className={`${className} pl-2 sm:pl-3 border-l border-border/40 ml-0 sm:ml-1 mt-4 space-y-4`}>{grouped}</div>
 }
 
 // Helper function for rendering rich text with annotations
@@ -136,28 +136,28 @@ export async function BlockRenderer({ block, numberedIndex }: BlockRendererProps
   switch (block.type) {
     case 'paragraph':
       return (
-        <p className="mb-6 leading-relaxed text-[17px] font-medium text-foreground/80">
+        <p className="mb-6 leading-relaxed text-[15px] sm:text-[17px] font-medium text-foreground/80">
           {renderRichText(block.paragraph.rich_text)}
         </p>
       )
 
     case 'heading_1':
       return (
-        <h1 id={block.id} className="text-4xl font-black mb-8 mt-16 tracking-tight text-foreground">
+        <h1 id={block.id} className="text-2xl sm:text-4xl font-black mb-8 mt-16 tracking-tight text-foreground">
           {renderRichText(block.heading_1.rich_text)}
         </h1>
       )
 
     case 'heading_2':
       return (
-        <h2 id={block.id} className="text-3xl font-black mb-6 mt-12 tracking-tight text-foreground">
+        <h2 id={block.id} className="text-xl sm:text-3xl font-black mb-6 mt-12 tracking-tight text-foreground">
           {renderRichText(block.heading_2.rich_text)}
         </h2>
       )
 
     case 'heading_3':
       return (
-        <h3 id={block.id} className="text-2xl font-black mb-4 mt-10 tracking-tight text-foreground">
+        <h3 id={block.id} className="text-lg sm:text-2xl font-black mb-4 mt-10 tracking-tight text-foreground">
           {renderRichText(block.heading_3.rich_text)}
         </h3>
       )
@@ -174,7 +174,7 @@ export async function BlockRenderer({ block, numberedIndex }: BlockRendererProps
       } catch (error) {
         console.error('Error resolving local image path:', originalImageUrl, error)
         return (
-          <figure className="my-12 space-y-3">
+          <figure className="my-8 sm:my-12 space-y-3">
             <div className="rounded-2xl border border-border bg-gray-50 p-6 text-sm font-bold text-muted-foreground">
               Image unavailable.
             </div>
@@ -188,7 +188,7 @@ export async function BlockRenderer({ block, numberedIndex }: BlockRendererProps
       }
 
       return (
-        <figure className="my-12 space-y-3 group/img">
+        <figure className="my-8 sm:my-12 space-y-3 group/img">
           <ZoomableImage 
             src={imageUrl} 
             alt={caption || 'Content image'} 
@@ -208,17 +208,19 @@ export async function BlockRenderer({ block, numberedIndex }: BlockRendererProps
       const highlightedHtml = await highlightCode(code, language)
 
       return (
-        <CodeBlock 
-          html={highlightedHtml} 
-          code={code} 
-          language={language} 
-        />
+        <div className="my-6 sm:my-8">
+          <CodeBlock 
+            html={highlightedHtml} 
+            code={code} 
+            language={language} 
+          />
+        </div>
       )
 
     case 'quote':
       return (
-        <blockquote className="border-l-4 border-accent pl-8 py-2 my-10 bg-accent/5 rounded-r-2xl">
-          <p className="text-xl font-black italic text-foreground/90 leading-relaxed">
+        <blockquote className="border-l-4 border-accent pl-4 sm:pl-8 py-2 my-8 sm:my-10 bg-accent/5 rounded-r-2xl">
+          <p className="text-base sm:text-xl font-black italic text-foreground/90 leading-relaxed">
             {renderRichText(block.quote.rich_text)}
           </p>
         </blockquote>
@@ -228,12 +230,12 @@ export async function BlockRenderer({ block, numberedIndex }: BlockRendererProps
       const calloutChildren = getChildBlocks(blockWithChildren)
 
       return (
-        <div className="my-8 flex gap-4 p-6 rounded-2xl bg-gray-50 border border-border shadow-xs transition-all hover:bg-white hover:shadow-md">
+        <div className="my-6 sm:my-8 flex gap-2.5 sm:gap-4 p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-gray-50 border border-border shadow-xs transition-all hover:bg-white hover:shadow-md">
           <div className="flex-shrink-0 text-accent pt-0.5">
-            <Info size={24} />
+            <Info size={19} className="sm:w-6 sm:h-6" />
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-[16px] font-bold text-foreground leading-relaxed">
+            <div className="text-[15px] sm:text-[16px] font-bold text-foreground leading-relaxed">
               {renderRichText(block.callout.rich_text)}
             </div>
             {renderChildBlocks(calloutChildren, 'mt-4 space-y-3')}
@@ -253,10 +255,10 @@ export async function BlockRenderer({ block, numberedIndex }: BlockRendererProps
       const bulletedChildren = getChildBlocks(blockWithChildren)
 
       return (
-        <li className="ml-1 list-none mb-4 group/item">
-          <div className="flex items-start gap-3">
+        <li className="ml-0 sm:ml-1 list-none mb-4 group/item">
+          <div className="flex items-start gap-1.5 sm:gap-3">
             <div className="mt-2.5 h-1.5 w-1.5 rounded-sm bg-accent/40 group-hover/item:bg-accent shrink-0 rotate-45 transition-colors" />
-            <span className="text-[17px] font-medium text-foreground/80 leading-relaxed">
+            <span className="text-[15px] sm:text-[17px] font-medium text-foreground/80 leading-relaxed">
               {renderRichText(block.bulleted_list_item.rich_text)}
             </span>
           </div>
@@ -269,12 +271,12 @@ export async function BlockRenderer({ block, numberedIndex }: BlockRendererProps
       const marker = numberedIndex ?? 1
 
       return (
-        <li className="ml-1 list-none mb-4 group/item">
-          <div className="flex items-start gap-3">
-            <span className="text-accent/60 group-hover/item:text-accent font-black text-sm mt-1 min-w-[1rem] text-right transition-colors">
+        <li className="ml-0 sm:ml-1 list-none mb-4 group/item">
+          <div className="flex items-start gap-1.5 sm:gap-3">
+            <span className="text-accent/60 group-hover/item:text-accent font-black text-xs sm:text-sm mt-1 min-w-[0.7rem] sm:min-w-[1rem] text-right transition-colors">
               {marker}.
             </span>
-            <span className="text-[17px] font-medium text-foreground/80 leading-relaxed">
+            <span className="text-[15px] sm:text-[17px] font-medium text-foreground/80 leading-relaxed">
               {renderRichText(block.numbered_list_item.rich_text)}
             </span>
           </div>
