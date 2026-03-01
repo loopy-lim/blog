@@ -4,6 +4,7 @@ import { highlightCode } from '@/lib/highlight'
 import { CodeBlock } from './CodeBlock'
 import { ZoomableImage } from './ZoomableImage'
 import { Info } from 'lucide-react'
+import type { ReactNode } from 'react'
 
 interface BlockRendererProps {
   block: BlockObjectResponse
@@ -48,25 +49,53 @@ const renderChildBlocks = (children: BlockObjectResponse[], className: string) =
     return null
   }
 
-  let nestedNumberedIndex = 0
+  const grouped: ReactNode[] = []
+  let index = 0
 
-  return (
-    <div className={`${className} pl-3 border-l border-border/40 ml-1 mt-4 space-y-4`}>
-      {children.map((child, index) => {
-        let childNumberedIndex: number | undefined
+  while (index < children.length) {
+    const child = children[index]
 
-        if (child.type === 'numbered_list_item') {
-          const prev = children[index - 1]
-          nestedNumberedIndex = prev?.type === 'numbered_list_item' ? nestedNumberedIndex + 1 : 1
-          childNumberedIndex = nestedNumberedIndex
-        } else {
-          nestedNumberedIndex = 0
-        }
+    if (child.type === 'bulleted_list_item') {
+      const items: BlockObjectResponse[] = []
 
-        return <BlockRenderer key={child.id} block={child} numberedIndex={childNumberedIndex} />
-      })}
-    </div>
-  )
+      while (index < children.length && children[index].type === 'bulleted_list_item') {
+        items.push(children[index])
+        index += 1
+      }
+
+      grouped.push(
+        <ul key={`child-ul-${items[0].id}`} className="list-none m-0 p-0">
+          {items.map((item) => (
+            <BlockRenderer key={item.id} block={item} />
+          ))}
+        </ul>
+      )
+      continue
+    }
+
+    if (child.type === 'numbered_list_item') {
+      const items: BlockObjectResponse[] = []
+
+      while (index < children.length && children[index].type === 'numbered_list_item') {
+        items.push(children[index])
+        index += 1
+      }
+
+      grouped.push(
+        <ol key={`child-ol-${items[0].id}`} className="list-none m-0 p-0">
+          {items.map((item, itemIndex) => (
+            <BlockRenderer key={item.id} block={item} numberedIndex={itemIndex + 1} />
+          ))}
+        </ol>
+      )
+      continue
+    }
+
+    grouped.push(<BlockRenderer key={child.id} block={child} />)
+    index += 1
+  }
+
+  return <div className={`${className} pl-3 border-l border-border/40 ml-1 mt-4 space-y-4`}>{grouped}</div>
 }
 
 // Helper function for rendering rich text with annotations

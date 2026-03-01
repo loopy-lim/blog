@@ -1,9 +1,60 @@
 import { getPageBlocks } from '@/lib/notion'
 import { BlockRenderer } from './BlockRenderer'
 import type { BlockObjectResponse } from '@notionhq/client'
+import type { ReactNode } from 'react'
 
 interface NotionContentProps {
   pageId: string
+}
+
+function renderBlocks(blocks: BlockObjectResponse[]) {
+  const grouped: ReactNode[] = []
+  let index = 0
+
+  while (index < blocks.length) {
+    const block = blocks[index]
+
+    if (block.type === 'bulleted_list_item') {
+      const items: BlockObjectResponse[] = []
+
+      while (index < blocks.length && blocks[index].type === 'bulleted_list_item') {
+        items.push(blocks[index])
+        index += 1
+      }
+
+      grouped.push(
+        <ul key={`ul-${items[0].id}`} className="list-none m-0 p-0">
+          {items.map((item) => (
+            <BlockRenderer key={item.id} block={item} />
+          ))}
+        </ul>
+      )
+      continue
+    }
+
+    if (block.type === 'numbered_list_item') {
+      const items: BlockObjectResponse[] = []
+
+      while (index < blocks.length && blocks[index].type === 'numbered_list_item') {
+        items.push(blocks[index])
+        index += 1
+      }
+
+      grouped.push(
+        <ol key={`ol-${items[0].id}`} className="list-none m-0 p-0">
+          {items.map((item, itemIndex) => (
+            <BlockRenderer key={item.id} block={item} numberedIndex={itemIndex + 1} />
+          ))}
+        </ol>
+      )
+      continue
+    }
+
+    grouped.push(<BlockRenderer key={block.id} block={block} />)
+    index += 1
+  }
+
+  return grouped
 }
 
 export async function NotionContent({ pageId }: NotionContentProps) {
@@ -21,25 +72,9 @@ export async function NotionContent({ pageId }: NotionContentProps) {
     )
   }
 
-  let numberedIndex = 0
-
   return (
     <div className="notion-content prose prose-neutral max-w-none">
-      {notionBlocks.map((block, index) => {
-        let currentNumberedIndex: number | undefined
-
-        if (block.type === 'numbered_list_item') {
-          const prev = notionBlocks[index - 1]
-          numberedIndex = prev?.type === 'numbered_list_item' ? numberedIndex + 1 : 1
-          currentNumberedIndex = numberedIndex
-        } else {
-          numberedIndex = 0
-        }
-
-        return (
-          <BlockRenderer key={block.id} block={block} numberedIndex={currentNumberedIndex} />
-        )
-      })}
+      {renderBlocks(notionBlocks)}
     </div>
   )
 }
