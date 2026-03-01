@@ -4,11 +4,11 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "next dev",
-    "build-data": "node --import tsx scripts/build-data.ts",
-    "download-images": "node --import tsx scripts/download-images.ts",
+    "build-data": "bun scripts/build-data.ts",
+    "download-images": "bun scripts/download-images.ts",
     "build": "bun run download-images || echo '[build] image download failed; using existing cached images'; bun run build-data; bun run generate-og-images && bun run generate-rss && next build",
-    "generate-og-images": "node --import tsx scripts/generate-og-images.ts",
-    "generate-rss": "node --import tsx scripts/generate-rss.ts",
+    "generate-og-images": "bun scripts/generate-og-images.ts",
+    "generate-rss": "bun scripts/generate-rss.ts",
     "start": "python3 -m http.server 3000 --directory out",
     "lint": "oxlint .",
     "type-check": "tsc --noEmit"
@@ -48,7 +48,6 @@
     "prettier-plugin-tailwindcss": "^0.6.14",
     "shiki": "^3.9.2",
     "tailwindcss": "^4.1.17",
-    "tsx": "^4.21.0",
     "typescript": "~5.8.3"
   },
   "packageManager": "bun@1.3.6"
