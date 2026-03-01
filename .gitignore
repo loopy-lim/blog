@@ -1,7 +1,6 @@
 # build output
 dist/
 .next/
-.wrangler/
 # generated types
 .astro/
 assets/

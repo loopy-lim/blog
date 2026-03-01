@@ -121,10 +121,6 @@ blog.ll3.kr/*                    - Cache Level: Cache Everything, Edge TTL: 4 ho
 - `/public/images/`에 있는 파일들만 배포됨
 - 빌드 후 불필요한 이미지 정리 필요
 
-### 4. Cloudflare Worker 미사용
-- 이 프로젝트는 Cloudflare Worker/Wrangler를 사용하지 않습니다.
-- Cloudflare Pages 정적 배포만 사용합니다.
-
 ## 🎉 배포 확인 체크리스트
 
 - [ ] 환경변수 설정 완료
