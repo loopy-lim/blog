@@ -1,5 +1,6 @@
 import 'server-only'
-import imageMapData from './image-map.json'
+import fs from 'node:fs'
+import path from 'node:path'
 
 const NOTION_SIGNED_IMAGE_HOSTS = new Set([
   'prod-files-secure.s3.us-west-2.amazonaws.com',
@@ -14,10 +15,29 @@ interface ImageMap {
   [url: string]: string
 }
 
-const imageMap: ImageMap = imageMapData as ImageMap
+let cachedImageMap: ImageMap | null = null
 
 function loadImageMap(): ImageMap {
-  return imageMap
+  if (cachedImageMap) {
+    return cachedImageMap
+  }
+
+  const mapPath = path.join(process.cwd(), 'lib', 'image-map.json')
+
+  try {
+    if (!fs.existsSync(mapPath)) {
+      cachedImageMap = {}
+      return cachedImageMap
+    }
+
+    const raw = fs.readFileSync(mapPath, 'utf8')
+    cachedImageMap = JSON.parse(raw) as ImageMap
+    return cachedImageMap
+  } catch (error) {
+    console.warn('Failed to load image map, using source image URLs:', error)
+    cachedImageMap = {}
+    return cachedImageMap
+  }
 }
 
 function normalizeImageUrlForCache(imageUrl: string): string {
@@ -60,9 +80,8 @@ export function getLocalImagePath(notionImageUrl: string): string {
   }
 
   if (isNotionManagedUrl(notionImageUrl)) {
-    throw new Error(
-      `Missing local image mapping for Notion image: ${notionImageUrl}. Run \`bun run download-images\` and rebuild.`
-    )
+    // CI/CD에서 Notion 일시 오류(예: 502)로 이미지 맵 생성이 실패해도 빌드는 계속 진행한다.
+    return notionImageUrl
   }
 
   // Non-Notion external images still fall back to original URL.
