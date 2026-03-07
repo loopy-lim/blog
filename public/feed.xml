@@ -3,9 +3,9 @@
   <channel>
     <title>임채승</title>
     <link>https://blog.ll3.kr</link>
-    <description>A blog built with Next.js and Notion</description>
+    <description>Loopy is a software engineer and blogger who shares insights on web development, programming, and technology trends.</description>
     <language>ko-KR</language>
-    <lastBuildDate>Sun, 01 Mar 2026 11:44:52 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 07 Mar 2026 12:37:23 GMT</lastBuildDate>
     <atom:link href="https://blog.ll3.kr/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://blog.ll3.kr/images/og/default.jpg</url>
@@ -45,7 +45,7 @@
     <enclosure url="https://blog.ll3.kr/images/og/2ba2c39d-6e1f-80c5-b568-f0d0d61d41f3.jpg" type="image/jpeg" length="0"/>
   </item>
   <item>
-    <title>리엑트 스터디(JSX, React Fiver)</title>
+    <title>리엑트 스터디(JSX, React Fiber)</title>
     <link>https://blog.ll3.kr/blog/2ad2c39d-6e1f-809b-87bc-fdf4447a0709</link>
     <guid isPermaLink="true">https://blog.ll3.kr/blog/2ad2c39d-6e1f-809b-87bc-fdf4447a0709</guid>
     <description>리엑트 스터디</description>

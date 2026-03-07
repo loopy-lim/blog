@@ -145,7 +145,7 @@ async function generatePostOGImage(post: PostData): Promise<void> {
   ctx.fillText(`${dateStr}  /  ${siteConfig.author.toUpperCase()}`, left, OG_HEIGHT - 100)
 
   const outputPath = path.join(OUTPUT_DIR, `${post.slug}.jpg`)
-  await fs.writeFile(outputPath, canvas.toBuffer('image/jpeg', { quality: 92 }))
+  await fs.writeFile(outputPath, canvas.toBuffer('image/jpeg', 92))
 }
 
 async function generateDefaultOGImage(): Promise<void> {
@@ -183,7 +183,7 @@ async function generateDefaultOGImage(): Promise<void> {
   ctx.fillText(siteConfig.url.replace(/^https?:\/\//, '').toUpperCase(), centerX, OG_HEIGHT - 80)
 
   const outputPath = path.join(OUTPUT_DIR, 'default.jpg')
-  await fs.writeFile(outputPath, canvas.toBuffer('image/jpeg', { quality: 92 }))
+  await fs.writeFile(outputPath, canvas.toBuffer('image/jpeg', 92))
 }
 
 async function main() {
