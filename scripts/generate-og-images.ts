@@ -9,17 +9,27 @@ type CanvasRenderingContext2DLike = {
   textAlign: string
   strokeStyle: unknown
   lineWidth: number
+  lineJoin: 'round' | 'bevel' | 'miter'
+  globalAlpha: number
   measureText(text: string): { width: number }
   fillRect(x: number, y: number, width: number, height: number): void
   fillText(text: string, x: number, y: number): void
+  strokeRect(x: number, y: number, width: number, height: number): void
   createLinearGradient(x0: number, y0: number, x1: number, y1: number): {
     addColorStop(offset: number, color: string): void
   }
   beginPath(): void
   moveTo(x: number, y: number): void
   lineTo(x: number, y: number): void
+  arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): void
   stroke(): void
+  fill(): void
+  closePath(): void
   drawImage(image: unknown, x: number, y: number, width: number, height: number): void
+  save(): void
+  restore(): void
+  translate(x: number, y: number): void
+  rotate(angle: number): void
 }
 
 type CanvasModule = {
@@ -28,6 +38,10 @@ type CanvasModule = {
     toBuffer(format: 'image/jpeg', options: { quality: number }): Uint8Array | Buffer
   }
   loadImage(src: string): Promise<unknown>
+  GlobalFonts?: {
+    registerFromPath(path: string, family: string): boolean
+  }
+  registerFont?: (path: string, options: { family: string; weight?: string }) => void
 }
 
 let canvasModule: CanvasModule | null = null
@@ -44,12 +58,38 @@ async function loadCanvasModule(): Promise<CanvasModule | null> {
     const napiCanvasPkg = '@napi-rs/canvas'
     const napiCanvas = (await import(napiCanvasPkg)) as unknown as CanvasModule
     console.log('✓ Using @napi-rs/canvas for OG image generation')
+    
+    // Register fonts if using @napi-rs/canvas
+    if (napiCanvas.GlobalFonts) {
+      const boldPath = path.join(process.cwd(), 'public/fonts/Pretendard-Bold.otf')
+      const regPath = path.join(process.cwd(), 'public/fonts/Pretendard-Regular.otf')
+      if (fsSync.existsSync(boldPath)) {
+        napiCanvas.GlobalFonts.registerFromPath(boldPath, 'Pretendard')
+        console.log('✓ Registered Pretendard Bold')
+      }
+      if (fsSync.existsSync(regPath)) {
+        napiCanvas.GlobalFonts.registerFromPath(regPath, 'Pretendard')
+        console.log('✓ Registered Pretendard Regular')
+      }
+    }
     return napiCanvas
   } catch {}
 
   try {
     const nodeCanvas = (await import('canvas')) as unknown as CanvasModule
     console.log('✓ Using canvas for OG image generation')
+    
+    // Register fonts if using node-canvas
+    if (nodeCanvas.registerFont) {
+      const boldPath = path.join(process.cwd(), 'public/fonts/Pretendard-Bold.otf')
+      const regPath = path.join(process.cwd(), 'public/fonts/Pretendard-Regular.otf')
+      if (fsSync.existsSync(boldPath)) {
+        nodeCanvas.registerFont(boldPath, { family: 'Pretendard', weight: 'bold' })
+      }
+      if (fsSync.existsSync(regPath)) {
+        nodeCanvas.registerFont(regPath, { family: 'Pretendard', weight: 'normal' })
+      }
+    }
     return nodeCanvas
   } catch {}
 
@@ -83,6 +123,17 @@ const OG_HEIGHT = 630
 const OUTPUT_DIR = path.join(process.cwd(), 'public/images/og')
 const DATA_FILE = path.join(process.cwd(), 'data/blog.json')
 
+const COLORS = {
+  bg: '#050505',
+  fg: '#ffffff',
+  accent: '#3b82f6', // Blue
+  accentDark: '#1d4ed8',
+  muted: '#888888',
+  grid: 'rgba(255, 255, 255, 0.03)',
+}
+
+const FONT_FAMILY = 'Pretendard, sans-serif'
+
 interface PostData {
   id: string
   title: string
@@ -98,20 +149,13 @@ interface BlogData {
   lastUpdated: string
 }
 
-// Gradient backgrounds for posts without cover images
-const GRADIENTS = [
-  ['#667eea', '#764ba2'],
-  ['#f093fb', '#f5576c'],
-  ['#4facfe', '#00f2fe'],
-  ['#43e97b', '#38f9d7'],
-  ['#fa709a', '#fee140'],
-  ['#a8edea', '#fed6e3'],
-  ['#ff9a9e', '#fecfef'],
-  ['#ffecd2', '#fcb69f'],
-]
-
 // Text wrap helper
-function wrapText(ctx: CanvasRenderingContext2DLike, text: string, maxWidth: number): string[] {
+function wrapText(
+  ctx: CanvasRenderingContext2DLike,
+  text: string,
+  maxWidth: number,
+  maxLines: number = 3
+): string[] {
   const words = text.split(' ')
   const lines: string[] = []
   let currentLine = ''
@@ -125,191 +169,236 @@ function wrapText(ctx: CanvasRenderingContext2DLike, text: string, maxWidth: num
     } else {
       currentLine = testLine
     }
+    if (lines.length >= maxLines) break
   }
-  if (currentLine) {
+  if (currentLine && lines.length < maxLines) {
     lines.push(currentLine)
   }
-  return lines.slice(0, 2) // Max 2 lines
+  return lines
 }
 
-// Truncate text helper
 function truncateText(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text
   return text.slice(0, maxLength - 3) + '...'
 }
 
-// Create gradient background
-function createGradientBackground(
-  ctx: CanvasRenderingContext2DLike,
-  width: number,
-  height: number,
-  colors: string[]
-) {
-  const gradient = ctx.createLinearGradient(0, 0, width, height)
-  gradient.addColorStop(0, colors[0])
-  gradient.addColorStop(1, colors[1])
-  ctx.fillStyle = gradient
-  ctx.fillRect(0, 0, width, height)
+function drawBackground(ctx: CanvasRenderingContext2DLike) {
+  // Base Black
+  ctx.fillStyle = COLORS.bg
+  ctx.fillRect(0, 0, OG_WIDTH, OG_HEIGHT)
+
+  // Subtle Gradient
+  const grad = ctx.createLinearGradient(0, 0, OG_WIDTH, OG_HEIGHT)
+  grad.addColorStop(0, 'rgba(59, 130, 246, 0.05)') // accent alpha
+  grad.addColorStop(1, 'rgba(0, 0, 0, 0)')
+  ctx.fillStyle = grad
+  ctx.fillRect(0, 0, OG_WIDTH, OG_HEIGHT)
+
+  // Grid
+  ctx.strokeStyle = COLORS.grid
+  ctx.lineWidth = 1
+  for (let x = 0; x <= OG_WIDTH; x += 50) {
+    ctx.beginPath()
+    ctx.moveTo(x, 0)
+    ctx.lineTo(x, OG_HEIGHT)
+    ctx.stroke()
+  }
+  for (let y = 0; y <= OG_HEIGHT; y += 50) {
+    ctx.beginPath()
+    ctx.moveTo(0, y)
+    ctx.lineTo(OG_WIDTH, y)
+    ctx.stroke()
+  }
 }
 
-// Create dark overlay
-function createDarkOverlay(ctx: CanvasRenderingContext2DLike, width: number, height: number) {
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.4)'
-  ctx.fillRect(0, 0, width, height)
+function drawDecorations(ctx: CanvasRenderingContext2DLike) {
+  // Left Accent Bar with Gradient
+  const barGrad = ctx.createLinearGradient(0, 0, 0, OG_HEIGHT)
+  barGrad.addColorStop(0, COLORS.accent)
+  barGrad.addColorStop(1, COLORS.accentDark)
+  ctx.fillStyle = barGrad
+  ctx.fillRect(0, 0, 12, OG_HEIGHT)
+
+  // Floating Blur (Simulated with circles)
+  ctx.save()
+  ctx.globalAlpha = 0.1
+  ctx.fillStyle = COLORS.accent
+  ctx.beginPath()
+  ctx.arc(OG_WIDTH - 100, 100, 200, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.restore()
 }
 
-// Generate OG image for a single post
-async function generatePostOGImage(post: PostData, index: number): Promise<void> {
+function drawBadge(ctx: CanvasRenderingContext2DLike, text: string, x: number, y: number) {
+  ctx.font = `bold 18px ${FONT_FAMILY}`
+  const metrics = ctx.measureText(text)
+  const paddingH = 16
+  const paddingV = 8
+  const w = metrics.width + paddingH * 2
+  const h = 36
+
+  ctx.fillStyle = 'rgba(59, 130, 246, 0.15)'
+  ctx.strokeStyle = 'rgba(59, 130, 246, 0.5)'
+  ctx.lineWidth = 1
+  
+  // Rounded rect
+  ctx.beginPath()
+  ctx.moveTo(x + 8, y)
+  ctx.lineTo(x + w - 8, y)
+  ctx.arcTo(x + w, y, x + w, y + 8, 8)
+  ctx.lineTo(x + w, y + h - 8)
+  ctx.arcTo(x + w, y + h, x + w - 8, y + h, 8)
+  ctx.lineTo(x + 8, y + h)
+  ctx.arcTo(x, y + h, x, y + h - 8, 8)
+  ctx.lineTo(x, y + 8)
+  ctx.arcTo(x, y, x + 8, y, 8)
+  ctx.fill()
+  ctx.stroke()
+
+  ctx.fillStyle = COLORS.accent
+  ctx.fillText(text, x + paddingH, y + 24)
+}
+
+async function generatePostOGImage(post: PostData): Promise<void> {
   const { createCanvas, loadImage } = getCanvasModule()
   const canvas = createCanvas(OG_WIDTH, OG_HEIGHT)
   const ctx = canvas.getContext('2d')
 
-  // Check if cover image exists locally
-  const localCoverPath = path.join(process.cwd(), 'public/images', `${post.slug}.jpg`)
-  const hasLocalCover = fsSync.existsSync(localCoverPath)
+  drawBackground(ctx)
 
-  if (hasLocalCover) {
+  // Optional Cover Image
+  const localCoverPath = path.join(process.cwd(), 'public/images', `${post.slug}.jpg`)
+  if (fsSync.existsSync(localCoverPath)) {
     try {
       const image = await loadImage(localCoverPath)
-      // Draw cover image
+      ctx.save()
+      ctx.globalAlpha = 0.2
       ctx.drawImage(image, 0, 0, OG_WIDTH, OG_HEIGHT)
-      // Add dark overlay for text readability
-      createDarkOverlay(ctx, OG_WIDTH, OG_HEIGHT)
-    } catch {
-      // Fallback to gradient
-      const gradientColors = GRADIENTS[index % GRADIENTS.length]
-      createGradientBackground(ctx, OG_WIDTH, OG_HEIGHT, gradientColors)
-    }
-  } else {
-    // Use gradient background
-    const gradientColors = GRADIENTS[index % GRADIENTS.length]
-    createGradientBackground(ctx, OG_WIDTH, OG_HEIGHT, gradientColors)
+      ctx.restore()
+    } catch {}
   }
 
-  // Draw title
-  ctx.fillStyle = '#ffffff'
-  ctx.font = 'bold 56px Arial, sans-serif'
-  const titleLines = wrapText(ctx, truncateText(post.title, 80), OG_WIDTH - 120)
-  let titleY = OG_HEIGHT / 2 - 40
+  drawDecorations(ctx)
+
+  const left = 80
+  
+  // Top Label
+  drawBadge(ctx, 'LOOPY', left, 70)
+
+  // Site Name
+  ctx.fillStyle = COLORS.muted
+  ctx.font = `20px ${FONT_FAMILY}`
+  ctx.fillText(siteConfig.title.toUpperCase(), left, 140)
+
+  // Title
+  ctx.fillStyle = COLORS.fg
+  ctx.font = `bold 72px ${FONT_FAMILY}`
+  const titleLines = wrapText(ctx, post.title, OG_WIDTH - 200, 3)
+  let currentY = 240
   for (const line of titleLines) {
-    ctx.fillText(line, 60, titleY)
-    titleY += 70
+    ctx.fillText(line, left, currentY)
+    currentY += 86
   }
 
-  // Draw description
+  // Description
   if (post.description) {
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)'
-    ctx.font = '28px Arial, sans-serif'
-    const descLines = wrapText(ctx, truncateText(post.description, 100), OG_WIDTH - 120)
-    let descY = titleY + 20
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'
+    ctx.font = `32px ${FONT_FAMILY}`
+    const descLines = wrapText(ctx, truncateText(post.description, 150), OG_WIDTH - 200, 2)
+    currentY += 10
     for (const line of descLines) {
-      ctx.fillText(line, 60, descY)
-      descY += 38
+      ctx.fillText(line, left, currentY)
+      currentY += 46
     }
   }
 
-  // Draw separator line
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'
-  ctx.lineWidth = 2
-  ctx.beginPath()
-  ctx.moveTo(60, OG_HEIGHT - 100)
-  ctx.lineTo(OG_WIDTH - 60, OG_HEIGHT - 100)
-  ctx.stroke()
+  // Footer
+  ctx.fillStyle = COLORS.muted
+  ctx.font = `24px ${FONT_FAMILY}`
+  const dateStr = post.publishedAt 
+    ? new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+    : 'Recent Post'
+  ctx.fillText(`${siteConfig.author} • ${dateStr}`, left, OG_HEIGHT - 70)
 
-  // Draw author and site name
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'
-  ctx.font = '24px Arial, sans-serif'
-  const authorText = `${siteConfig.author} | ${siteConfig.title}`
-  ctx.fillText(authorText, 60, OG_HEIGHT - 55)
-
-  // Save image
   const outputPath = path.join(OUTPUT_DIR, `${post.slug}.jpg`)
-  const buffer = canvas.toBuffer('image/jpeg', { quality: 0.9 })
-  await fs.writeFile(outputPath, buffer)
+  await fs.writeFile(outputPath, canvas.toBuffer('image/jpeg', { quality: 0.9 }))
   console.log(`✓ Generated: ${post.slug}.jpg`)
 }
 
-// Generate default OG image for home/blog-list/about pages
 async function generateDefaultOGImage(): Promise<void> {
   const { createCanvas } = getCanvasModule()
   const canvas = createCanvas(OG_WIDTH, OG_HEIGHT)
   const ctx = canvas.getContext('2d')
 
-  // Create gradient background
-  createGradientBackground(ctx, OG_WIDTH, OG_HEIGHT, ['#1a1a2e', '#16213e'])
+  drawBackground(ctx)
+  
+  // Custom decorations for default
+  ctx.save()
+  // Large background text as a design element
+  ctx.globalAlpha = 0.03
+  ctx.fillStyle = COLORS.fg
+  ctx.font = `bold 320px ${FONT_FAMILY}`
+  ctx.fillText('LOOPY', -40, 480)
+  ctx.restore()
 
-  // Draw site title
-  ctx.fillStyle = '#ffffff'
-  ctx.font = 'bold 72px Arial, sans-serif'
-  ctx.textAlign = 'center'
-  ctx.fillText(siteConfig.title, OG_WIDTH / 2, OG_HEIGHT / 2 - 60)
+  drawDecorations(ctx)
 
-  // Draw description
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'
-  ctx.font = '32px Arial, sans-serif'
-  ctx.fillText(siteConfig.description, OG_WIDTH / 2, OG_HEIGHT / 2 + 10)
+  const left = 100
 
-  // Draw separator
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'
+  // Big Brand Title
+  ctx.fillStyle = COLORS.accent
+  ctx.font = `bold 32px ${FONT_FAMILY}`
+  ctx.fillText('DEVELOPER & ENGINEER', left, 180)
+
+  // Main Site Title
+  ctx.fillStyle = COLORS.fg
+  ctx.font = `bold 110px ${FONT_FAMILY}`
+  ctx.fillText(siteConfig.title, left, 310)
+
+  // Description with better layout
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'
+  ctx.font = `34px ${FONT_FAMILY}`
+  const descLines = wrapText(ctx, siteConfig.description, 750, 2)
+  let descY = 380
+  for (const line of descLines) {
+    ctx.fillText(line, left, descY)
+    descY += 48
+  }
+
+  // Footer / URL
+  ctx.fillStyle = COLORS.accent
+  ctx.font = `bold 24px ${FONT_FAMILY}`
+  ctx.fillText(siteConfig.url.replace(/^https?:\/\//, ''), left, OG_HEIGHT - 80)
+
+  // Decorative element on the right
+  ctx.strokeStyle = COLORS.accent
   ctx.lineWidth = 2
   ctx.beginPath()
-  ctx.moveTo(OG_WIDTH / 2 - 200, OG_HEIGHT / 2 + 50)
-  ctx.lineTo(OG_WIDTH / 2 + 200, OG_HEIGHT / 2 + 50)
+  ctx.moveTo(OG_WIDTH - 150, 0)
+  ctx.lineTo(OG_WIDTH, 150)
+  ctx.stroke()
+  
+  ctx.beginPath()
+  ctx.moveTo(OG_WIDTH - 100, 0)
+  ctx.lineTo(OG_WIDTH, 100)
   ctx.stroke()
 
-  // Draw author
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'
-  ctx.font = '28px Arial, sans-serif'
-  ctx.fillText(siteConfig.author, OG_WIDTH / 2, OG_HEIGHT / 2 + 100)
-
-  ctx.textAlign = 'left' // Reset
-
-  // Save image
   const outputPath = path.join(OUTPUT_DIR, 'default.jpg')
-  const buffer = canvas.toBuffer('image/jpeg', { quality: 0.9 })
-  await fs.writeFile(outputPath, buffer)
+  await fs.writeFile(outputPath, canvas.toBuffer('image/jpeg', { quality: 0.9 }))
   console.log('✓ Generated: default.jpg')
 }
 
-// Main function
 async function generateOGImages() {
-  console.log('🖼️  Generating OG images...')
-
-  if (process.env.SKIP_OG_GENERATION === '1' || process.env.SKIP_OG_GENERATION === 'true') {
-    console.log('⏭ SKIP_OG_GENERATION is enabled. Skipping OG image generation.')
-    return
-  }
-
+  console.log('🖼️  Generating Premium OG images...')
   canvasModule = await loadCanvasModule()
-  if (!canvasModule) {
-    console.warn('⚠️ No canvas runtime is available in this environment.')
-    console.warn('   Skipping OG image generation and using existing files.')
-    return
-  }
-
-  // Ensure output directory exists
+  if (!canvasModule) return
   await fs.mkdir(OUTPUT_DIR, { recursive: true })
-
-  // Read blog data
-  let blogData: BlogData
-  try {
-    const data = await fs.readFile(DATA_FILE, 'utf-8')
-    blogData = JSON.parse(data)
-  } catch {
-    console.error('❌ Error reading blog data. Run `bun run build-data` first.')
-    process.exit(1)
-  }
-
-  // Generate default OG image
+  const blogData = JSON.parse(await fs.readFile(DATA_FILE, 'utf-8'))
   await generateDefaultOGImage()
-
-  // Generate OG images for all posts
-  for (let i = 0; i < blogData.posts.length; i++) {
-    await generatePostOGImage(blogData.posts[i], i)
+  for (const post of blogData.posts) {
+    await generatePostOGImage(post)
   }
-
-  console.log(`\n✅ Generated ${blogData.posts.length + 1} OG images in ${OUTPUT_DIR}`)
+  console.log(`\n✅ Generated ${blogData.posts.length + 1} OG images.`)
 }
 
-// Run
 generateOGImages().catch(console.error)
