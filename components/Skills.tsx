@@ -17,11 +17,10 @@ export function Skills() {
   };
 
   const skillCategories = [
-    { name: "Frontend", keywords: resume.skills.frontend },
-    { name: "Backend", keywords: resume.skills.backend },
-    { name: "DevOps", keywords: resume.skills.devops },
-    { name: "Mobile", keywords: resume.skills.mobile },
-    { name: "Tools", keywords: resume.skills.tools },
+    { name: "Main", keywords: resume.skills.main },
+    { name: "Experienced", keywords: resume.skills.experienced },
+    { name: "Tooling", keywords: resume.skills.tooling },
+    { name: "Deploy", keywords: resume.skills.deploy },
   ];
 
   return (

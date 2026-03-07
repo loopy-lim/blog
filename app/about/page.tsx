@@ -1,4 +1,5 @@
 import { About } from "@/components/About";
+import { KeyAchievements } from "@/components/KeyAchievements";
 import { Skills } from "@/components/Skills";
 import { Experience } from "@/components/Experience";
 import { Projects } from "@/components/Projects";
@@ -42,6 +43,7 @@ export default function AboutPage() {
   return (
     <main className="min-h-screen bg-background">
       <About />
+      <KeyAchievements />
       <Skills />
       <Experience />
       <Projects />
