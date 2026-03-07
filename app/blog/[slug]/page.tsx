@@ -162,7 +162,7 @@ export default async function BlogPostPage({
                 )}
 
                 {/* Article Content */}
-                <div className="px-8 sm:px-20 py-16 sm:py-24 prose prose-stone prose-lg max-w-none word-keep-all leading-relaxed">
+                <div className="px-8 sm:px-20 py-16 sm:py-24 prose prose-stone prose-lg max-w-none break-keep leading-relaxed">
                   <Suspense fallback={<PostSkeleton />}>
                     <NotionContent pageId={post.id} />
                   </Suspense>
