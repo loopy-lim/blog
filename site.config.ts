@@ -5,7 +5,7 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
   ogImage: '/og-image.jpg',
   links: {
-    github: 'https://github.com/loopy',
+    github: 'https://github.com/loopy-lim',
   },
 } as const
 
