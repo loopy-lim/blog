@@ -1,6 +1,7 @@
 import { About } from "@/components/About";
 import { KeyAchievements } from "@/components/KeyAchievements";
 import { Skills } from "@/components/Skills";
+import { Background } from "@/components/Background";
 import { Contact } from "@/components/Contact";
 import { siteConfig } from "@/site.config";
 import type { Metadata } from "next";
@@ -40,42 +41,45 @@ export default function AboutPage() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <main>
+    <main className="space-y-0">
       <About />
       <KeyAchievements />
       <Skills />
+      <Background />
+      
       {/* 더 보기 섹션 */}
-      <section className="py-20 px-4">
+      <section className="py-24 px-4 bg-black/[0.01] border-y border-border/40">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            더 알아보기
+          <h2 className="text-sm font-bold text-accent uppercase tracking-[0.3em] mb-12 text-center">
+            Deep Dive
           </h2>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-8">
             <Link
               href="/projects"
-              className="group p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 transition-all"
+              className="group p-8 bg-white rounded-2xl border border-border/60 shadow-sm hover:border-accent/40 transition-all active:scale-[0.98]"
             >
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400">
-                프로젝트 →
+              <h3 className="text-2xl font-bold text-foreground mb-3 group-hover:text-accent transition-colors">
+                Projects →
               </h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                진행한 프로젝트와 성과를 확인하세요.
+              <p className="text-muted text-[15px] font-medium leading-relaxed break-keep">
+                실제 비즈니스 임팩트를 만든 프로젝트와 기술적 의사결정 과정을 확인하세요.
               </p>
             </Link>
             <Link
               href="/experience"
-              className="group p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 transition-all"
+              className="group p-8 bg-white rounded-2xl border border-border/60 shadow-sm hover:border-accent/40 transition-all active:scale-[0.98]"
             >
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400">
-                경력 →
+              <h3 className="text-2xl font-bold text-foreground mb-3 group-hover:text-accent transition-colors">
+                Experience →
               </h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                경력과 업무 이력을 확인하세요.
+              <p className="text-muted text-[15px] font-medium leading-relaxed break-keep">
+                스타트업과 조직에서의 경력, 그리고 함께 성장해온 협업 이력을 확인하세요.
               </p>
             </Link>
           </div>
         </div>
       </section>
+
       <Contact currentYear={currentYear} />
     </main>
   );

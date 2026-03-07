@@ -12,7 +12,7 @@ export function Skills() {
   ];
 
   return (
-    <section className="py-24 sm:py-32 border-y border-border/40">
+    <section className="py-24 sm:py-32 bg-black/[0.01]">
       <div className="container mx-auto px-6 lg:px-8 max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -23,10 +23,10 @@ export function Skills() {
           <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
             Expertise
           </h2>
-          <div className="mt-4 h-1 w-12 bg-foreground/10" />
+          <div className="mt-4 h-1 w-12 bg-black/[0.05]" />
         </motion.div>
         
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
           {skillCategories.map((skillGroup, idx) => (
             <motion.div
               key={skillGroup.name}
@@ -36,21 +36,20 @@ export function Skills() {
               transition={{ delay: idx * 0.05 }}
               className="flex flex-col items-start"
             >
-              <div className="flex items-center gap-2 mb-6">
-                <div className="h-1.5 w-1.5 rounded-full bg-foreground/20" />
-                <h3 className="text-sm font-bold text-foreground/40 uppercase tracking-[0.2em]">
-                  {skillGroup.name}
-                </h3>
-              </div>
+              <h3 className="text-[11px] font-bold text-accent uppercase tracking-[0.3em] mb-8">
+                {skillGroup.name}
+              </h3>
               
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-col gap-3 w-full">
                 {skillGroup.keywords.map((keyword) => (
-                  <span
+                  <div
                     key={keyword}
-                    className="inline-flex items-center rounded px-2.5 py-1 text-[12px] font-bold text-muted border border-border/50 bg-black/[0.01] hover:bg-black/[0.03] transition-colors"
+                    className="group flex items-center justify-between py-2 border-b border-black/[0.03] last:border-0"
                   >
-                    {keyword}
-                  </span>
+                    <span className="text-[13px] font-bold text-foreground/70 group-hover:text-accent transition-colors">
+                      {keyword}
+                    </span>
+                  </div>
                 ))}
               </div>
             </motion.div>

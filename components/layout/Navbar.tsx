@@ -78,13 +78,16 @@ export function Navbar() {
     }
   }, [aboutDropdownOpen, scrolled])
 
+  // About 관련 페이지인지 확인
+  const isAboutActive = pathname.startsWith('/about') || pathname.startsWith('/projects') || pathname.startsWith('/experience')
+
   return (
     <header className="fixed top-0 left-0 right-0 z-[100] px-4 py-4 sm:py-6 flex justify-center pointer-events-none">
       <motion.nav
         initial={false}
         animate={{
-          backgroundColor: scrolled ? 'rgba(255, 255, 255, 0.8)' : 'rgba(255, 255, 255, 0.4)',
-          backdropFilter: scrolled ? 'blur(20px) saturate(160%)' : 'blur(10px) saturate(100%)',
+          backgroundColor: scrolled ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.4)',
+          backdropFilter: scrolled ? 'blur(24px) saturate(110%)' : 'blur(12px) saturate(100%)',
           borderRadius: scrolled ? '2rem' : '1.5rem',
           maxWidth: scrolled ? '450px' : '1024px',
           width: '100%',
@@ -103,8 +106,8 @@ export function Navbar() {
       >
         {/* Logo / Title Area */}
         <Link href="/" className="flex items-center gap-2 group shrink-0">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center bg-black relative overflow-hidden">
-            <div className="w-2.5 h-2.5 rounded-full bg-white absolute bottom-1 right-1" />
+          <div className="w-8 h-8 rounded-full flex items-center justify-center bg-foreground relative overflow-hidden transition-all group-hover:bg-accent">
+            <div className="w-2.5 h-2.5 rounded-full bg-background absolute bottom-1 right-1" />
           </div>
 
           <AnimatePresence>
@@ -114,7 +117,6 @@ export function Navbar() {
                 initial={{ opacity: 0, x: -10, width: 0 }}
                 animate={{ opacity: 1, x: 0, width: 'auto' }}
                 exit={{ opacity: 0, x: -10, width: 0 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="text-[14px] font-black tracking-tight text-foreground whitespace-nowrap hidden sm:inline-block overflow-hidden"
               >
                 {siteConfig.author}
@@ -131,17 +133,17 @@ export function Navbar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`relative px-4 py-2 text-[13px] font-bold transition-colors duration-300 rounded-full group ${
+                className={`relative px-4 py-2 text-[13px] font-bold transition-all duration-300 rounded-full group ${
                   isActive
                     ? 'text-accent'
-                    : 'text-muted hover:text-foreground'
+                    : 'text-muted/60 hover:text-foreground'
                 }`}
               >
                 <span className="relative z-10">{item.name}</span>
                 {isActive && (
                   <motion.div
                     layoutId="nav-pill-active"
-                    className="absolute inset-0 bg-accent/5 rounded-full -z-0"
+                    className="absolute inset-0 bg-accent/[0.03] border border-accent/10 rounded-full -z-0"
                     transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                   />
                 )}
@@ -153,23 +155,30 @@ export function Navbar() {
           <button
             ref={dropdownButtonRef}
             onClick={() => setAboutDropdownOpen(!aboutDropdownOpen)}
-            className={`relative px-4 py-2 text-[13px] font-bold transition-colors duration-300 rounded-full flex items-center gap-1 ${
-              pathname.startsWith('/about') || pathname.startsWith('/projects') || pathname.startsWith('/experience')
+            className={`relative px-4 py-2 text-[13px] font-bold transition-all duration-300 rounded-full flex items-center gap-1 ${
+              isAboutActive
                 ? 'text-accent'
-                : 'text-muted hover:text-foreground'
+                : 'text-muted/60 hover:text-foreground'
             }`}
           >
             <span className="relative z-10">About</span>
             <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${aboutDropdownOpen ? 'rotate-180' : ''}`} />
+            {isAboutActive && (
+              <motion.div
+                layoutId="nav-pill-active-about"
+                className="absolute inset-0 bg-accent/[0.03] border border-accent/10 rounded-full -z-0"
+                transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+              />
+            )}
           </button>
 
-          <div className="w-px h-4 bg-border/60 mx-2" />
+          <div className="w-px h-4 bg-border/40 mx-2" />
 
           <a
             href={siteConfig.links.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 text-muted hover:text-accent transition-all duration-300 shrink-0"
+            className="p-2 text-muted/40 hover:text-foreground transition-all duration-300 shrink-0"
           >
             <Github size={18} />
           </a>
@@ -233,10 +242,10 @@ export function Navbar() {
                   key={item.name}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-between px-4 py-4 text-xl font-bold text-foreground border-b border-border/50 last:border-0"
+                  className="flex items-center justify-between px-4 py-4 text-xl font-bold text-foreground border-b border-border/40 last:border-0"
                 >
                   {item.name}
-                  <ArrowUpRight size={20} className="text-muted/40" />
+                  <ArrowUpRight size={20} className="text-muted/20" />
                 </Link>
               ))}
             </div>
