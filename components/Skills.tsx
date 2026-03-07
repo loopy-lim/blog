@@ -2,20 +2,8 @@
 
 import { resume } from "../lib/data";
 import { motion } from "framer-motion";
-import { Layout, Server, Database, Smartphone, Wrench, Boxes } from "lucide-react";
 
 export function Skills() {
-  const getIcon = (name: string) => {
-    switch (name) {
-      case "Frontend": return <Layout size={18} />;
-      case "Backend": return <Server size={18} />;
-      case "DevOps": return <Database size={18} />;
-      case "Mobile": return <Smartphone size={18} />;
-      case "Tools": return <Wrench size={18} />;
-      default: return <Boxes size={18} />;
-    }
-  };
-
   const skillCategories = [
     { name: "Main", keywords: resume.skills.main },
     { name: "Experienced", keywords: resume.skills.experienced },
@@ -24,45 +12,42 @@ export function Skills() {
   ];
 
   return (
-    <section className="py-32 bg-white">
+    <section className="py-24 sm:py-32 border-y border-border/40">
       <div className="container mx-auto px-6 lg:px-8 max-w-5xl">
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-20"
+          className="mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-accent/5 text-accent text-xs font-black uppercase tracking-widest mb-4 border border-accent/10">
-            Technical Arsenal
-          </div>
-          <h2 className="text-4xl font-black tracking-tight text-foreground sm:text-6xl text-gradient">
-            Expertise.
+          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
+            Expertise
           </h2>
+          <div className="mt-4 h-1 w-12 bg-foreground/10" />
         </motion.div>
         
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {skillCategories.map((skillGroup, idx) => (
             <motion.div
               key={skillGroup.name}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.05 }}
-              className="group relative rounded-3xl border border-border bg-gray-50/30 p-8 transition-colors hover:bg-white"
+              className="flex flex-col items-start"
             >
-              <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-white text-accent shadow-xs border border-border group-hover:bg-accent group-hover:text-white transition-colors duration-300">
-                {getIcon(skillGroup.name)}
+              <div className="flex items-center gap-2 mb-6">
+                <div className="h-1.5 w-1.5 rounded-full bg-foreground/20" />
+                <h3 className="text-sm font-bold text-foreground/40 uppercase tracking-[0.2em]">
+                  {skillGroup.name}
+                </h3>
               </div>
               
-              <h3 className="mb-6 text-xl font-black text-foreground">
-                {skillGroup.name}
-              </h3>
-              
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {skillGroup.keywords.map((keyword) => (
                   <span
                     key={keyword}
-                    className="inline-flex items-center rounded-lg bg-white px-3 py-1.5 text-[12px] font-bold text-muted border border-border shadow-xs"
+                    className="inline-flex items-center rounded px-2.5 py-1 text-[12px] font-bold text-muted border border-border/50 bg-black/[0.01] hover:bg-black/[0.03] transition-colors"
                   >
                     {keyword}
                   </span>

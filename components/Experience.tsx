@@ -2,29 +2,26 @@
 
 import { resume } from "../lib/data";
 import { motion } from "framer-motion";
-import { Calendar } from "lucide-react";
 
 export function Experience() {
   return (
-    <section id="experience" className="py-32 bg-background">
+    <section id="experience" className="py-24 sm:py-32">
       <div className="container mx-auto px-6 lg:px-8 max-w-4xl">
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-24"
+          className="mb-20"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-accent/5 text-accent text-xs font-black uppercase tracking-widest mb-4 border border-accent/10">
-            Professional Journey
-          </div>
-          <h2 className="text-4xl font-black tracking-tight text-foreground sm:text-6xl text-gradient">
-            Experience.
+          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
+            Experience
           </h2>
+          <div className="mt-4 h-1 w-12 bg-accent" />
         </motion.div>
 
         <div className="relative space-y-12">
-          {/* Vertical Line - Shifted to left for cleaner single column look */}
-          <div className="absolute left-0 top-4 bottom-4 w-px bg-border ml-2 sm:ml-0" />
+          {/* Subtle Vertical Line */}
+          <div className="absolute left-0 top-2 bottom-2 w-px bg-border/40 ml-1" />
           
           {resume.experience.map((exp, index) => (
             <motion.div
@@ -33,40 +30,39 @@ export function Experience() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="relative pl-10 sm:pl-16"
+              className="relative pl-10 group"
             >
-              {/* Square on Timeline */}
-              <div className="absolute left-0 top-2 h-3.5 w-3.5 rounded-sm border-2 border-background bg-accent ml-[1.5px] sm:-ml-[6.5px] rotate-45" />
+              {/* Point on Timeline - Static Signature Blue */}
+              <div className="absolute left-[-4.5px] top-2 h-2.5 w-2.5 rounded-full bg-accent border-2 border-background shadow-sm" />
               
-              <div className="flex flex-col items-start p-8 rounded-3xl bg-white border border-border shadow-sm transition-shadow hover:shadow-md">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full mb-4 gap-4">
-                  <div>
-                    <h3 className="text-2xl font-black text-foreground">
+              <div className="relative flex flex-col items-start p-8 rounded-xl border border-border/50 bg-white/40 backdrop-blur-sm transition-all hover:border-foreground/10 hover:bg-white/60">
+                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between w-full mb-4 gap-2">
+                  <div className="flex flex-col gap-1">
+                    <h3 className="text-xl font-bold text-foreground tracking-tight">
                       {exp.company}
                     </h3>
-                    <p className="text-[15px] font-bold text-accent mt-0.5">
+                    <p className="text-[14px] font-bold text-accent tracking-wide uppercase">
                       {exp.position}
                     </p>
                   </div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50 text-[11px] font-black text-muted uppercase tracking-widest border border-border shadow-xs whitespace-nowrap h-fit">
-                    <Calendar size={12} className="text-accent" />
+                  <div className="text-[12px] font-medium text-muted/60 tabular-nums">
                     {exp.period}
                   </div>
                 </div>
                 
-                <p className="mb-6 text-[16px] text-muted leading-relaxed font-medium">
+                <p className="mb-8 text-[15px] text-muted leading-relaxed font-medium">
                   {exp.description}
                 </p>
 
-                <ul className="space-y-4 w-full pl-3 border-l border-border/40 ml-1 mt-6">
+                <ul className="space-y-4 w-full">
                   {exp.highlights.map((highlight, i) => (
-                    <li key={i} className="flex items-start gap-3 text-[15px] text-foreground/90 leading-relaxed font-medium group/hl">
-                      <div className="mt-2 h-1.5 w-1.5 rounded-sm bg-accent/30 group-hover/hl:bg-accent shrink-0 rotate-45 transition-all" />
+                    <li key={i} className="flex items-start gap-4 text-[14px] text-foreground/70 leading-relaxed font-medium">
+                      <div className="mt-2.5 h-1 w-1 bg-accent/30 shrink-0" />
                       <span
                         dangerouslySetInnerHTML={{
                           __html: highlight.replace(
                             /\*\*(.*?)\*\*/g,
-                            '<strong class="text-foreground font-black bg-accent/5 px-1 rounded-sm">$1</strong>'
+                            '<strong class="text-foreground font-bold">$1</strong>'
                           ),
                         }}
                       />

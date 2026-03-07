@@ -34,7 +34,7 @@ export function ZoomableImage({ src, alt, caption }: ZoomableImageProps) {
   return (
     <>
       <div 
-        className="relative w-full rounded-2xl overflow-hidden border border-border/40 shadow-sm flex justify-center mx-auto transition-shadow duration-500 hover:shadow-md cursor-zoom-in"
+        className="relative w-full rounded-lg overflow-hidden border border-border bg-stone-50 flex justify-center mx-auto transition-all duration-500 hover:border-accent/20 cursor-zoom-in"
         onClick={() => setIsOpen(true)}
       >
         <img

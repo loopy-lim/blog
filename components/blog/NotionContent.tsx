@@ -66,14 +66,14 @@ export async function NotionContent({ pageId }: NotionContentProps) {
   } catch (error) {
     console.error('Error rendering Notion content:', error)
     return (
-      <div className="rounded-2xl border border-border bg-gray-50 p-6 text-sm font-bold text-muted-foreground">
+      <div className="rounded-lg border border-border bg-stone-50 p-10 text-sm font-bold text-muted">
         콘텐츠를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
       </div>
     )
   }
 
   return (
-    <div className="notion-content prose prose-neutral max-w-none">
+    <div className="notion-content prose prose-stone max-w-none break-keep">
       {renderBlocks(notionBlocks)}
     </div>
   )

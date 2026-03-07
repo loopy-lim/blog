@@ -79,7 +79,7 @@ export default async function Home() {
   }
 
   return (
-    <main className="min-h-screen">
+    <main>
       <Hero />
       <RecentPosts posts={recentPosts} />
       <Contact currentYear={currentYear} />

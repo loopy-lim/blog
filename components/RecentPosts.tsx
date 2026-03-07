@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Calendar, ArrowRight, BookOpen, Layers } from 'lucide-react'
+import { Calendar, ArrowRight, Layers, BookOpen } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 // 포스트 타입 정의
@@ -25,49 +25,46 @@ export function RecentPosts({ posts }: RecentPostsProps) {
   }
 
   return (
-    <section className="relative py-24 sm:py-32 bg-[#fbfbfa]/50">
-      {/* Background Decor */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent opacity-50" />
-      
+    <section className="relative py-24 sm:py-32 border-y border-border">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 gap-6 sm:gap-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
           <div className="max-w-2xl">
             <motion.div 
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -15 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-accent/5 text-accent text-xs font-black uppercase tracking-widest mb-4 border border-accent/10"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/5 text-accent text-[12px] font-bold uppercase tracking-widest mb-6 border border-accent/10"
             >
               <Layers size={14} />
               Recent Writing
             </motion.div>
             <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-3xl font-black tracking-tight text-foreground sm:text-6xl"
+              className="text-4xl font-black tracking-tight text-foreground sm:text-7xl"
             >
-              Featured <span className="text-gradient">Posts.</span>
+              Featured <span className="text-accent">Posts.</span>
             </motion.h2 >
             <motion.p 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="mt-4 sm:mt-6 text-base sm:text-xl text-muted-foreground font-medium max-w-lg leading-relaxed"
+              className="mt-8 text-lg sm:text-xl text-muted font-medium max-w-lg leading-relaxed"
             >
               생각을 정리하고, 배운 것을 기록하며 성장의 발자취를 남깁니다.
             </motion.p>
           </div>
           <Link
             href="/blog"
-            className="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl bg-white border border-gray-200 px-8 py-4 text-sm font-black text-foreground transition-all hover:scale-105 active:scale-95 shadow-sm w-full sm:w-auto"
+            className="group relative inline-flex items-center justify-center rounded-2xl bg-white border border-border px-10 py-4 text-sm font-black text-foreground transition-all hover:border-accent/30 hover:shadow-xl hover:shadow-black/[0.02] w-full sm:w-auto"
           >
             모든 포스트 보기
-            <ArrowRight size={18} className="ml-3 text-muted-foreground transition-transform group-hover:translate-x-2 group-hover:text-accent" />
+            <ArrowRight size={18} className="ml-3 text-muted transition-transform group-hover:translate-x-2 group-hover:text-accent" />
           </Link>
         </div>
 
@@ -78,16 +75,14 @@ export function RecentPosts({ posts }: RecentPostsProps) {
             return (
               <motion.article
                 key={post.id}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1, duration: 0.6 }}
-                className="group relative flex flex-col rounded-[2.5rem] border border-gray-100 bg-white p-6 transition-all duration-500 hover:border-accent/20 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] overflow-hidden"
+                className="group relative flex flex-col rounded-3xl border border-border bg-white p-6 transition-all duration-500 hover:border-accent/20 hover:shadow-2xl hover:shadow-black/[0.02] overflow-hidden"
               >
                 {/* Cover Image Area */}
-                <div className="relative aspect-[16/10] w-full mb-8 rounded-[1.75rem] bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-50 group-hover:scale-[1.02] transition-transform duration-700">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-accent/5 to-transparent pointer-events-none" />
-                  
+                <div className="relative aspect-[16/10] w-full mb-8 rounded-2xl bg-stone-50 flex items-center justify-center overflow-hidden border border-border group-hover:scale-[1.02] transition-transform duration-700">
                   {coverImage ? (
                     <img
                       src={coverImage}
@@ -97,15 +92,15 @@ export function RecentPosts({ posts }: RecentPostsProps) {
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                   ) : (
-                    <img 
-                      src="/favicon.png" 
-                      alt="Post Icon" 
-                      className="w-16 h-16 object-contain opacity-20 transition-all duration-700 group-hover:scale-125 group-hover:opacity-40 group-hover:rotate-12"
-                    />
+                    <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center transition-all duration-700 group-hover:scale-125 group-hover:bg-black/10">
+                      <div className="w-8 h-8 rounded-full bg-black relative overflow-hidden">
+                        <div className="w-2.5 h-2.5 rounded-full bg-white absolute bottom-1 right-1" />
+                      </div>
+                    </div>
                   )}
                   
                   {/* Date Badge */}
-                  <div className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/80 backdrop-blur-md border border-white/50 text-[10px] font-black text-muted-foreground uppercase tracking-widest shadow-sm">
+                  <div className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-border text-[10px] font-black text-muted uppercase tracking-widest shadow-sm">
                     <Calendar size={12} className="text-accent" />
                     {post.publishedAtLabel || 'Recent'}
                   </div>
@@ -116,7 +111,7 @@ export function RecentPosts({ posts }: RecentPostsProps) {
                     {post.tags && post.tags.slice(0, 2).map((tag) => (
                       <span
                         key={tag}
-                        className="inline-flex items-center rounded-lg bg-gray-50 px-2.5 py-1 text-[10px] font-black text-muted-foreground uppercase tracking-wider group-hover:bg-accent/5 group-hover:text-accent transition-colors duration-300"
+                        className="inline-flex items-center rounded-full bg-stone-50 px-3 py-1 text-[10px] font-bold text-muted uppercase tracking-wider border border-border"
                       >
                         {tag}
                       </span>
@@ -130,17 +125,17 @@ export function RecentPosts({ posts }: RecentPostsProps) {
                       </Link>
                     </h3>
                     {post.description && (
-                      <p className="text-[15px] text-muted-foreground line-clamp-3 mb-8 leading-relaxed font-medium">
+                      <p className="text-[15px] text-muted line-clamp-2 mb-8 leading-relaxed font-medium">
                         {post.description}
                       </p>
                     )}
                   </div>
 
-                  <div className="pt-6 mt-auto border-t border-gray-50 flex items-center justify-between">
+                  <div className="pt-6 mt-auto border-t border-border/50 flex items-center justify-between">
                     <span className="text-[11px] font-black text-accent uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1.5">
                       Read Article <ArrowRight size={14} />
                     </span>
-                    <div className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-accent/10 group-hover:text-accent transition-all duration-500">
+                    <div className="w-8 h-8 rounded-xl bg-stone-50 flex items-center justify-center text-stone-300 group-hover:bg-accent/10 group-hover:text-accent transition-all duration-500">
                       <BookOpen size={14} />
                     </div>
                   </div>

@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
 
 interface TOCItem {
   id: string
@@ -78,39 +77,30 @@ export function TableOfContents() {
 
   return (
     <nav className="space-y-1 relative">
-      {/* Vertical Indicator Line */}
-      <div className="absolute left-0 top-0 bottom-0 w-px bg-border" />
-      
       <ul className="relative z-10">
         {headings.map((heading) => {
           const isActive = activeId === heading.id
           
           return (
-            <li key={heading.id} className="relative">
-              {isActive && (
-                <motion.div 
-                  layoutId="toc-active"
-                  className="absolute left-0 top-0 bottom-0 w-0.5 bg-accent"
-                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                />
-              )}
+            <li key={heading.id} className="relative group/toc">
               <a
                 href={`#${heading.id}`}
                 onClick={(e) => {
                   e.preventDefault()
-                  document.getElementById(heading.id)?.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                  })
+                  const el = document.getElementById(heading.id)
+                  if (el) {
+                    const top = el.getBoundingClientRect().top + window.pageYOffset - 100
+                    window.scrollTo({ top, behavior: 'smooth' })
+                  }
                 }}
-                className={`block py-1.5 pr-4 text-[13px] font-bold leading-snug transition-all duration-300 border-l-2 border-transparent hover:text-foreground ${
+                className={`block py-2 pr-4 text-[12px] font-bold leading-snug transition-all duration-200 border-l border-transparent hover:text-foreground ${
                   heading.level === 1 ? 'pl-4' : 
                   heading.level === 2 ? 'pl-4' : 
-                  'pl-8 text-[12px] opacity-80'
+                  'pl-8 text-[11px] opacity-80'
                 } ${
                   isActive
-                    ? 'text-accent border-accent/30'
-                    : 'text-muted/40'
+                    ? 'text-accent border-accent bg-stone-50/50'
+                    : 'text-muted border-border hover:border-muted/30'
                 }`}
               >
                 {heading.text}

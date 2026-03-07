@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react"
 
-export default function InnovativeBackground() {
+export function InnovativeBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -13,129 +13,126 @@ export default function InnovativeBackground() {
     if (!ctx) return
 
     let animationFrameId: number
-    let particles: Particle[] = []
-    const mouse = { x: 0, y: 0 }
-
-    const init = () => {
-      resize()
-      createParticles()
-      animate()
-    }
+    let time = 0
 
     const resize = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      const dpr = window.devicePixelRatio || 1
+      canvas.width = window.innerWidth * dpr
+      canvas.height = window.innerHeight * dpr
+      ctx.scale(dpr, dpr)
+      canvas.style.width = `${window.innerWidth}px`
+      canvas.style.height = `${window.innerHeight}px`
     }
 
-    class Particle {
+    interface Blob {
       x: number
       y: number
+      r: number
+      color: string
       vx: number
       vy: number
-      size: number
-      color: string
-
-      constructor() {
-        this.x = Math.random() * canvas!.width
-        this.y = Math.random() * canvas!.height
-        this.vx = (Math.random() - 0.5) * 0.5
-        this.vy = (Math.random() - 0.5) * 0.5
-        this.size = Math.random() * 2 + 1
-        // Subtle blue-ish/purple-ish for dark mode
-        this.color = `rgba(${100 + Math.random() * 100}, ${100 + Math.random() * 100}, 255, ${
-          Math.random() * 0.3 + 0.1
-        })`
-      }
-
-      update() {
-        this.x += this.vx
-        this.y += this.vy
-
-        if (this.x < 0 || this.x > canvas!.width) this.vx *= -1
-        if (this.y < 0 || this.y > canvas!.height) this.vy *= -1
-
-        // Mouse interaction
-        const dx = mouse.x - this.x
-        const dy = mouse.y - this.y
-        const distance = Math.sqrt(dx * dx + dy * dy)
-        if (distance < 100) {
-          this.x -= dx * 0.02
-          this.y -= dy * 0.02
-        }
-      }
-
-      draw() {
-        ctx!.fillStyle = this.color
-        // Changed from circular arc to square for a more unique, non-AI look
-        ctx!.save()
-        ctx!.translate(this.x, this.y)
-        ctx!.rotate(Math.PI / 4) // Diamond shape
-        ctx!.fillRect(-this.size / 2, -this.size / 2, this.size, this.size)
-        ctx!.restore()
-      }
+      originX: number
+      originY: number
     }
 
-    const createParticles = () => {
-      particles = []
-      const particleCount = Math.min(window.innerWidth / 10, 100) // Responsive count
-      for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle())
-      }
+    // Grayscale Monochromatic Blobs for Premium Feel
+    const blobs: Blob[] = [
+      {
+        x: 0,
+        y: 0,
+        r: 1200,
+        color: "rgba(220, 220, 220, 0.15)", // Light Silver
+        vx: 0.0004,
+        vy: 0.0005,
+        originX: 0.1,
+        originY: 0.2,
+      },
+      {
+        x: 0,
+        y: 0,
+        r: 1400,
+        color: "rgba(200, 200, 200, 0.1)", // Soft Gray
+        vx: 0.0003,
+        vy: 0.0006,
+        originX: 0.9,
+        originY: 0.1,
+      },
+      {
+        x: 0,
+        y: 0,
+        r: 1300,
+        color: "rgba(230, 230, 230, 0.12)", // Almost White
+        vx: 0.0005,
+        vy: 0.0004,
+        originX: 0.5,
+        originY: 0.8,
+      },
+      {
+        x: 0,
+        y: 0,
+        r: 1500,
+        color: "rgba(215, 215, 215, 0.08)", // Mist Gray
+        vx: 0.0002,
+        vy: 0.0004,
+        originX: 0.8,
+        originY: 0.9,
+      },
+    ]
+
+    const drawBlob = (blob: Blob) => {
+      const { x, y, r, color } = blob
+      const gradient = ctx.createRadialGradient(x, y, 0, x, y, r)
+      gradient.addColorStop(0, color)
+      gradient.addColorStop(1, "rgba(250, 250, 249, 0)")
+
+      ctx.fillStyle = gradient
+      ctx.beginPath()
+      ctx.arc(x, y, r, 0, Math.PI * 2)
+      ctx.fill()
     }
 
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      time += 0.003 // Slow and elegant
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
       
-      // Draw connections
-      ctx.strokeStyle = "rgba(100, 150, 255, 0.05)"
-      ctx.lineWidth = 0.5
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x
-          const dy = particles[i].y - particles[j].y
-          const distance = Math.sqrt(dx * dx + dy * dy)
+      ctx.fillStyle = "#fafaf9" // Match base background
+      ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
 
-          if (distance < 150) {
-            ctx.beginPath()
-            ctx.moveTo(particles[i].x, particles[i].y)
-            ctx.lineTo(particles[j].x, particles[j].y)
-            ctx.stroke()
-          }
-        }
-      }
+      blobs.forEach((blob) => {
+        blob.x =
+          blob.originX * window.innerWidth +
+          Math.sin(time * 1.2 + blob.vx * 1000) * (window.innerWidth * 0.2)
+        blob.y =
+          blob.originY * window.innerHeight +
+          Math.cos(time * 1.0 + blob.vy * 1000) * (window.innerHeight * 0.2)
 
-      particles.forEach((particle) => {
-        particle.update()
-        particle.draw()
+        drawBlob(blob)
       })
 
       animationFrameId = requestAnimationFrame(animate)
     }
 
-    const handleMouseMove = (e: MouseEvent) => {
-      mouse.x = e.clientX
-      mouse.y = e.clientY
-    }
-
-    window.addEventListener("resize", () => {
-      resize()
-      createParticles()
-    })
-    window.addEventListener("mousemove", handleMouseMove)
-
-    init()
+    window.addEventListener("resize", resize)
+    resize()
+    animate()
 
     return () => {
-      window.removeEventListener("resize", resize) // Helper function not needed if inline
-      window.removeEventListener("mousemove", handleMouseMove)
+      window.removeEventListener("resize", resize)
       cancelAnimationFrame(animationFrameId)
     }
   }, [])
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute top-0 left-0 -z-50 h-full min-h-screen w-full bg-slate-50 dark:bg-slate-950 transition-colors duration-500"
-    />
+    <div className="fixed inset-0 -z-50 overflow-hidden pointer-events-none bg-[#fafaf9]">
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full"
+      />
+      {/* High-quality deep blur for monochrome depth */}
+      <div className="absolute inset-0 backdrop-blur-[120px] pointer-events-none" />
+
+      {/* Ultra-subtle grayscale noise */}
+      <div className="absolute inset-0 opacity-[0.015] bg-grain pointer-events-none mix-blend-multiply" />
+    </div>
   )
 }

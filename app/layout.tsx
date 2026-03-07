@@ -53,6 +53,8 @@ export const metadata = {
   },
 }
 
+import { InnovativeBackground } from '@/components/ui/InnovativeBackground'
+
 export default function RootLayout({
   children,
 }: {
@@ -68,13 +70,15 @@ export default function RootLayout({
           author={siteConfig.author}
         />
       </head>
-      <body className="bg-background text-foreground" suppressHydrationWarning>
+      <body className="bg-transparent text-foreground min-h-screen relative" suppressHydrationWarning>
+        <InnovativeBackground />
+        
         <GoogleAnalytics
           gaId={process.env.NEXT_PUBLIC_GA_ID}
           gtmId={process.env.NEXT_PUBLIC_GTM_ID}
         />
         <TopLoader />
-        <div className="flex min-h-screen flex-col antialiased">
+        <div className="flex min-h-screen flex-col antialiased relative z-10">
           <Navbar />
           <main className="flex-1 w-full">
             {children}

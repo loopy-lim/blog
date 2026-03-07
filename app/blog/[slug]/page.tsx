@@ -9,7 +9,7 @@ import Link from 'next/link'
 import { formatDateString } from '@/lib/utils'
 import { getLocalImagePath, getDefaultCover } from '@/lib/image-utils'
 import { siteConfig } from '@/site.config'
-import { Calendar, ChevronLeft, Clock } from 'lucide-react'
+import { ChevronLeft } from 'lucide-react'
 
 function toAbsoluteSiteUrl(urlOrPath: string): string {
   try {
@@ -20,10 +20,7 @@ function toAbsoluteSiteUrl(urlOrPath: string): string {
 }
 
 function safeGetLocalImagePath(imageUrl: string | null | undefined): string | null {
-  if (!imageUrl) {
-    return null
-  }
-
+  if (!imageUrl) return null
   try {
     return getLocalImagePath(imageUrl)
   } catch (error) {
@@ -34,8 +31,7 @@ function safeGetLocalImagePath(imageUrl: string | null | undefined): string | nu
 
 export async function generateStaticParams() {
   try {
-    const posts = await getStaticAllPostSlugs()
-    return posts
+    return await getStaticAllPostSlugs()
   } catch (error) {
     console.error('Error generating static params:', error)
     return []
@@ -50,23 +46,19 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     const title = post.title || 'Untitled'
     const description = post.description || ''
-    const publishedAt = post.publishedAt
-    const tags = post.tags || []
-
-    // Use generated OG image for this post
     const ogImageUrl = `${siteConfig.url}/images/og/${slug}.jpg`
 
     return {
       title,
       description,
       authors: [{ name: siteConfig.author }],
-      keywords: tags.join(', '),
+      keywords: post.tags?.join(', '),
       openGraph: {
         title,
         description,
         type: 'article',
-        publishedTime: publishedAt,
-        tags,
+        publishedTime: post.publishedAt,
+        tags: post.tags,
         images: [{ url: ogImageUrl, width: 1200, height: 630, alt: title }],
       },
       twitter: {
@@ -80,7 +72,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       },
     }
   } catch (error) {
-    console.error('Error generating metadata:', error)
     return {}
   }
 }
@@ -118,88 +109,70 @@ export default async function BlogPostPage({
       { name: title, url: `${siteConfig.url}/blog/${slug}` },
     ]
 
-        return (
-          <div className="bg-background min-h-screen">
-            <BlogPostingJsonLd {...jsonLdData} />
-            <BreadcrumbJsonLd items={breadcrumbData} />
-            <ReadingProgress />
-            
-            <main className="relative pb-16">
-              {/* Header Section: Edge-to-edge on mobile, Containerized on Desktop */}
-              <div className="w-full sm:container sm:mx-auto sm:max-w-5xl sm:pt-32 sm:px-6">
-                {/* Contrast-Fixed Premium Post Card */}
-                <div className={`relative sm:rounded-[3rem] overflow-hidden border-b sm:border border-border shadow-2xl shadow-black/3 group min-h-screen sm:min-h-150 flex flex-col ${!bgImage ? 'bg-foreground' : 'bg-white'}`}>
-                  
-                  {/* Cover Background */}
-                  <div className="absolute inset-0 z-0">
-                    {bgImage ? (
-                      <>
-                        <img
-                          src={bgImage} 
-                          alt="" 
-                          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
-                        />
-                        <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
-                        <div className="absolute inset-0 bg-linear-to-t from-black/95 via-black/40 via-40% to-transparent" />
-                      </>
-                    ) : (
-                      <div className="w-full h-full bg-linear-to-br from-gray-900 via-black to-gray-800 opacity-90" />
-                    )}
-                  </div>
-    
-                  {/* Back Button */}
-                  <div className="relative z-20 p-8 pt-32 sm:pt-8">
-                    <Link 
-                      href="/blog"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-[13px] font-black text-white transition-all hover:-translate-x-1 shadow-sm"
-                    >
-                      <ChevronLeft size={14} />
-                      Back
-                    </Link>
-                  </div>
-    
-                  {/* Title & Info Section */}
-                  <div className="relative z-10 mt-auto p-8 sm:p-20 flex flex-col items-center text-center pb-20 sm:pb-20">                <div className="mb-8 flex flex-wrap justify-center gap-3">
-                  {tags.map(tag => (
-                    <span key={tag} className="px-3 py-1 rounded-lg bg-white/10 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-widest border border-white/20">
-                      {tag}
-                    </span>
-                  ))}
+    return (
+      <div className="min-h-screen">
+        <BlogPostingJsonLd {...jsonLdData} />
+        <BreadcrumbJsonLd items={breadcrumbData} />
+        <ReadingProgress />
+        
+        <main className="relative pt-24 sm:pt-36 pb-32">
+          <div className="container mx-auto px-6 max-w-7xl">
+            <div className="flex flex-col lg:flex-row gap-12 sm:gap-16 justify-center items-start">
+              
+              {/* Main Article "Card" Container */}
+              <article className="w-full max-w-4xl flex flex-col min-w-0 bg-white shadow-sm border border-border/60 rounded-2xl overflow-hidden">
+                
+                {/* Back Link Overlay */}
+                <div className="p-8 pb-0">
+                   <Link 
+                    href="/blog"
+                    className="inline-flex items-center gap-1 text-[11px] font-bold text-muted/40 hover:text-accent transition-colors uppercase tracking-widest"
+                  >
+                    <ChevronLeft size={14} />
+                    Back to Archive
+                  </Link>
                 </div>
 
-                <h1 className="text-3xl sm:text-6xl font-black text-white tracking-tight mb-8 sm:mb-10 leading-[1.1] drop-shadow-2xl break-keep max-w-4xl px-2">
-                  {title}
-                </h1>
+                {/* Article Header */}
+                <header className="px-8 sm:px-16 pt-8 pb-12 sm:pb-16 text-center border-b border-border/40">
+                  <div className="flex flex-wrap justify-center gap-2 mb-8">
+                    {tags.map(tag => (
+                      <span key={tag} className="text-[10px] font-bold text-accent uppercase tracking-widest px-2 py-0.5 bg-accent/5 rounded border border-accent/10">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
 
-                <div className="flex flex-wrap items-center justify-center gap-6 text-[12px] font-black text-white/80 uppercase tracking-widest">
-                  <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 backdrop-blur-sm">
-                     <Calendar size={14} className="text-accent" />
-                     {publishedAt ? formatDateString(publishedAt) : 'Recent'}
+                  <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-foreground tracking-tight mb-8 leading-[1.2] word-keep-all">
+                    {title}
+                  </h1>
+
+                  <div className="flex items-center justify-center gap-4 text-[11px] font-bold text-muted/30 uppercase tracking-[0.2em] tabular-nums">
+                    {publishedAt ? formatDateString(publishedAt) : 'Recent'}
+                    <span className="w-1 h-1 rounded-full bg-border" />
+                    Article
                   </div>
-                  <div className="w-1.5 h-1.5 rounded-sm bg-white/30 rotate-45" />
-                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 backdrop-blur-xs">
-                     <Clock size={14} className="text-accent" />
-                     Article
+                </header>
+
+                {/* Cover Image inside Card */}
+                {bgImage && (
+                  <div className="w-full border-b border-border/40 bg-black/[0.02] aspect-[21/9] overflow-hidden">
+                    <img src={bgImage} alt="" className="w-full h-full object-cover" />
                   </div>
+                )}
+
+                {/* Article Content */}
+                <div className="px-8 sm:px-20 py-16 sm:py-24 prose prose-stone prose-lg max-w-none word-keep-all leading-relaxed">
+                  <Suspense fallback={<PostSkeleton />}>
+                    <NotionContent pageId={post.id} />
+                  </Suspense>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Article Body Area - Adjusted Max Width & Sidebar Alignment */}
-          <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-16 pb-40">
-            <div className="flex flex-col lg:flex-row gap-12 justify-center items-start">
-              {/* Main Content */}
-              <article className="max-w-3xl w-full flex flex-col min-w-0">
-                <Suspense fallback={<PostSkeleton />}>
-                  <NotionContent pageId={post.id} />
-                </Suspense>
               </article>
 
-              {/* Improved TOC Sidebar */}
-              <aside className="hidden lg:block w-64 shrink-0 sticky top-32 self-start">
-                <div className="pl-8 border-l border-border">
-                  <h4 className="text-[11px] font-black text-foreground uppercase tracking-[0.2em] mb-8">On this page</h4>
+              {/* Sidebar / TOC */}
+              <aside className="hidden xl:block w-64 shrink-0 sticky top-32 self-start">
+                <div className="pl-8 border-l border-border/40">
+                  <h4 className="text-[10px] font-bold text-foreground/30 uppercase tracking-[0.2em] mb-6">On this page</h4>
                   <TableOfContents />
                 </div>
               </aside>
@@ -209,20 +182,19 @@ export default async function BlogPostPage({
       </div>
     )
   } catch (error) {
-    console.error('Error loading post:', error)
     notFound()
   }
 }
 
 function PostSkeleton() {
   return (
-    <div className="space-y-12 animate-pulse w-full">
+    <div className="space-y-10 animate-pulse w-full">
       <div className="space-y-4">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-4 bg-gray-100 rounded-lg w-full"></div>
+          <div key={i} className="h-4 bg-black/[0.03] rounded-md w-full"></div>
         ))}
       </div>
-      <div className="h-96 bg-gray-100 rounded-3xl w-full"></div>
+      <div className="h-64 bg-black/[0.03] rounded-xl w-full"></div>
     </div>
   )
 }

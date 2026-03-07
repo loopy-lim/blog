@@ -105,7 +105,7 @@ const renderMediaCaption = (caption: RichTextList | undefined, renderRichText: (
   }
 
   return (
-    <figcaption className="text-center text-[11px] font-bold text-muted uppercase tracking-[0.15em] italic opacity-60">
+    <figcaption className="text-center text-[12px] font-bold text-muted uppercase tracking-[0.2em] italic opacity-60">
       {renderRichText(caption)}
     </figcaption>
   )
@@ -118,7 +118,7 @@ export const renderMediaBlock = ({ block, renderRichText }: RenderMediaBlockOpti
     if (block.video.type === 'file') {
       return (
         <figure className="my-12 space-y-3">
-          <div className="overflow-hidden rounded-2xl border border-border bg-black/5">
+          <div className="overflow-hidden rounded-lg border border-border bg-stone-50">
             <video
               className="w-full"
               controls
@@ -137,7 +137,7 @@ export const renderMediaBlock = ({ block, renderRichText }: RenderMediaBlockOpti
     if (youtubeEmbedUrl) {
       return (
         <figure className="my-12 space-y-3">
-          <div className="aspect-video overflow-hidden rounded-2xl border border-border bg-black/5">
+          <div className="aspect-video overflow-hidden rounded-lg border border-border bg-stone-50">
             <iframe
               src={youtubeEmbedUrl}
               title="YouTube video"
@@ -156,7 +156,7 @@ export const renderMediaBlock = ({ block, renderRichText }: RenderMediaBlockOpti
     if (isDirectVideoFile(externalUrl)) {
       return (
         <figure className="my-12 space-y-3">
-          <div className="overflow-hidden rounded-2xl border border-border bg-black/5">
+          <div className="overflow-hidden rounded-lg border border-border bg-stone-50">
             <video className="w-full" controls preload="metadata" src={externalUrl} />
           </div>
           {renderMediaCaption(caption, renderRichText)}
@@ -170,7 +170,7 @@ export const renderMediaBlock = ({ block, renderRichText }: RenderMediaBlockOpti
           href={externalUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="block rounded-2xl border border-border bg-gray-50 p-5 transition-colors hover:bg-gray-100"
+          className="block rounded-lg border border-border bg-stone-50 p-5 transition-colors hover:bg-gray-100"
         >
           <p className="text-[11px] font-black uppercase tracking-[0.15em] text-muted">{getHostLabel(externalUrl)}</p>
           <p className="mt-2 break-all text-sm font-bold text-foreground">{externalUrl}</p>
@@ -186,7 +186,7 @@ export const renderMediaBlock = ({ block, renderRichText }: RenderMediaBlockOpti
 
     return (
       <figure className="my-12 space-y-3">
-        <div className="aspect-video overflow-hidden rounded-2xl border border-border bg-black/5">
+        <div className="aspect-video overflow-hidden rounded-lg border border-border bg-stone-50">
           <iframe
             src={iframeSrc}
             title="Embedded content"
@@ -216,7 +216,7 @@ export const renderMediaBlock = ({ block, renderRichText }: RenderMediaBlockOpti
   if (youtubeEmbedUrl) {
     return (
       <figure className="my-12 space-y-3">
-        <div className="aspect-video overflow-hidden rounded-2xl border border-border bg-black/5">
+        <div className="aspect-video overflow-hidden rounded-lg border border-border bg-stone-50">
           <iframe
             src={youtubeEmbedUrl}
             title="Bookmarked YouTube video"
@@ -238,7 +238,7 @@ export const renderMediaBlock = ({ block, renderRichText }: RenderMediaBlockOpti
         href={bookmarkUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="block rounded-2xl border border-border bg-gray-50 p-5 transition-colors hover:bg-gray-100"
+        className="block rounded-lg border border-border bg-stone-50 p-5 transition-colors hover:bg-gray-100"
       >
         <p className="text-[11px] font-black uppercase tracking-[0.15em] text-muted">{getHostLabel(bookmarkUrl)}</p>
         <p className="mt-2 break-all text-sm font-bold text-foreground">{bookmarkUrl}</p>
