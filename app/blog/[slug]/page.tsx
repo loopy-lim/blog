@@ -95,7 +95,12 @@ export default async function BlogPostPage({
     const bgImage = localCoverImage ?? getDefaultCover(post.id)
     const jsonLdImage = localCoverImage ? toAbsoluteSiteUrl(localCoverImage) : null
 
-    const relatedPosts = await getRelatedPosts(slug, tags, 4)
+    const relatedPosts = (await getRelatedPosts(slug, tags, 4)).map((relatedPost) => ({
+      ...relatedPost,
+      coverImage: relatedPost.coverImage
+        ? safeGetLocalImagePath(relatedPost.coverImage) ?? getDefaultCover(relatedPost.id)
+        : getDefaultCover(relatedPost.id),
+    }))
 
     const jsonLdData = {
       title,
