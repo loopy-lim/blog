@@ -11,6 +11,17 @@ export const metadata = {
     template: `%s | ${siteConfig.title}`,
   },
   description: siteConfig.description,
+  keywords: [
+    '임채승',
+    '기술 블로그',
+    '프론트엔드',
+    'React',
+    'Next.js',
+    'Flutter',
+    '성능 최적화',
+    'CI/CD',
+    '트러블슈팅',
+  ],
   metadataBase: new URL(siteConfig.url),
   openGraph: {
     title: siteConfig.title,

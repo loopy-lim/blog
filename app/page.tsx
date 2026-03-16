@@ -8,10 +8,19 @@ import { siteConfig } from "@/site.config";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Home",
+  title: `${siteConfig.author} | 프론트엔드 개발자 기술 블로그`,
   description: siteConfig.description,
+  keywords: [
+    siteConfig.author,
+    "프론트엔드 개발자",
+    "기술 블로그",
+    "React",
+    "Flutter",
+    "성능 최적화",
+    "CI/CD",
+  ],
   openGraph: {
-    title: siteConfig.title,
+    title: `${siteConfig.author} | 프론트엔드 개발자 기술 블로그`,
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.title,
@@ -28,7 +37,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: siteConfig.title,
+    title: `${siteConfig.author} | 프론트엔드 개발자 기술 블로그`,
     description: siteConfig.description,
     images: ["/images/og/default.jpg"],
   },
